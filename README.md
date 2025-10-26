@@ -2,6 +2,7 @@
 Front end for AIQuiz using Java (Android app)
 
 # Folder structure
+```
 MyApp/
 │
 ├── app/                      # Main Android app module
@@ -35,3 +36,4 @@ MyApp/
 │
 ├── build.gradle
 └── settings.gradle
+```
