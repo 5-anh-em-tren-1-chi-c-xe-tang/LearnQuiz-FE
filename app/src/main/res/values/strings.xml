@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">LearnQuiz_FE</string>
+    
+    <!-- Login Screen -->
+    <string name="login_welcome">Welcome back! Please login to continue.</string>
+    <string name="login_username_hint">Username or Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_demo_info">Demo: username = demo, password = password123</string>
+    
+    <!-- Home Screen -->
+    <string name="home_title">Create Quiz</string>
+    <string name="home_instructions_title">How to Create a Quiz</string>
+    <string name="home_instructions_text">1. Take or select a photo\n2. Select a region on the photo\n3. Generate quiz questions from the selected content</string>
+    <string name="home_take_photo">Take Photo</string>
+    <string name="home_capture_photo">Capture</string>
+    <string name="home_select_photo">Select Photo</string>
+    <string name="home_select_region">Select Region</string>
+    <string name="home_selecting_region">Selecting…</string>
+    <string name="home_generate_quiz">Generate Quiz</string>
+    <string name="home_placeholder_text">Take or select a photo to get started</string>
+    <string name="home_selection_title">Selected Region</string>
+    <string name="home_photo_preview_desc">Photo preview</string>
+    <string name="home_camera_icon_desc">Camera icon</string>
 </resources>

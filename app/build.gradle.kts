@@ -58,4 +58,16 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation("com.google.android.material:material:1.13.0")
+    
+    // ViewModel and LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+    
+    // CameraX dependencies for photo capture
+    implementation("androidx.camera:camera-camera2:1.3.4")
+    implementation("androidx.camera:camera-lifecycle:1.3.4")
+    implementation("androidx.camera:camera-view:1.3.4")
+    
+    // ConstraintLayout for complex layouts
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 }
