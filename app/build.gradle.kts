@@ -70,4 +70,16 @@ dependencies {
     
     // ConstraintLayout for complex layouts
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    
+    // Retrofit for network calls
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
+    
+    // Glide for image loading
+    implementation(libs.glide.core)
+    annotationProcessor(libs.glide.compiler)
+    
+    // PhotoView for zoom support
+    implementation(libs.photoview)
 }

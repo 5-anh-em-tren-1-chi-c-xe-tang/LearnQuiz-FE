@@ -172,13 +172,10 @@ public class HomeActivity extends AppCompatActivity {
      * Setup click listeners for buttons
      */
     private void setupListeners() {
-        // Take photo button
+        // Take photo button - Launch new camera workflow
         btnTakePhoto.setOnClickListener(v -> {
-            if (checkCameraPermission()) {
-                startCamera();
-            } else {
-                requestCameraPermission();
-            }
+            Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
+            startActivity(intent);
         });
 
         // Select photo button

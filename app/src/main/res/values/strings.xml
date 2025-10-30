@@ -23,4 +23,69 @@
     <string name="home_selection_title">Selected Region</string>
     <string name="home_photo_preview_desc">Photo preview</string>
     <string name="home_camera_icon_desc">Camera icon</string>
+    
+    <!-- Camera Activity -->
+    <string name="camera_title">Camera</string>
+    <string name="camera_capture">Capture</string>
+    <string name="camera_flip">Flip</string>
+    <string name="camera_flash">Flash</string>
+    <string name="camera_gallery">Gallery</string>
+    <string name="camera_permission_required">Camera permission is required</string>
+    <string name="camera_error">Camera error occurred</string>
+    
+    <!-- Photo Preview Activity -->
+    <string name="preview_title">Crop Region</string>
+    <string name="preview_confirm">Confirm</string>
+    <string name="preview_retake">Retake</string>
+    <string name="preview_instruction">Drag corners to adjust region</string>
+    <string name="preview_region_info">Region: %1$d × %2$d pixels</string>
+    
+    <!-- Quiz Generation Activity -->
+    <string name="generation_title">Generate Quiz</string>
+    <string name="generation_photos">Photos</string>
+    <string name="generation_add_photo">Add Photo</string>
+    <string name="generation_settings">Quiz Settings</string>
+    <string name="generation_language">Language</string>
+    <string name="generation_language_vi">Vietnamese</string>
+    <string name="generation_language_en">English</string>
+    <string name="generation_question_count">Question Count</string>
+    <string name="generation_visibility">Quiz Visibility</string>
+    <string name="generation_visibility_public">Public - Anyone can access</string>
+    <string name="generation_visibility_private">Private - Only you can access</string>
+    <string name="generation_time_limit">Time Limit per Question (seconds)</string>
+    <string name="generation_generate">Generate Quiz</string>
+    <string name="generation_generating">Generating quiz from images…</string>
+    <string name="generation_success_title">Quiz Created!</string>
+    <string name="generation_success_message">Quiz "%1$s" created with %2$d questions</string>
+    <string name="generation_error_title">Generation Failed</string>
+    <string name="generation_error_no_photos">Please add at least one photo</string>
+    <string name="generation_error_time_limit">Time limit must be between 10-300 seconds</string>
+    <string name="generation_error_invalid_time">Please enter a valid time limit</string>
+    <string name="generation_error_processing">Error processing images</string>
+    <string name="generation_error_invalid_request">Invalid request parameters</string>
+    <string name="generation_max_photos_reached">Maximum 10 photos reached</string>
+    <string name="generation_photo_thumbnail">Photo thumbnail</string>
+    <string name="generation_photo_preview">Photo Preview</string>
+    <string name="generation_delete_photo">Delete Photo</string>
+    <string name="generation_delete_confirm">Are you sure you want to delete this photo?</string>
+    <string name="generation_delete">Delete</string>
+    <string name="generation_photo_deleted">Photo deleted</string>
+    <string name="generation_view_quiz">View Quiz</string>
+    <string name="generation_create_another">Create Another</string>
+    <string name="generation_exit_title">Discard Progress?</string>
+    <string name="generation_exit_message">You have unsaved photos. Do you want to discard them?</string>
+    <string name="generation_exit_confirm">Discard</string>
+    
+    <!-- Common -->
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_unauthorized">Unauthorized. Please login again.</string>
+    <string name="error_invalid_data">Invalid data. Please check your inputs.</string>
+    <string name="error_unknown">An unexpected error occurred</string>
+    <string name="loading">Loading…</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
 </resources>

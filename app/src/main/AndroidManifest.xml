@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -33,6 +35,26 @@
         <!-- Home Activity -->
         <activity
             android:name=".ui.activities.HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+        
+        <!-- Camera Activity (Full Screen) -->
+        <activity
+            android:name=".ui.activities.CameraActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+        
+        <!-- Photo Preview Activity -->
+        <activity
+            android:name=".ui.activities.PhotoPreviewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+        
+        <!-- Quiz Generation Activity -->
+        <activity
+            android:name=".ui.activities.QuizGenerationActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
         
