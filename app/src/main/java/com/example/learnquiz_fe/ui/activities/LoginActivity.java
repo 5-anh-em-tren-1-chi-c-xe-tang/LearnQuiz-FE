@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginWithGoogle(String idToken) {
         loginViewModel.loginWithGoogle(idToken).observe(this, response -> {
-            if (response != null) {
-                Toast.makeText(this, "Welcome " + response.getData().user.name, Toast.LENGTH_SHORT).show();
+            if (response.isSuccess() && response.getData() != null) {
+                Toast.makeText(this, "Welcome " + response.getData().userResponseDto.username, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, HomeActivity.class));
                 finish();
             } else {

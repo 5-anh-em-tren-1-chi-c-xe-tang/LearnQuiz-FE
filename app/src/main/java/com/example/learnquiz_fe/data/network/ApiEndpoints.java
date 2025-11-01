@@ -14,8 +14,10 @@ public class ApiEndpoints {
      * use "http://10.0.0.2.2 to access localhost from Android emulator
      * 5186 for http and 7024 for https
      */
-    public static final String BASE_URL = "https://10.0.2.2:7024/";
-    
+//    public static final String BASE_URL = "https://10.0.2.2:7024/";
+//    public static final String BASE_URL = "https://192.168.1.18:7025/";
+    public static final String BASE_URL = "http://192.168.1.18:7024/";
+
     /**
      * Quiz generation endpoint
      */
