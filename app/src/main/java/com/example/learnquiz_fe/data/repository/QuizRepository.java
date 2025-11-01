@@ -5,11 +5,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.network.ApiService;
 import com.example.learnquiz_fe.data.network.RetrofitClient;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -161,7 +164,43 @@ public class QuizRepository {
             }
         });
     }
-    
+
+    /**
+     * Get public quizzes
+     * @return {@link ApiResponse<QuizResponseDTO>} API Response containing list of public quizzes
+     */
+    public void getPublicQuizzes(GenericQuizCallback callback) {
+        Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getPublicQuizzies();
+
+        call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
+
+            @Override
+            public void onResponse(Call<ApiResponse<List<QuizResponseDTO>>> call, Response<ApiResponse<List<QuizResponseDTO>>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<List<QuizResponseDTO>> apiResponse = response.body();
+
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        Log.d(TAG, "Public quizzes fetched successfully");
+                        callback.onSuccess(apiResponse.getData());
+                    } else {
+                        Log.e(TAG, "API returned error: " + apiResponse.getMessage());
+                        callback.onError(apiResponse.getMessage(), response.code());
+                    }
+                } else {
+                    String errorMsg = handleErrorResponse(response.code());
+                    Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<QuizResponseDTO>>> call, Throwable throwable) {
+                Log.e(TAG, "HTTP error " + throwable.getMessage());
+                callback.onError("Network error: " + throwable.getMessage(), -1);
+            }
+        });
+    }
+
     /**
      * Handle HTTP error responses
      */
@@ -189,6 +228,14 @@ public class QuizRepository {
      */
     public interface QuizCallback {
         void onSuccess(GenerateQuizResponse response);
+        void onError(String message, int errorCode);
+    }
+
+    /**
+     * Callback interface for quiz operations
+     */
+    public interface GenericQuizCallback {
+        void onSuccess(List<QuizResponseDTO> response);
         void onError(String message, int errorCode);
     }
 }
