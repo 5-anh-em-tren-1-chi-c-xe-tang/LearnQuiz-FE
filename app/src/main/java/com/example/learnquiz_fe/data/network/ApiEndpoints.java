@@ -13,7 +13,7 @@ public class ApiEndpoints {
      * TODO: Update this value to match your backend
      * Or configure in AppConfig.API.BASE_URL
      */
-    public static final String BASE_URL = "https://your-backend-url.com/";
+    public static final String BASE_URL = "http://localhost:5186";
     
     /**
      * Quiz generation endpoint
@@ -24,6 +24,7 @@ public class ApiEndpoints {
      * Authentication endpoints
      */
     public static final String LOGIN = "api/auth/login";
+    public static final String LOGIN_GOOGLE = "api/auth/google";
     public static final String REGISTER = "api/auth/register";
     public static final String REFRESH_TOKEN = "api/auth/refresh";
     
