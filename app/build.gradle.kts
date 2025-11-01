@@ -82,4 +82,11 @@ dependencies {
     
     // PhotoView for zoom support
     implementation(libs.photoview)
+
+    // Google material support
+    implementation("com.google.android.material:material:1.13.0")
+
+    // Swipe to refresh
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    
 }
