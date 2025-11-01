@@ -3,9 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,13 +21,25 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LearnQuiz_FE">
-        
+
         <!-- Login Activity (Main Launcher) -->
         <activity
             android:name=".ui.activities.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
+
+        <!--        Main activity - The one where it will manage the fragments-->
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LearnQuiz_FE">
             <intent-filter>
@@ -31,36 +47,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <!-- Home Activity -->
         <activity
             android:name=".ui.activities.HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
+
         <!-- Camera Activity (Full Screen) -->
         <activity
             android:name=".ui.activities.CameraActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
+
         <!-- Photo Preview Activity -->
         <activity
             android:name=".ui.activities.PhotoPreviewActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
+
         <!-- Quiz Generation Activity -->
         <activity
             android:name=".ui.activities.QuizGenerationActivity"
-            android:exported="false"
-            android:theme="@style/Theme.LearnQuiz_FE" />
-        
-        <!-- Original MainActivity (kept for reference) -->
-        <activity
-            android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
     </application>

@@ -10,10 +10,11 @@ public class ApiEndpoints {
     
     /**
      * Base URL for the backend API
-     * TODO: Update this value to match your backend
      * Or configure in AppConfig.API.BASE_URL
+     * use "http://10.0.0.2.2 to access localhost from Android emulator
+     * 5186 for http and 7024 for https
      */
-    public static final String BASE_URL = "https://your-backend-url.com/";
+    public static final String BASE_URL = "https://10.0.2.2:7024/";
     
     /**
      * Quiz generation endpoint
@@ -33,9 +34,9 @@ public class ApiEndpoints {
     public static final String USER_PROFILE = "api/user/profile";
     
     /**
-     * Quiz management endpoints
+     * Quiz endpoints
      */
-    public static final String GET_QUIZZES = "api/quiz/list";
+    public static final String GET_PUBLIC_QUIZ = "api/Quiz/public";
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
     

@@ -1,8 +1,11 @@
 package com.example.learnquiz_fe.data.network;
 
+import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -53,4 +56,7 @@ public interface ApiService {
     Call<ApiResponse<GenerateQuizResponse>> getQuizDetail(
         @Path("id") String quizId
     );
+
+    @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
+    Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies();
 }
