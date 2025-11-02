@@ -31,6 +31,10 @@ public class ApiResponse<T> {
      */
     @SerializedName("errorCode")
     private String errorCode;
+
+    // The attrs below match exact as the response object from backend
+    private Object errors;
+    private int statusCode;
     
     // Constructor
     public ApiResponse() {

@@ -7,9 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
     <!-- Quiz Answer Feedback Colors -->
     <color name="correct_answer_bg">#E8F5E9</color>
     <color name="wrong_answer_bg">#FFEBEE</color>
     <color name="skipped_answer_bg">#F5F5F5</color>
+    <color name="gray">#808080</color>
 </resources>

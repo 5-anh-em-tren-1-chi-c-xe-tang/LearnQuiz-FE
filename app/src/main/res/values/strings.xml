@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">LearnQuiz_FE</string>
-    
+
     <!-- Login Screen -->
     <string name="login_welcome">Welcome back! Please login to continue.</string>
     <string name="login_username_hint">Username or Email</string>
@@ -8,7 +8,7 @@
     <string name="login_button">Login</string>
     <string name="login_forgot_password">Forgot Password?</string>
     <string name="login_demo_info">Demo: username = demo, password = password123</string>
-    
+
     <!-- Home Screen -->
     <string name="home_title">Create Quiz</string>
     <string name="home_instructions_title">How to Create a Quiz</string>
@@ -23,7 +23,7 @@
     <string name="home_selection_title">Selected Region</string>
     <string name="home_photo_preview_desc">Photo preview</string>
     <string name="home_camera_icon_desc">Camera icon</string>
-    
+
     <!-- Camera Activity -->
     <string name="camera_title">Camera</string>
     <string name="camera_capture">Capture</string>
@@ -32,14 +32,14 @@
     <string name="camera_gallery">Gallery</string>
     <string name="camera_permission_required">Camera permission is required</string>
     <string name="camera_error">Camera error occurred</string>
-    
+
     <!-- Photo Preview Activity -->
     <string name="preview_title">Crop Region</string>
     <string name="preview_confirm">Confirm</string>
     <string name="preview_retake">Retake</string>
     <string name="preview_instruction">Drag corners to adjust region</string>
     <string name="preview_region_info">Region: %1$d × %2$d pixels</string>
-    
+
     <!-- Quiz Generation Activity -->
     <string name="generation_title">Generate Quiz</string>
     <string name="generation_photos">Photos</string>
@@ -117,6 +117,13 @@
     <string name="quiz_retake">Retake Quiz</string>
     <string name="quiz_home">Back to Home</string>
     
+
+    <!--    View all quiz activity-->
+    <string name="nav_home" type="id">nav_home</string>
+    <string name="nav_my_quizzes" type="id">nav_my_quizzes</string>
+    <string name="nav_create_quiz" type="id">nav_create_quiz</string>
+    <string name="nav_profile" type="id">nav_profile</string>
+
     <!-- Common -->
     <string name="error_network">Network error. Please check your connection.</string>
     <string name="error_server">Server error. Please try again later.</string>
@@ -129,4 +136,18 @@
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
+    <!--    Nav-->
+    <string name="nav_home_title">Home</string>
+    <string name="nav_my_quizzes_title">My Quizzes</string>
+    <string name="nav_create_quiz_title">Create</string>
+    <string name="nav_profile_title">Profile</string>
+    <string name="quiz_image">Quiz image</string>
+    <string name="category_name_placeholder">Category Name</string>
+    <string name="question_placeholder">15 questions</string>
+    <string name="star_rate_placeholder">4.9</string>
+    <string name="image_description">Image description</string>
+    <string name="rating_count_placeholder">• 2,156</string>
+    <string name="author_placeholder">by Sarah Smith</string>
+    <string name="title_placeholder">React Hooks Complete Guide</string>
+    <string name="desc_placeholder">Everything about React Hooks</string>
 </resources>

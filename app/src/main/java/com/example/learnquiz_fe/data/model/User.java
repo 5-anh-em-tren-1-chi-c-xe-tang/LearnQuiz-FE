@@ -1,35 +1,80 @@
 package com.example.learnquiz_fe.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * User data model representing authenticated user information
- * Used for login and session management
+ * User data model representing authenticated user information.
+ * This class is designed to map the user data from the API response.
  */
 public class User {
-    private String id;
-    private String username;
-    private String email;
-    private String password;
+
+    @SerializedName("id")
+    public String id;
+
+    @SerializedName("username")
+    public String username;
+
+    @SerializedName("passwordHash")
+    public String passwordHash;
+
+    @SerializedName("email")
+    public String email;
+
+    /**
+     * User role (e.g., "Admin", "User", "Teacher", "Student")
+     */
+    @SerializedName("role")
+    public String role;
+
+    /**
+     * Avatar image URL
+     */
+    @SerializedName("avatarUrl")
+    public String avatarUrl;
+
+    /**
+     * Refresh token for JWT authentication
+     */
+    @SerializedName("refreshToken")
+    public String refreshToken;
+
+    /**
+     * Expiry date of the refresh token (represented as a String in ISO format)
+     */
+    @SerializedName("refreshTokenExpiry")
+    public String refreshTokenExpiry;
+
+    /**
+     * Account creation timestamp (represented as a String in ISO format)
+     */
+    @SerializedName("createdAt")
+    public String createdAt;
+
+    /**
+     * Last update timestamp (represented as a String in ISO format)
+     */
+    @SerializedName("updatedAt")
+    public String updatedAt;
+
+    /**
+     * The number of quizzes can be created by the free user in a day
+     */
+    @SerializedName("createQuizCount")
+    public int createQuizCount;
+
+    // This property might not come from the backend, so we don't use SerializedName
     private boolean isAuthenticated;
 
+    // --- Constructors ---
+
     /**
-     * Default constructor
+     * Default constructor for libraries like GSON.
      */
     public User() {
-        this.isAuthenticated = false;
     }
 
-    /**
-     * Constructor with all fields
-     */
-    public User(String id, String username, String email, String password) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.isAuthenticated = false;
-    }
+    // --- Getters and Setters (Optional, but good practice) ---
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -54,14 +99,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isAuthenticated() {
         return isAuthenticated;
     }
@@ -70,12 +107,15 @@ public class User {
         isAuthenticated = authenticated;
     }
 
+    // You can add getters and setters for other fields as needed.
+
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
                 ", isAuthenticated=" + isAuthenticated +
                 '}';
     }

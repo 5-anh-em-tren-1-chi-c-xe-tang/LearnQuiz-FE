@@ -1,10 +1,15 @@
 package com.example.learnquiz_fe.data.network;
 
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
+import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -67,4 +72,11 @@ public interface ApiService {
     Call<ApiResponse<SubmitQuizResponseDTO>> submitQuiz(
         @Body SubmitQuizRequestDTO request
     );
+
+
+    @POST(ApiEndpoints.LOGIN_GOOGLE)
+    Call<ApiResponse<AuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+
+    @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
+    Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies();
 }
