@@ -58,7 +58,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
                 : "0 questions");
         holder.tvRating.setText(String.format(Locale.getDefault(), "%.1f", quiz.getAverageRating()));
         holder.tvRatingCount.setText(String.format(Locale.getDefault(), "• %,.0f", quiz.getRatingCount()));
-        holder.tvAuthor.setText(quiz.getAuthorName() != null ? quiz.getAuthorName() : "Unknown");
+        holder.tvAuthor.setText(quiz.getAuthorName() != null ? "by " + quiz.getAuthorName() : "Unknown");
 
         Glide.with(holder.itemView.getContext())
                 .load(quiz.getImageSource())
