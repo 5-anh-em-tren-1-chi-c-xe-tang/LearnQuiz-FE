@@ -44,6 +44,7 @@
     <string name="generation_title">Generate Quiz</string>
     <string name="generation_photos">Photos</string>
     <string name="generation_add_photo">Add Photo</string>
+    <string name="generation_no_photos">No photos yet. Tap "Add Photo" above to get started.</string>
     <string name="generation_settings">Quiz Settings</string>
     <string name="generation_language">Language</string>
     <string name="generation_language_vi">Vietnamese</string>
@@ -75,6 +76,46 @@
     <string name="generation_exit_title">Discard Progress?</string>
     <string name="generation_exit_message">You have unsaved photos. Do you want to discard them?</string>
     <string name="generation_exit_confirm">Discard</string>
+    <string name="generation_photo_info">Photo Information</string>
+    <string name="generation_pinch_zoom_hint">Pinch to zoom, double tap to reset</string>
+    
+    <!-- Add Photo Options -->
+    <string name="add_photo_choose_option">Choose Option</string>
+    <string name="add_photo_take_photo">Take Photo with Camera</string>
+    <string name="add_photo_select_files">Select Files (Images/PDF)</string>
+    <string name="add_photo_processing">Processing files…</string>
+    
+    <!-- PDF Upload -->
+    <string name="pdf_too_large">PDF file too large (%.1f MB). Maximum size is 10 MB</string>
+    <string name="pdf_timeout">Processing timeout - PDF file is too large or complex</string>
+    <string name="pdf_unsupported">Only PDF files are supported</string>
+    <string name="pdf_read_error">Cannot read PDF file</string>
+    <string name="pdf_encode_error">Failed to encode PDF file</string>
+    <string name="pdf_processing">Processing PDF file…</string>
+    
+    <!-- Quiz Taking -->
+    <string name="quiz_question_number">Question %1$d of %2$d</string>
+    <string name="quiz_previous">Previous</string>
+    <string name="quiz_next">Next</string>
+    <string name="quiz_submit">Submit Quiz</string>
+    <string name="quiz_exit_title">Exit Quiz?</string>
+    <string name="quiz_exit_message">Are you sure you want to exit? Your progress will be lost.</string>
+    <string name="quiz_exit_confirm">Exit</string>
+    <string name="quiz_submit_title">Submit Quiz?</string>
+    <string name="quiz_submit_message">You have answered %1$d out of %2$d questions. Submit now?</string>
+    <string name="quiz_submit_confirm">Submit</string>
+    <string name="quiz_view_results">View Results</string>
+    
+    <!-- Quiz Result -->
+    <string name="quiz_result_title">Quiz Results</string>
+    <string name="quiz_result_score">%1$d / %2$d</string>
+    <string name="quiz_result_excellent">Excellent! 🎉</string>
+    <string name="quiz_result_good">Good job! 👍</string>
+    <string name="quiz_result_fair">Keep practicing! 📚</string>
+    <string name="quiz_result_poor">Need improvement 💪</string>
+    <string name="quiz_review_title">Review Answers</string>
+    <string name="quiz_retake">Retake Quiz</string>
+    <string name="quiz_home">Back to Home</string>
     
     <!-- Common -->
     <string name="error_network">Network error. Please check your connection.</string>

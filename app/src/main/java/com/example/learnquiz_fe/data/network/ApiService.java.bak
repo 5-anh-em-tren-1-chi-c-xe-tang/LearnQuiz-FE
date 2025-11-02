@@ -57,14 +57,16 @@ public interface ApiService {
     );
     
     /**
-     * Submit quiz answers (wrapped in ApiResponse)
+     * Submit quiz answers
      * POST /api/quizhistory/submit
      * 
+     * @param token Authorization Bearer token
      * @param request Submit quiz request with quizId and answers
-     * @return ApiResponse containing SubmitQuizResponseDTO with score and results
+     * @return SubmitQuizResponseDTO containing score and results
      */
     @POST(ApiEndpoints.SUBMIT_QUIZ)
-    Call<ApiResponse<SubmitQuizResponseDTO>> submitQuiz(
+    Call<SubmitQuizResponseDTO> submitQuiz(
+        @Header("Authorization") String token,
         @Body SubmitQuizRequestDTO request
     );
 }

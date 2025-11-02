@@ -58,6 +58,19 @@
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
         
+        <!-- Quiz Taking Activity -->
+        <activity
+            android:name=".ui.activities.QuizTakingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+        
+        <!-- Quiz Result Activity -->
+        <activity
+            android:name=".ui.activities.QuizResultActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+        
         <!-- Original MainActivity (kept for reference) -->
         <activity
             android:name=".MainActivity"

@@ -32,6 +32,18 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Add Photo Button (Separated at top) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/generation_add_photo"
+                android:paddingVertical="16dp"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/ic_photo_library"
+                app:iconGravity="start" />
+
             <!-- Photo Gallery Section -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -46,30 +58,52 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/tvPhotosLabel"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/generation_photos"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_marginBottom="8dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
 
+                        <TextView
+                            android:id="@+id/tvPhotosLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/generation_photos"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+                        <TextView
+                            android:id="@+id/tvPhotoCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 photos"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                            android:textColor="?attr/colorSecondary" />
+
+                    </LinearLayout>
+
+                    <!-- Horizontal RecyclerView for thumbnails -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvPhotos"
                         android:layout_width="match_parent"
                         android:layout_height="140dp"
+                        android:clipToPadding="false"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
                         android:orientation="horizontal"
                         tools:listitem="@layout/item_photo_thumbnail" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAddPhoto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/generation_add_photo"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        app:icon="@drawable/ic_photo_library" />
+                    <!-- Empty state message -->
+                    <TextView
+                        android:id="@+id/tvEmptyPhotos"
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:gravity="center"
+                        android:text="@string/generation_no_photos"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -94,7 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/generation_settings"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Language Selection -->
@@ -104,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:hint="@string/generation_language"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                         <AutoCompleteTextView
                             android:id="@+id/actvLanguage"
@@ -121,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/generation_question_count"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                         android:layout_marginBottom="4dp" />
 
                     <TextView
@@ -129,7 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="10"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="8dp" />
 
@@ -149,7 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/generation_visibility"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                         android:layout_marginBottom="8dp" />
 
                     <RadioGroup
@@ -180,7 +214,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/generation_time_limit"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTimeLimit"
@@ -203,7 +237,7 @@
                 android:text="@string/generation_generate"
                 android:paddingVertical="16dp"
                 app:icon="@drawable/ic_check"
-                style="@style/Widget.Material3.Button" />
+                style="@style/Widget.MaterialComponents.Button" />
 
         </LinearLayout>
 
@@ -237,7 +271,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/generation_generating"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
         </LinearLayout>
 

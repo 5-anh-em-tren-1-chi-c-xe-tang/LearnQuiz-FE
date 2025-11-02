@@ -13,7 +13,7 @@ public class ApiEndpoints {
      * TODO: Update this value to match your backend
      * Or configure in AppConfig.API.BASE_URL
      */
-    public static final String BASE_URL = "https://your-backend-url.com/";
+    public static final String BASE_URL = "https://82b68fb70340.ngrok-free.app/";
     
     /**
      * Quiz generation endpoint
@@ -38,6 +38,11 @@ public class ApiEndpoints {
     public static final String GET_QUIZZES = "api/quiz/list";
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
+    
+    /**
+     * Quiz history endpoints
+     */
+    public static final String SUBMIT_QUIZ = "api/quizhistory/submit";
     
     // Request timeout configuration (in seconds)
     public static final int CONNECT_TIMEOUT = 30;
