@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.learnquiz_fe">
     <!-- Permissions -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -26,49 +26,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LearnQuiz_FE">
 
-        <!-- Login Activity (Main Launcher) -->
         <activity
-            android:name=".ui.activities.LoginActivity"
+            android:name=".ui.activities.RouterActivity"
             android:exported="true"
-            android:theme="@style/Theme.LearnQuiz_FE">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
-
-        <!--        Main activity - The one where it will manage the fragments-->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LearnQuiz_FE">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"> <!-- Theme trong suốt để không bị chớp màn hình -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Login Activity (Main Launcher) -->
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <!-- Main activity - The one where it will manage the fragments -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
         <!-- Home Activity -->
         <activity
             android:name=".ui.activities.HomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.LearnQuiz_FE" />
-
-        <!-- Camera Activity (Full Screen) -->
+            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Camera Activity (Full Screen) -->
         <activity
             android:name=".ui.activities.CameraActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LearnQuiz_FE" />
-
-        <!-- Photo Preview Activity -->
+            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Photo Preview Activity -->
         <activity
             android:name=".ui.activities.PhotoPreviewActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LearnQuiz_FE" />
-
-        <!-- Quiz Generation Activity -->
+            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Quiz Generation Activity -->
         <activity
             android:name=".ui.activities.QuizGenerationActivity"
             android:exported="false"
