@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.learnquiz_fe.BuildConfig;
+import com.example.learnquiz_fe.MainActivity;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -87,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.loginWithGoogle(idToken).observe(this, response -> {
             if (response.isSuccess() && response.getData() != null) {
                 Toast.makeText(this, "Welcome " + response.getData().userResponseDto.username, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, HomeActivity.class));
+                startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
