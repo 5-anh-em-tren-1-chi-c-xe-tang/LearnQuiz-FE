@@ -79,12 +79,6 @@
             android:name=".ui.activities.QuizResultActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
-        <!-- Original MainActivity (kept for reference) -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.LearnQuiz_FE" />
     </application>
 
 </manifest>

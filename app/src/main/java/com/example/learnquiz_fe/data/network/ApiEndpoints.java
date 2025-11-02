@@ -16,7 +16,7 @@ public class ApiEndpoints {
      */
 //    public static final String BASE_URL = "https://10.0.2.2:7024/";
 //    public static final String BASE_URL = "https://192.168.1.18:7025/";
-    public static final String BASE_URL = "https://192.168.1.3:7025/";
+    public static final String BASE_URL = "https://b177d9503547.ngrok-free.app/";
 //    public static final String BASE_URL = "http://192.168.1.3:7024/";
 
     /**
