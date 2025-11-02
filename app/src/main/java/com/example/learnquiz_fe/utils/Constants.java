@@ -22,6 +22,8 @@ public class Constants {
     public static final String EXTRA_FROM_CAMERA = "extra_from_camera";
     public static final String EXTRA_QUIZ_RESPONSE = "extra_quiz_response";
     public static final String EXTRA_IMAGE_ID = "extra_image_id";
+    public static final String EXTRA_DOCUMENT_URI = "extra_document_uri";
+    public static final String EXTRA_MIME_TYPE = "extra_mime_type";
     
     /**
      * Image processing settings
@@ -29,7 +31,13 @@ public class Constants {
     public static final int MAX_IMAGE_WIDTH = 1920;
     public static final int MAX_IMAGE_HEIGHT = 1920;
     public static final int JPEG_QUALITY = 85;
-    public static final int THUMBNAIL_SIZE = 120;
+    public static final int THUMBNAIL_SIZE = 200;
+    
+    /**
+     * PDF processing settings
+     */
+    public static final long MAX_PDF_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+    public static final long PDF_ENCODING_TIMEOUT_MS = 30000; // 30 seconds
     
     /**
      * Photo session limits

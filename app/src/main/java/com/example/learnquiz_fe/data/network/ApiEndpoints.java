@@ -44,6 +44,11 @@ public class ApiEndpoints {
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
     
+    /**
+     * Quiz history endpoints
+     */
+    public static final String SUBMIT_QUIZ = "api/quizhistory/submit";
+    
     // Request timeout configuration (in seconds)
     public static final int CONNECT_TIMEOUT = 30;
     public static final int READ_TIMEOUT = 60;
