@@ -144,13 +144,54 @@ public class HomeActivity extends AppCompatActivity {
      * Setup activity result launchers for camera permissions and photo selection
      */
     private void setupActivityResultLaunchers() {
-        // Launcher for selecting photo from gallery
+        // Launcher for selecting image or document from storage (multi-select support)
         selectPhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri selectedImageUri = result.getData().getData();
-                    loadPhotoFromUri(selectedImageUri);
+                    android.content.Intent data = result.getData();
+                    
+                    // Check if multiple files selected
+                    android.content.ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        // Multiple files - forward all to QuizGenerationActivity
+                        int count = clipData.getItemCount();
+                        android.util.Log.d("HomeActivity", "Selected " + count + " files");
+                        
+                        // For multiple files, go directly to QuizGenerationActivity
+                        // and let it handle the processing
+                        Intent intent = new Intent(HomeActivity.this, 
+                            com.example.learnquiz_fe.ui.activities.QuizGenerationActivity.class);
+                        
+                        // Pass ClipData via intent
+                        intent.setClipData(clipData);
+                        intent.putExtra("HAS_MULTIPLE_FILES", true);
+                        startActivity(intent);
+                        
+                    } else if (data.getData() != null) {
+                        // Single file
+                        Uri selectedUri = data.getData();
+
+                        // Determine mime type
+                        String mime = null;
+                        try {
+                            mime = getContentResolver().getType(selectedUri);
+                        } catch (Exception ignored) {}
+
+                        if (mime != null && mime.startsWith("image/")) {
+                            // For images, forward to PhotoPreviewActivity for region selection
+                            Intent intent = new Intent(HomeActivity.this, com.example.learnquiz_fe.ui.activities.PhotoPreviewActivity.class);
+                            intent.putExtra(com.example.learnquiz_fe.utils.Constants.EXTRA_IMAGE_URI, selectedUri.toString());
+                            intent.putExtra(com.example.learnquiz_fe.utils.Constants.EXTRA_FROM_CAMERA, false);
+                            startActivity(intent);
+                        } else {
+                            // For documents (pdf), forward to QuizGenerationActivity to be added to session
+                            Intent intent = new Intent(HomeActivity.this, com.example.learnquiz_fe.ui.activities.QuizGenerationActivity.class);
+                            intent.putExtra(com.example.learnquiz_fe.utils.Constants.EXTRA_DOCUMENT_URI, selectedUri.toString());
+                            intent.putExtra(com.example.learnquiz_fe.utils.Constants.EXTRA_MIME_TYPE, mime);
+                            startActivity(intent);
+                        }
+                    }
                 }
             }
         );
@@ -316,11 +357,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * Open gallery to select photo
+     * Open gallery to select photo or PDF document (multi-select enabled)
      */
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        selectPhotoLauncher.launch(intent);
+        // Use ACTION_OPEN_DOCUMENT - allow multi-select for images and PDFs
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] mimeTypes = new String[] {
+            "image/*",
+            "application/pdf"
+        };
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // Enable multi-select
+        Intent chooser = Intent.createChooser(intent, "Select images or PDFs");
+        selectPhotoLauncher.launch(chooser);
     }
 
     /**

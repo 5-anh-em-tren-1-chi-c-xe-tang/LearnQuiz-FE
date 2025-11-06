@@ -7,6 +7,7 @@ import android.net.Uri;
 import com.example.learnquiz_fe.data.model.camera.CapturedImage;
 import com.example.learnquiz_fe.data.model.camera.ImageRegion;
 import com.example.learnquiz_fe.data.model.camera.PhotoSession;
+import com.example.learnquiz_fe.utils.Constants;
 import com.example.learnquiz_fe.utils.ImageUtils;
 
 import java.io.IOException;
@@ -65,8 +66,8 @@ public class ImageRepository {
                 // Compress to Base64
                 String base64Data = ImageUtils.compressToBase64(resizedBitmap, 85);
                 
-                // Create thumbnail
-                Bitmap thumbnail = ImageUtils.createThumbnail(processedBitmap, 120);
+                // Create thumbnail (larger size for better quality)
+                Bitmap thumbnail = ImageUtils.createThumbnail(processedBitmap, 200);
                 
                 // Create CapturedImage object
                 CapturedImage capturedImage = new CapturedImage(imageUri, fromCamera);
@@ -76,14 +77,17 @@ public class ImageRepository {
                 capturedImage.setOriginalWidth(originalBitmap.getWidth());
                 capturedImage.setOriginalHeight(originalBitmap.getHeight());
                 
-                // Cleanup
-                if (processedBitmap != originalBitmap) {
-                    processedBitmap.recycle();
-                }
-                if (resizedBitmap != processedBitmap) {
+                // Cleanup - IMPORTANT: Don't recycle bitmaps that might be referenced
+                // Only recycle intermediate processing bitmaps, NOT the thumbnail
+                if (resizedBitmap != processedBitmap && resizedBitmap != originalBitmap && resizedBitmap != thumbnail) {
                     resizedBitmap.recycle();
                 }
-                originalBitmap.recycle();
+                if (processedBitmap != originalBitmap && processedBitmap != thumbnail) {
+                    processedBitmap.recycle();
+                }
+                if (originalBitmap != thumbnail) {
+                    originalBitmap.recycle();
+                }
                 
                 callback.onSuccess(capturedImage);
                 
@@ -91,6 +95,90 @@ public class ImageRepository {
                 callback.onError("Error processing image: " + e.getMessage());
             }
         });
+    }
+
+    /**
+     * Process a document (PDF). For PDFs, encode entire file to base64 for Gemini API.
+     * Create a PDF icon thumbnail for display in gallery.
+     * Maximum file size: 10MB
+     */
+    public void processDocument(Uri docUri, String mimeType, ImageCallback callback) {
+        executorService.execute(() -> {
+            try {
+                // Validate that it's a PDF
+                if (mimeType == null || !mimeType.contains("pdf")) {
+                    callback.onError("Only PDF files are supported");
+                    return;
+                }
+
+                // Check file size (max 10MB)
+                long fileSize = getFileSize(docUri);
+                
+                if (fileSize < 0) {
+                    callback.onError("Cannot read PDF file");
+                    return;
+                }
+                
+                if (fileSize > Constants.MAX_PDF_SIZE_BYTES) {
+                    double sizeMB = fileSize / (1024.0 * 1024.0);
+                    callback.onError(String.format("PDF file too large (%.1f MB). Maximum size is 10 MB", sizeMB));
+                    return;
+                }
+
+                // Encode entire PDF file to base64 (for Gemini API processing)
+                // Use timeout for large files
+                String base64Data = ImageUtils.encodeFileToBase64(context, docUri, mimeType);
+                
+                if (base64Data == null || base64Data.isEmpty()) {
+                    callback.onError("Failed to encode PDF file");
+                    return;
+                }
+
+                // Create PDF icon thumbnail for gallery display (larger size for clarity)
+                Bitmap thumbnail = ImageUtils.createPdfIconThumbnail(200);
+
+                // Create CapturedImage with PDF data
+                com.example.learnquiz_fe.data.model.camera.CapturedImage capturedImage =
+                        new com.example.learnquiz_fe.data.model.camera.CapturedImage(docUri, false);
+                capturedImage.setBase64Data(base64Data);
+                capturedImage.setThumbnail(thumbnail);
+                // Set reasonable dimensions for PDF "image"
+                capturedImage.setOriginalWidth(800);
+                capturedImage.setOriginalHeight(1000);
+
+                callback.onSuccess(capturedImage);
+                
+            } catch (Exception e) {
+                callback.onError("Error processing PDF: " + e.getMessage());
+            }
+        });
+    }
+    
+    /**
+     * Get file size from URI
+     * @param uri File URI
+     * @return File size in bytes, or -1 if cannot be determined
+     */
+    private long getFileSize(Uri uri) {
+        try {
+            android.database.Cursor cursor = context.getContentResolver().query(
+                uri, null, null, null, null);
+            if (cursor != null) {
+                int sizeIndex = cursor.getColumnIndex(android.provider.OpenableColumns.SIZE);
+                cursor.moveToFirst();
+                long size = cursor.getLong(sizeIndex);
+                cursor.close();
+                return size;
+            }
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Error getting file size", e);
+        }
+        return -1;
+    }
+
+    private int MAX_IMAGE_DIM_FOR_DOCUMENT() {
+        // Use same sizing rule as images but smaller ceiling for documents
+        return 1280;
     }
     
     /**

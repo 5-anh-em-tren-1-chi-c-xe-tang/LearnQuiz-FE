@@ -10,6 +10,12 @@ import java.util.List;
 public class QuizQuestion {
     
     /**
+     * Question ID from server
+     */
+    @SerializedName("questionId")
+    private String questionId;
+    
+    /**
      * Question text
      */
     @SerializedName("question")
@@ -39,6 +45,14 @@ public class QuizQuestion {
     }
     
     // Getters and Setters
+    public String getQuestionId() {
+        return questionId;
+    }
+    
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+    
     public String getQuestion() {
         return question;
     }

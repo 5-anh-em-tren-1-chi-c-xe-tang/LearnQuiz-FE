@@ -12,21 +12,35 @@ import java.util.List;
 /**
  * ViewModel for managing PhotoSession across activities
  * Shared between CameraActivity, PhotoPreviewActivity, and QuizGenerationActivity
+ * Singleton pattern to ensure single instance across app
  */
 public class PhotoSessionViewModel extends ViewModel {
+    
+    // Singleton instance
+    private static PhotoSessionViewModel instance;
     
     private final PhotoSession photoSession;
     private final MutableLiveData<List<CapturedImage>> imagesLiveData;
     private final MutableLiveData<Integer> imageCountLiveData;
     private final MutableLiveData<Boolean> isFullLiveData;
     
-    public PhotoSessionViewModel() {
+    private PhotoSessionViewModel() {
         this.photoSession = new PhotoSession();
         this.imagesLiveData = new MutableLiveData<>();
         this.imageCountLiveData = new MutableLiveData<>(0);
         this.isFullLiveData = new MutableLiveData<>(false);
         
         updateLiveData();
+    }
+    
+    /**
+     * Get singleton instance
+     */
+    public static synchronized PhotoSessionViewModel getInstance() {
+        if (instance == null) {
+            instance = new PhotoSessionViewModel();
+        }
+        return instance;
     }
     
     /**

@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -88,30 +89,76 @@ public class ImageUtils {
     
     /**
      * Crop bitmap to specified region
+     * ✅ FIX: Added detailed logging and validation
      * 
      * @param source Source bitmap
-     * @param region Region to crop
+     * @param region Region to crop (in actual pixel coordinates)
      * @return Cropped bitmap
      */
     public static Bitmap cropBitmap(Bitmap source, Rect region) {
-        if (source == null || region == null) {
+        if (source == null) {
+            Log.w(TAG, "cropBitmap: source is null");
+            return null;
+        }
+        
+        if (region == null || region.isEmpty()) {
+            Log.w(TAG, "cropBitmap: region is null or empty, returning original");
             return source;
         }
         
-        // Ensure region is within bounds
-        int left = Math.max(0, region.left);
-        int top = Math.max(0, region.top);
-        int right = Math.min(source.getWidth(), region.right);
-        int bottom = Math.min(source.getHeight(), region.bottom);
+        // ✅ DEBUG: Log input parameters
+        Log.d(TAG, "=== cropBitmap() ===");
+        Log.d(TAG, "Source bitmap: " + source.getWidth() + "x" + source.getHeight());
+        Log.d(TAG, "Crop region: " + region.toString());
+        Log.d(TAG, "  left=" + region.left + ", top=" + region.top);
+        Log.d(TAG, "  right=" + region.right + ", bottom=" + region.bottom);
+        Log.d(TAG, "  width=" + region.width() + ", height=" + region.height());
         
-        int width = right - left;
-        int height = bottom - top;
+        // ✅ CRITICAL: Extract x, y, width, height from Rect
+        int x = region.left;
+        int y = region.top;
+        int width = region.width();
+        int height = region.height();
         
+        // ✅ Validation: Ensure crop rect is within bitmap bounds
+        if (x < 0 || y < 0 || x + width > source.getWidth() || y + height > source.getHeight()) {
+            Log.w(TAG, "cropBitmap: Crop rect out of bounds, clamping...");
+            Log.w(TAG, "  Original: x=" + x + ", y=" + y + ", w=" + width + ", h=" + height);
+            
+            // Clamp to valid bounds
+            x = Math.max(0, x);
+            y = Math.max(0, y);
+            width = Math.min(width, source.getWidth() - x);
+            height = Math.min(height, source.getHeight() - y);
+            
+            Log.w(TAG, "  Clamped: x=" + x + ", y=" + y + ", w=" + width + ", h=" + height);
+        }
+        
+        // ✅ Edge case: Invalid dimensions after clamping
         if (width <= 0 || height <= 0) {
+            Log.e(TAG, "cropBitmap: Invalid dimensions after clamping, returning original");
             return source;
         }
         
-        return Bitmap.createBitmap(source, left, top, width, height);
+        try {
+            // ✅ THE KEY: Use x, y coordinates, not (0, 0)
+            Bitmap cropped = Bitmap.createBitmap(source, x, y, width, height);
+            
+            Log.d(TAG, "cropBitmap: ✅ SUCCESS - Created " + cropped.getWidth() + 
+                      "x" + cropped.getHeight() + " bitmap");
+            Log.d(TAG, "cropBitmap: Cropped from position (" + x + ", " + y + ")");
+            
+            return cropped;
+            
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "cropBitmap: ❌ IllegalArgumentException", e);
+            Log.e(TAG, "  Parameters: x=" + x + ", y=" + y + ", w=" + width + ", h=" + height);
+            Log.e(TAG, "  Bitmap: " + source.getWidth() + "x" + source.getHeight());
+            return source;
+        } catch (OutOfMemoryError e) {
+            Log.e(TAG, "cropBitmap: ❌ OutOfMemoryError", e);
+            return source;
+        }
     }
     
     /**
@@ -144,7 +191,7 @@ public class ImageUtils {
     }
     
     /**
-     * Create thumbnail from bitmap
+     * Create thumbnail from bitmap with high quality
      * 
      * @param source Source bitmap
      * @param size Thumbnail size (width and height)
@@ -163,7 +210,98 @@ public class ImageUtils {
         int newWidth = (int) (width * scale);
         int newHeight = (int) (height * scale);
         
+        // Use high-quality filtering for sharper thumbnails
         return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
+    }
+    
+    /**
+     * Create PDF icon placeholder thumbnail
+     * 
+     * @param size Thumbnail size
+     * @return Bitmap with PDF icon
+     */
+    public static Bitmap createPdfIconThumbnail(int size) {
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas canvas = new android.graphics.Canvas(bitmap);
+        
+        // Background
+        canvas.drawColor(android.graphics.Color.parseColor("#F5F5F5"));
+        
+        // Red rectangle for PDF look
+        android.graphics.Paint bgPaint = new android.graphics.Paint();
+        bgPaint.setColor(android.graphics.Color.parseColor("#D32F2F"));
+        bgPaint.setStyle(android.graphics.Paint.Style.FILL);
+        float margin = size * 0.15f;
+        canvas.drawRoundRect(margin, margin, size - margin, size - margin, 10, 10, bgPaint);
+        
+        // PDF text
+        android.graphics.Paint textPaint = new android.graphics.Paint();
+        textPaint.setColor(android.graphics.Color.WHITE);
+        textPaint.setTextSize(size * 0.25f);
+        textPaint.setTextAlign(android.graphics.Paint.Align.CENTER);
+        textPaint.setAntiAlias(true);
+        textPaint.setFakeBoldText(true);
+        canvas.drawText("PDF", size / 2f, size / 2f + (size * 0.08f), textPaint);
+        
+        return bitmap;
+    }
+    
+    /**
+     * Encode entire file (PDF) to base64 string with timeout protection
+     * Maximum processing time: 30 seconds
+     * 
+     * @param context Application context
+     * @param uri File URI
+     * @param mimeType MIME type of file
+     * @return Base64 encoded string with data URI prefix or null if failed
+     */
+    public static String encodeFileToBase64(Context context, Uri uri, String mimeType) {
+        final long startTime = System.currentTimeMillis();
+        final long TIMEOUT_MS = 30000; // 30 seconds timeout
+        
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream == null) {
+                return null;
+            }
+            
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            int len;
+            long totalBytesRead = 0;
+            
+            while ((len = inputStream.read(buffer)) != -1) {
+                // Check timeout
+                if (System.currentTimeMillis() - startTime > TIMEOUT_MS) {
+                    inputStream.close();
+                    Log.e(TAG, "File encoding timeout after 30 seconds");
+                    return null;
+                }
+                
+                byteBuffer.write(buffer, 0, len);
+                totalBytesRead += len;
+                
+                // Log progress for large files (every 1MB)
+                if (totalBytesRead % (1024 * 1024) == 0) {
+                    Log.d(TAG, "Encoded " + (totalBytesRead / (1024 * 1024)) + " MB...");
+                }
+            }
+            inputStream.close();
+            
+            Log.d(TAG, "File encoding completed: " + (totalBytesRead / 1024) + " KB in " + 
+                  (System.currentTimeMillis() - startTime) + " ms");
+            
+            byte[] fileBytes = byteBuffer.toByteArray();
+            String base64 = Base64.encodeToString(fileBytes, Base64.NO_WRAP);
+            
+            // Return with appropriate data URI prefix
+            String prefix = "data:" + (mimeType != null ? mimeType : "application/pdf") + ";base64,";
+            return prefix + base64;
+            
+        } catch (Exception e) {
+            Log.e(TAG, "Error encoding file to base64", e);
+            return null;
+        }
     }
     
     /**

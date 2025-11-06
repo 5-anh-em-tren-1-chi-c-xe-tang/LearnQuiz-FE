@@ -9,6 +9,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -40,6 +41,10 @@ public class RegionSelectorView extends View {
     private boolean isResizing = false;
     private int resizeCorner = -1; // 0=TL, 1=TR, 2=BR, 3=BL
     private float lastTouchX, lastTouchY;
+    
+    // ✅ ADD: Store original image dimensions
+    private int originalImageWidth = 0;
+    private int originalImageHeight = 0;
     
     // Listener
     private OnRegionSelectedListener listener;
@@ -361,6 +366,25 @@ public class RegionSelectorView extends View {
     }
     
     /**
+     * ✅ NEW METHOD: Set original image dimensions
+     * Must be called after image is loaded to calculate correct scale
+     */
+    public void setImageDimensions(int width, int height) {
+        this.originalImageWidth = width;
+        this.originalImageHeight = height;
+        
+        Log.d(TAG, "=== setImageDimensions() ===");
+        Log.d(TAG, "Original image: " + width + "x" + height);
+        Log.d(TAG, "View size: " + getWidth() + "x" + getHeight());
+        
+        if (getWidth() > 0 && getHeight() > 0) {
+            float scaleX = (float) width / getWidth();
+            float scaleY = (float) height / getHeight();
+            Log.d(TAG, "Scale factors: scaleX=" + scaleX + ", scaleY=" + scaleY);
+        }
+    }
+    
+    /**
      * Get selected region as ImageRegion
      */
     public ImageRegion getSelectedRegion() {
@@ -375,8 +399,29 @@ public class RegionSelectorView extends View {
             (int) selectedRegion.bottom
         );
         
-        ImageRegion region = new ImageRegion(bounds, getWidth(), getHeight());
-        return region;
+        // ✅ FIX: Use original image dimensions if available
+        if (originalImageWidth > 0 && originalImageHeight > 0) {
+            Log.d(TAG, "=== getSelectedRegion() ===");
+            Log.d(TAG, "Display bounds: " + bounds);
+            Log.d(TAG, "View size: " + getWidth() + "x" + getHeight());
+            Log.d(TAG, "Original image: " + originalImageWidth + "x" + originalImageHeight);
+            
+            ImageRegion region = new ImageRegion(bounds, originalImageWidth, originalImageHeight);
+            
+            // Calculate and set scale factors
+            float scaleX = (float) originalImageWidth / getWidth();
+            float scaleY = (float) originalImageHeight / getHeight();
+            region.setScaleX(scaleX);
+            region.setScaleY(scaleY);
+            
+            Log.d(TAG, "Scale factors set: scaleX=" + scaleX + ", scaleY=" + scaleY);
+            
+            return region;
+        } else {
+            // ❌ Fallback: Use view dimensions (scale = 1.0)
+            Log.w(TAG, "Original image dimensions not set! Scale will be 1.0");
+            return new ImageRegion(bounds, getWidth(), getHeight());
+        }
     }
     
     /**

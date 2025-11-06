@@ -60,8 +60,8 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_preview);
         
-        // Get ViewModel
-        sessionViewModel = new ViewModelProvider(this).get(PhotoSessionViewModel.class);
+        // Get ViewModel - Use requireActivity() to share across activities
+        sessionViewModel = PhotoSessionViewModel.getInstance();
         imageRepository = new ImageRepository(this);
         
         // Get intent data
@@ -154,6 +154,15 @@ public class PhotoPreviewActivity extends AppCompatActivity {
             if (originalBitmap != null) {
                 photoView.setImageBitmap(originalBitmap);
                 Log.d(TAG, "Image loaded: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight());
+                
+                // ✅ FIX: Set image dimensions to RegionSelectorView after layout
+                photoView.post(() -> {
+                    regionSelector.setImageDimensions(
+                        originalBitmap.getWidth(),
+                        originalBitmap.getHeight()
+                    );
+                    Log.d(TAG, "Image dimensions set to RegionSelectorView");
+                });
             } else {
                 Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
                 finish();
@@ -200,17 +209,24 @@ public class PhotoPreviewActivity extends AppCompatActivity {
                 public void onSuccess(CapturedImage capturedImage) {
                     runOnUiThread(() -> {
                         Log.d(TAG, "Image processed successfully");
+                        Log.d(TAG, "Base64 length: " + (capturedImage.getBase64Data() != null ? capturedImage.getBase64Data().length() : 0));
+                        Log.d(TAG, "Current session count before add: " + sessionViewModel.getCurrentImageCount());
                         
                         // Add to session
                         boolean added = sessionViewModel.addImage(capturedImage);
+                        
+                        Log.d(TAG, "Image added: " + added);
+                        Log.d(TAG, "Current session count after add: " + sessionViewModel.getCurrentImageCount());
                         
                         if (added) {
                             // Check if session is full
                             if (sessionViewModel.isFull().getValue() == Boolean.TRUE) {
                                 // Navigate to quiz generation
+                                Log.d(TAG, "Session full, navigating to quiz generation");
                                 navigateToQuizGeneration();
                             } else {
                                 // Ask user: Add more or generate
+                                Log.d(TAG, "Showing options dialog");
                                 showOptionsDialog();
                             }
                         } else {

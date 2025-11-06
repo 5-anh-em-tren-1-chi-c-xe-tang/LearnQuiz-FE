@@ -1,12 +1,15 @@
 package com.example.learnquiz_fe.data.model.camera;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 /**
  * Represents a selected region within an image
  * Stores coordinates and scale information for cropping
  */
 public class ImageRegion {
+    
+    private static final String TAG = "ImageRegion";
     
     /**
      * Rectangle bounds of the selected region
@@ -91,16 +94,36 @@ public class ImageRegion {
     
     /**
      * Get scaled bounds relative to original image
+     * ✅ FIX: Added detailed logging for debugging
      */
     public Rect getScaledBounds() {
-        if (bounds == null) return new Rect();
+        if (bounds == null) {
+            Log.w(TAG, "getScaledBounds: bounds is null");
+            return new Rect();
+        }
         
-        return new Rect(
-            (int) (bounds.left * scaleX),
-            (int) (bounds.top * scaleY),
-            (int) (bounds.right * scaleX),
-            (int) (bounds.bottom * scaleY)
-        );
+        // ✅ Calculate scaled coordinates (display → actual pixels)
+        int scaledLeft = (int) (bounds.left * scaleX);
+        int scaledTop = (int) (bounds.top * scaleY);
+        int scaledRight = (int) (bounds.right * scaleX);
+        int scaledBottom = (int) (bounds.bottom * scaleY);
+        
+        Rect result = new Rect(scaledLeft, scaledTop, scaledRight, scaledBottom);
+        
+        // ✅ DEBUG: Log conversion details
+        Log.d(TAG, "=== getScaledBounds() ===");
+        Log.d(TAG, "Display bounds: " + bounds.toString());
+        Log.d(TAG, "  left=" + bounds.left + ", top=" + bounds.top + 
+                   ", right=" + bounds.right + ", bottom=" + bounds.bottom);
+        Log.d(TAG, "  width=" + bounds.width() + ", height=" + bounds.height());
+        Log.d(TAG, "Scale factors: scaleX=" + scaleX + ", scaleY=" + scaleY);
+        Log.d(TAG, "Original image: " + originalImageWidth + "x" + originalImageHeight);
+        Log.d(TAG, "Scaled bounds: " + result.toString());
+        Log.d(TAG, "  left=" + scaledLeft + ", top=" + scaledTop + 
+                   ", right=" + scaledRight + ", bottom=" + scaledBottom);
+        Log.d(TAG, "  width=" + result.width() + ", height=" + result.height());
+        
+        return result;
     }
     
     /**
