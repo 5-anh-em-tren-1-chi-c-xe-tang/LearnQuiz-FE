@@ -1,5 +1,7 @@
 package com.example.learnquiz_fe.data.network;
 
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
@@ -13,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Retrofit API service interface
@@ -57,6 +60,10 @@ public interface ApiService {
         @Path("id") String quizId
     );
 
+
+    @POST(ApiEndpoints.LOGIN_GOOGLE)
+    Call<ApiResponse<AuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
-    Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies();
+    Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
 }

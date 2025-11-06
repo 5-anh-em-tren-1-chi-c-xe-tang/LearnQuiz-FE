@@ -47,5 +47,6 @@ google-services.json
 # Android Profiling
 *.hprof
 
-# The certs
-/app/src/main/res/raw/dev_cert.cer
+
+# Ignore assets folder
+/assets/

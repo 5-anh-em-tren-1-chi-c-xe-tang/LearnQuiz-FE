@@ -56,7 +56,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
         holder.tvQuestionCount.setText(quiz.getQuestions() != null
                 ? quiz.getQuestions().size() + " questions"
                 : "0 questions");
-        holder.tvRating.setText(String.format(Locale.getDefault(), "%.1f", quiz.getAverageRating()));
+        holder.tvRating.setText(String.format(Locale.getDefault(), "%.1f users", quiz.getAverageRating()));
         holder.tvRatingCount.setText(String.format(Locale.getDefault(), "• %,.0f", quiz.getRatingCount()));
         holder.tvAuthor.setText(quiz.getAuthorName() != null ? "by " + quiz.getAuthorName() : "Unknown");
 

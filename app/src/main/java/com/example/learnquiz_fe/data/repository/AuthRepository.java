@@ -1,79 +1,70 @@
 package com.example.learnquiz_fe.data.repository;
 
-import com.example.learnquiz_fe.data.model.User;
-import java.util.HashMap;
-import java.util.Map;
+import android.content.Context;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-/**
- * Repository for handling authentication operations
- * In production, this would connect to a backend API
- * Currently uses mock data for demonstration
- */
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
+import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
+import com.example.learnquiz_fe.data.network.ApiService;
+
+import com.example.learnquiz_fe.data.network.RetrofitClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AuthRepository {
-    
-    // Mock user database for demonstration
-    private static final Map<String, User> mockUsers = new HashMap<>();
-    
-    static {
-        // Initialize with demo users
-        User demoUser = new User("1", "demo", "demo@learnquiz.com", "password123");
-        mockUsers.put("demo", demoUser);
-        mockUsers.put("demo@learnquiz.com", demoUser);
+
+    private final ApiService apiService;
+
+    public AuthRepository(Context context) {
+        this.apiService = RetrofitClient.getInstance(context).getApiService();
     }
 
     /**
-     * Authenticate user with username/email and password
-     * @param usernameOrEmail Username or email
-     * @param password Password
-     * @return User object if authentication successful, null otherwise
+     * Attempts to log in with a Google ID token and returns a LiveData of ApiResponse<AuthResponse>.
+     * @param idToken The Google ID token.
+     * @return A LiveData object wrapping the API response.
      */
-    public User login(String usernameOrEmail, String password) {
-        // Simulate network delay
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public LiveData<ApiResponse<AuthResponse>> loginWithGoogle(String idToken) {
+        // LiveData giờ sẽ chứa toàn bộ ApiResponse
+        MutableLiveData<ApiResponse<AuthResponse>> liveData = new MutableLiveData<>();
 
-        // Check if user exists and password matches
-        User user = mockUsers.get(usernameOrEmail);
-        if (user != null && user.getPassword().equals(password)) {
-            user.setAuthenticated(true);
-            return user;
-        }
-        
-        return null;
-    }
+        // Giả định rằng apiService.loginWithGoogle đã được cập nhật để trả về Call<ApiResponse<AuthResponse>>
+        apiService.loginWithGoogle(new IdTokenRequest(idToken)).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    // Nếu backend trả về success = true và có dữ liệu user
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        AuthResponse authData = apiResponse.getData();
+                        // Lưu token nếu cần
+                        if (authData.accessToken != null) {
+                            RetrofitClient.getInstance(null)
+                                    .setAuthToken(authData.accessToken);
+                        }
+                        liveData.postValue(apiResponse);
+                    } else {
+                        // API trả về thành công nhưng logic thất bại (success=false)
+                        String errorMessage = apiResponse.getMessage() != null ? apiResponse.getMessage() : "Invalid response from server";
+                        liveData.postValue(new ApiResponse<>(false, errorMessage, null));
+                    }
+                } else {
+                    // Lỗi HTTP (ví dụ: 404, 500)
+                    liveData.postValue(new ApiResponse<>(false, "Server error, please try again.", null));
+                }
+            }
 
-    /**
-     * Validate email format
-     * @param email Email to validate
-     * @return true if valid email format
-     */
-    public boolean isValidEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            return false;
-        }
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
+            @Override
+            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
+                // Lỗi mạng hoặc lỗi không xác định
+                liveData.postValue(new ApiResponse<>(false, "Network error: " + t.getMessage(), null));
+            }
+        });
 
-    /**
-     * Register new user (placeholder for future implementation)
-     * @param username Username
-     * @param email Email
-     * @param password Password
-     * @return true if registration successful
-     */
-    public boolean register(String username, String email, String password) {
-        // TODO: Implement registration with backend API
-        return false;
-    }
-
-    /**
-     * Logout current user
-     */
-    public void logout() {
-        // Clear session data
-        // TODO: Implement session clearing
+        return liveData;
     }
 }

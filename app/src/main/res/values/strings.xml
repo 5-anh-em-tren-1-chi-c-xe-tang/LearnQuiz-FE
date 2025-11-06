@@ -94,7 +94,7 @@
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
-<!--    Nav-->
+    <!--    Nav-->
     <string name="nav_home_title">Home</string>
     <string name="nav_my_quizzes_title">My Quizzes</string>
     <string name="nav_create_quiz_title">Create</string>
@@ -108,4 +108,8 @@
     <string name="author_placeholder">by Sarah Smith</string>
     <string name="title_placeholder">React Hooks Complete Guide</string>
     <string name="desc_placeholder">Everything about React Hooks</string>
+    <string name="search_quizzes">Search quizzes...</string>
+    <string name="clear">Clear</string>
+    <string name="search">Search</string>
+    <string name="no_quizzes_found">No quizzes found</string>
 </resources>
