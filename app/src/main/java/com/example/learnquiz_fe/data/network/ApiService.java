@@ -3,6 +3,8 @@ package com.example.learnquiz_fe.data.network;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
+import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
@@ -74,10 +76,18 @@ public interface ApiService {
         @Body SubmitQuizRequestDTO request
     );
 
-
     @POST(ApiEndpoints.LOGIN_GOOGLE)
     Call<ApiResponse<AuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
 
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
+
+    /**
+     * Payment endpoints
+     */
+    @GET(ApiEndpoints.GET_ORDER)
+    Call<ApiResponse<PayOSGetOrderResponse>> getOrder(@Path("orderId") String orderId);
+
+    @POST(ApiEndpoints.CREATE_PAYMENT_INTENT)
+    Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body Object paymentRequest);
 }

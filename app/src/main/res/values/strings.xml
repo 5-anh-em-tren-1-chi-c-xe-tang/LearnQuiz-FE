@@ -154,4 +154,7 @@
     <string name="clear">Clear</string>
     <string name="search">Search</string>
     <string name="no_quizzes_found">No quizzes found</string>
+    <string name="testing_activity">Debug layout</string>
+    <string name="back" />
+    <string name="premium" />
 </resources>

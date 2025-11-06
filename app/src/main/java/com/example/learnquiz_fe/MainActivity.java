@@ -1,11 +1,13 @@
 package com.example.learnquiz_fe;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -38,10 +40,15 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_profile) {
                 Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
 //                selected = new ProfileFragment();
+            } else if (id == R.id.testing) {
+                selected = new UpgradePremiumFragment();
             }
 
             if (selected != null) {
-                loadFragment(selected);
+                // The add to back stack should be false for bottom navigation
+                // But for debug you can set it to true
+                // This allow any back button press to go back to previous fragment
+                loadFragment(selected, true);
                 return true;
             }
             return false;
@@ -56,11 +63,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
+    private void loadFragment(Fragment fragment, boolean addToBackStack) {
+        var transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+                .replace(R.id.fragment_container, fragment);
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
     }
 }
