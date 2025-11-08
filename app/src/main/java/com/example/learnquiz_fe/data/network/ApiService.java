@@ -3,6 +3,7 @@ package com.example.learnquiz_fe.data.network;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.payment.request.CreatePaymentRequest;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
@@ -86,8 +87,8 @@ public interface ApiService {
      * Payment endpoints
      */
     @GET(ApiEndpoints.GET_ORDER)
-    Call<ApiResponse<PayOSGetOrderResponse>> getOrder(@Path("orderId") String orderId);
+    Call<ApiResponse<PayOSGetOrderResponse>> getOrder(@Path("orderId") int orderId);
 
     @POST(ApiEndpoints.CREATE_PAYMENT_INTENT)
-    Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body Object paymentRequest);
+    Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body CreatePaymentRequest paymentRequest);
 }

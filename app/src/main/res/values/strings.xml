@@ -157,4 +157,7 @@
     <string name="testing_activity">Debug layout</string>
     <string name="back" />
     <string name="premium" />
+    <string name="payment_qr">Payment QR\n</string>
+    <string name="payment_success">payment_success</string>
+    <string name="payment_failed">payment failed</string>
 </resources>

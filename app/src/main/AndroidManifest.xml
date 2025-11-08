@@ -47,6 +47,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+<!--        Payment activity -->
+        <activity
+            android:name=".ui.activities.payment.PayActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PaySuccessActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PayFailedActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+
         <!-- Home Activity -->
         <activity
             android:name=".ui.activities.HomeActivity"

@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Load the default fragment only when the activity is first created
-        if (savedInstanceState == null) {
+    if (savedInstanceState == null) {
             // This will trigger the listener and load the HomeFragment,
             // and the BottomNavigationView will automatically highlight the correct item.
             // So no need to manual handle it
