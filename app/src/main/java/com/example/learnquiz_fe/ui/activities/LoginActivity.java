@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnSignIn;
     private ProgressBar progressBar;
     private TextView tvError;
+    private MaterialButton btnGGLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btn_sign_in);
         progressBar = findViewById(R.id.progress_bar);
         tvError = findViewById(R.id.tv_error);
+        btnGGLogin = findViewById(R.id.btn_login_google);
     }
 
     private void initGoogleSignIn() {
@@ -82,15 +85,50 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupListeners() {
         // Email/Password login
-        btnSignIn.setOnClickListener(v -> handleEmailPasswordLogin());
+        btnSignIn.setOnClickListener(v -> handleNormalLogin());
         
         // Google login
-        findViewById(R.id.btn_login_google).setOnClickListener(v -> startGoogleLogin());
+        btnGGLogin.setOnClickListener(v -> startGoogleLogin());
     }
     
     /**
      * Handle email/password login with hardcoded credentials for testing
      */
+    private void handleNormalLogin(){
+        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
+
+        // Hide error
+        tvError.setVisibility(View.GONE);
+
+        // Validate input
+        if (email.isEmpty()) {
+            tvError.setText("Please enter email/username");
+            tvError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (password.isEmpty()) {
+            tvError.setText("Please enter password");
+            tvError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        showLoading(true);
+        loginViewModel.login(email,password).observe(this, response -> {
+            if (response.isSuccess() && response.getData() != null) {
+                showLoading(false);
+                Toast.makeText(this, "Welcome " + response.getData().getUsername(), Toast.LENGTH_SHORT).show();
+                navigateToHome();
+            } else {
+                showLoading(false);
+                tvError.setText("Invalid username or password.");
+                tvError.setVisibility(View.VISIBLE);
+//                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void handleEmailPasswordLogin() {
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
@@ -169,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginWithGoogle(String idToken) {
         loginViewModel.loginWithGoogle(idToken).observe(this, response -> {
             if (response.isSuccess() && response.getData() != null) {
-                Toast.makeText(this, "Welcome " + response.getData().userResponseDto.username, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Welcome " + response.getData().getUserResponseDto().username, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {

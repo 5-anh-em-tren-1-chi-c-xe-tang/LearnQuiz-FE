@@ -1,16 +1,21 @@
 package com.example.learnquiz_fe.data.network;
 
+import com.example.learnquiz_fe.data.model.User;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.GoogleAuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.payment.request.CreatePaymentRequest;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
+import com.example.learnquiz_fe.data.model.auth.LoginRequestDTO;
+import com.example.learnquiz_fe.data.model.auth.RegisterRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
+import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
 
 import java.util.List;
 
@@ -19,6 +24,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -78,7 +84,15 @@ public interface ApiService {
     );
 
     @POST(ApiEndpoints.LOGIN_GOOGLE)
-    Call<ApiResponse<AuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+    Call<ApiResponse<GoogleAuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+
+    @POST(ApiEndpoints.LOGIN)
+    Call<ApiResponse<AuthResponse>> login(@Body LoginRequestDTO loginRequest);
+
+    @POST(ApiEndpoints.REGISTER)
+    Call<ApiResponse<AuthResponse>> register(@Body RegisterRequestDTO registerRequest);
+    @PUT(ApiEndpoints.UPDATE_PROFILE)
+    Call<ApiResponse<User>> updateProfile(@Body UserRequestDTO userRequestDTO);
 
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);

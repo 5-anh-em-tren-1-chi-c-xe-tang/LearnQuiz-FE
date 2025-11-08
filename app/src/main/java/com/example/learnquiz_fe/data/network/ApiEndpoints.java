@@ -32,7 +32,7 @@ public class ApiEndpoints {
      * User profile endpoints
      */
     public static final String USER_PROFILE = "api/user/profile";
-    
+    public static final String UPDATE_PROFILE = "api/user";
     /**
      * Quiz endpoints
      */

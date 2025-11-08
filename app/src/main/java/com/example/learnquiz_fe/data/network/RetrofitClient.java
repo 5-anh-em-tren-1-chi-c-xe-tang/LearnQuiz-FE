@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.learnquiz_fe.R;
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,6 +34,14 @@ public class RetrofitClient {
     private final Retrofit retrofit;
     private final ApiService apiService;
     private final Context context;
+
+    // START: Thêm hằng số cho SharedPreferences
+    private static final String PREFS_NAME = "app_prefs";
+    private static final String KEY_AUTH_TOKEN = "auth_token";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_USERNAME = "user_name";
+    private static final String KEY_EMAIL = "user_email";
+    private static final String KEY_ROLE = "user_role";
 
     /**
      * Private constructor for singleton pattern
@@ -178,6 +187,20 @@ public class RetrofitClient {
         SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
         prefs.edit().putString("auth_token", token).apply();
     }
+    public void saveAuthData(AuthResponse authResponse) {
+        if (authResponse == null) return;
+
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(KEY_USER_ID, authResponse.getUserId());
+        editor.putString(KEY_USERNAME, authResponse.getUsername());
+        editor.putString(KEY_EMAIL, authResponse.getEmail());
+        editor.putString(KEY_ROLE, authResponse.getRole());
+
+        editor.apply();
+    }
+
 
     /**
      * Clear authentication token
@@ -187,6 +210,53 @@ public class RetrofitClient {
         prefs.edit().remove("auth_token").apply();
     }
 
+    public void clearAuthData() {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.remove(KEY_AUTH_TOKEN);
+        editor.remove(KEY_USER_ID);
+        editor.remove(KEY_USERNAME);
+        editor.remove(KEY_EMAIL);
+        editor.remove(KEY_ROLE);
+
+        editor.apply();
+    }
+    /**
+     * Lấy User ID của người dùng đã đăng nhập.
+     * @return User ID hoặc null nếu chưa đăng nhập.
+     */
+    public String getUserId() {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_USER_ID, null);
+    }
+
+    /**
+     * Lấy Username của người dùng đã đăng nhập.
+     * @return Username hoặc null nếu chưa đăng nhập.
+     */
+    public String getUsername() {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_USERNAME, null);
+    }
+
+    /**
+     * Lấy Email của người dùng đã đăng nhập.
+     * @return Email hoặc null nếu chưa đăng nhập.
+     */
+    public String getEmail() {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_EMAIL, null);
+    }
+
+    /**
+     * Lấy Role (vai trò) của người dùng đã đăng nhập.
+     * @return Role hoặc null nếu chưa đăng nhập.
+     */
+    public String getRole() {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(KEY_ROLE, null);
+    }
     /**
      * Get current authentication token
      */
