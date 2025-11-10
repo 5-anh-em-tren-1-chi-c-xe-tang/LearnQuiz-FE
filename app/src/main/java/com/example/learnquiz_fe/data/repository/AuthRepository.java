@@ -5,11 +5,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.GoogleAuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
+import com.example.learnquiz_fe.data.model.auth.LoginRequestDTO;
+import com.example.learnquiz_fe.data.model.auth.RegisterRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.network.ApiService;
 
 import com.example.learnquiz_fe.data.network.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,23 +35,31 @@ public class AuthRepository {
      * @param idToken The Google ID token.
      * @return A LiveData object wrapping the API response.
      */
-    public LiveData<ApiResponse<AuthResponse>> loginWithGoogle(String idToken) {
+    public LiveData<ApiResponse<GoogleAuthResponse>> loginWithGoogle(String idToken) {
         // LiveData giờ sẽ chứa toàn bộ ApiResponse
-        MutableLiveData<ApiResponse<AuthResponse>> liveData = new MutableLiveData<>();
+        MutableLiveData<ApiResponse<GoogleAuthResponse>> liveData = new MutableLiveData<>();
 
         // Giả định rằng apiService.loginWithGoogle đã được cập nhật để trả về Call<ApiResponse<AuthResponse>>
-        apiService.loginWithGoogle(new IdTokenRequest(idToken)).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+        apiService.loginWithGoogle(new IdTokenRequest(idToken)).enqueue(new Callback<ApiResponse<GoogleAuthResponse>>() {
             @Override
-            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+            public void onResponse(Call<ApiResponse<GoogleAuthResponse>> call, Response<ApiResponse<GoogleAuthResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    ApiResponse<GoogleAuthResponse> apiResponse = response.body();
                     // Nếu backend trả về success = true và có dữ liệu user
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-                        AuthResponse authData = apiResponse.getData();
+                        GoogleAuthResponse googleAuthData = apiResponse.getData();
                         // Lưu token nếu cần
-                        if (authData.accessToken != null) {
+                        if (googleAuthData.getAccessToken() != null) {
                             RetrofitClient.getInstance(null)
-                                    .setAuthToken(authData.accessToken);
+                                    .setAuthToken(googleAuthData.getAccessToken());
+                            // Create an AuthResponse object to save user data, assuming it has a suitable constructor or setters
+                            AuthResponse authData = new AuthResponse(
+                                    googleAuthData.getUserResponseDto().getId(),
+                                    googleAuthData.getUserResponseDto().getUsername(),
+                                    googleAuthData.getUserResponseDto().getEmail(),
+                                    googleAuthData.getUserResponseDto().getRole()
+                            );
+                            RetrofitClient.getInstance(null).saveAuthData(authData);
                         }
                         liveData.postValue(apiResponse);
                     } else {
@@ -53,8 +68,49 @@ public class AuthRepository {
                         liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                     }
                 } else {
-                    // Lỗi HTTP (ví dụ: 404, 500)
-                    liveData.postValue(new ApiResponse<>(false, "Server error, please try again.", null));
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<GoogleAuthResponse>> call, Throwable t) {
+                // Lỗi mạng hoặc lỗi không xác định
+                liveData.postValue(new ApiResponse<>(false, "Network error: " + t.getMessage(), null));
+            }
+        });
+
+        return liveData;
+    }
+
+    public LiveData<ApiResponse<AuthResponse>> login(String usernameOrEmail, String password) {
+        // LiveData giờ sẽ chứa toàn bộ ApiResponse
+        MutableLiveData<ApiResponse<AuthResponse>> liveData = new MutableLiveData<>();
+
+        // Giả định rằng apiService.loginWithGoogle đã được cập nhật để trả về Call<ApiResponse<AuthResponse>>
+        apiService.login(new LoginRequestDTO(usernameOrEmail,password)).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    // Nếu backend trả về success = true và có dữ liệu user
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        AuthResponse authData = apiResponse.getData();
+                        // Lưu token nếu cần
+                        if (authData.getAccessToken() != null) {
+                            RetrofitClient.getInstance(null)
+                                    .setAuthToken(authData.getAccessToken());
+                            RetrofitClient.getInstance(null).saveAuthData(authData);
+                        }
+                        liveData.postValue(apiResponse);
+                    } else {
+                        // API trả về thành công nhưng logic thất bại (success=false)
+                        String errorMessage = apiResponse.getMessage() != null ? apiResponse.getMessage() : "Invalid response from server";
+                        liveData.postValue(new ApiResponse<>(false, errorMessage, null));
+                    }
+                } else {
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                 }
             }
 
@@ -67,4 +123,72 @@ public class AuthRepository {
 
         return liveData;
     }
+
+    public LiveData<ApiResponse<AuthResponse>> register(RegisterRequestDTO registerRequestDTO) {
+        MutableLiveData<ApiResponse<AuthResponse>> liveData = new MutableLiveData<>();
+
+        apiService.register(registerRequestDTO).enqueue(new Callback<ApiResponse<AuthResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<AuthResponse> apiResponse = response.body();
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        AuthResponse authData = apiResponse.getData();
+                        // Save token and user data upon successful registration
+                        if (authData.getAccessToken() != null) {
+                            RetrofitClient.getInstance(null).setAuthToken(authData.getAccessToken());
+                            RetrofitClient.getInstance(null).saveAuthData(authData);
+                        }
+                        liveData.postValue(apiResponse);
+                    } else {
+                        // API call successful, but registration failed (e.g., user exists)
+                        String errorMessage = apiResponse.getMessage() != null ? apiResponse.getMessage() : "Registration failed";
+                        liveData.postValue(new ApiResponse<>(false, errorMessage, null));
+                    }
+                } else {
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
+                // Network error or other issues
+                liveData.postValue(new ApiResponse<>(false, "Network error: " + t.getMessage(), null));
+            }
+        });
+
+        return liveData;
+    }
+    private String parseErrorResponse(Response<?> response) {
+        String errorMessage = "An unknown error occurred."; // Tin nhắn mặc định
+
+        if (response.errorBody() != null) {
+            try {
+                // Đọc errorBody thành chuỗi String. Cần gọi .string() một lần duy nhất.
+                String errorJsonString = response.errorBody().string();
+
+                // Dùng Gson để parse chuỗi JSON thành đối tượng ApiResponse<?>
+                Gson gson = new Gson();
+                // Sử dụng ApiResponse.class vì chúng ta chỉ cần lấy message, không cần kiểu dữ liệu generic.
+                ApiResponse<?> errorResponse = gson.fromJson(errorJsonString, ApiResponse.class);
+
+                // Lấy message từ đối tượng đã parse được
+                if (errorResponse != null && errorResponse.getMessage() != null) {
+                    errorMessage = errorResponse.getMessage();
+                }
+
+            } catch (IOException e) {
+                // Lỗi khi đọc stream từ errorBody (rất hiếm).
+                e.printStackTrace();
+                errorMessage = "Error reading server response.";
+            } catch (JsonSyntaxException e) {
+                // Lỗi khi parse JSON (format JSON không đúng).
+                e.printStackTrace();
+                errorMessage = "Server returned invalid error format.";
+            }
+        }
+        return errorMessage;
+    }
+
 }

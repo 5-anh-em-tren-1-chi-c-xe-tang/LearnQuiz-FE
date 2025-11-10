@@ -5,14 +5,11 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import com.example.learnquiz_fe.data.model.User;
+
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.GoogleAuthResponse;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.repository.AuthRepository;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ViewModel for Login screen
@@ -27,8 +24,11 @@ public class LoginViewModel extends AndroidViewModel {
         repository = new AuthRepository(application.getApplicationContext());
     }
 
-    public LiveData<ApiResponse<AuthResponse>> loginWithGoogle(String idToken) {
+    public LiveData<ApiResponse<GoogleAuthResponse>> loginWithGoogle(String idToken) {
         return repository.loginWithGoogle(idToken);
+    }
+    public LiveData<ApiResponse<AuthResponse>> login(String usernameOrEmail, String password) {
+        return repository.login(usernameOrEmail,password);
     }
 }
 
