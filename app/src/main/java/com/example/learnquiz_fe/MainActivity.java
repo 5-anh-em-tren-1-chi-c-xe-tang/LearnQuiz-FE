@@ -7,7 +7,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.learnquiz_fe.ui.fragments.myquizzes.MyQuizzesFragment;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
+import com.example.learnquiz_fe.ui.fragments.profile.ProfileFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -33,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
                 selected = new HomeFragment();
             } else if (id == R.id.nav_my_quizzes) {
                 Toast.makeText(this, "Navigating to my quizzies", Toast.LENGTH_SHORT).show();
-//                selected = new QuizListFragment();
+                selected = new MyQuizzesFragment();
             } else if (id == R.id.nav_create_quiz) {
                 Toast.makeText(this, "Navigating to create quiz", Toast.LENGTH_SHORT).show();
 //                selected = new CreateQuizFragment();
             } else if (id == R.id.nav_profile) {
                 Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
-//                selected = new ProfileFragment();
+                selected = new ProfileFragment();
             } else if (id == R.id.testing) {
                 selected = new UpgradePremiumFragment();
             }

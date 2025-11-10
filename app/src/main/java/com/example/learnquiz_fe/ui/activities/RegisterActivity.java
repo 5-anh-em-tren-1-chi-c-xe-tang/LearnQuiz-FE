@@ -125,8 +125,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void navigateToLogin() {
         // Quay trở lại màn hình Login sau khi đăng ký thành công
         Intent intent = new Intent(this, LoginActivity.class);
-        // Xóa các activity trước đó khỏi stack để người dùng không thể quay lại màn hình đăng ký
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }

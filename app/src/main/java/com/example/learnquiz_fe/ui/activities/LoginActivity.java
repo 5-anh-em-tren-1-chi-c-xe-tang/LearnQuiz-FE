@@ -34,14 +34,14 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
-    
+
     // Hardcoded test credentials
     private static final String TEST_USERNAME = "admin";
     private static final String TEST_PASSWORD = "admin";
-    
+
     private GoogleSignInClient googleSignInClient;
     private LoginViewModel loginViewModel;
-    
+
     // UI Components
     private TextInputEditText etEmail;
     private TextInputEditText etPassword;
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         setupViewModel();
         setupListeners();
     }
-    
+
     private void initViews() {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         // Google login
         btnGGLogin.setOnClickListener(v -> startGoogleLogin());
     }
-    
+
     /**
      * Handle email/password login with hardcoded credentials for testing
      */
@@ -134,26 +134,26 @@ public class LoginActivity extends AppCompatActivity {
     private void handleEmailPasswordLogin() {
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
-        
+
         // Hide error
         tvError.setVisibility(View.GONE);
-        
+
         // Validate input
         if (email.isEmpty()) {
             tvError.setText("Please enter email/username");
             tvError.setVisibility(View.VISIBLE);
             return;
         }
-        
+
         if (password.isEmpty()) {
             tvError.setText("Please enter password");
             tvError.setVisibility(View.VISIBLE);
             return;
         }
-        
+
         // Show loading
         showLoading(true);
-        
+
         // Check hardcoded credentials
         if (email.equals(TEST_USERNAME) && password.equals(TEST_PASSWORD)) {
             // Login successful
@@ -171,14 +171,16 @@ public class LoginActivity extends AppCompatActivity {
             }, 500);
         }
     }
-    
+
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         btnSignIn.setEnabled(!show);
         etEmail.setEnabled(!show);
         etPassword.setEnabled(!show);
+        btnGGLogin.setEnabled(!show); // Thêm dòng này để vô hiệu hóa nút Google Login
+        tvSignUp.setEnabled(!show); // Thêm dòng này để vô hiệu hóa nút Sign Up
     }
-    
+
     private void navigateToMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -219,13 +221,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToSignup() {
-        // Quay trở lại màn hình Login sau khi đăng ký thành công
+        showLoading(true);
+
         Intent intent = new Intent(this, RegisterActivity.class);
         // Xóa các activity trước đó khỏi stack để người dùng không thể quay lại màn hình đăng ký
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 }
-
-
