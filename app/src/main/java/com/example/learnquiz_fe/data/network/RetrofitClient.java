@@ -73,7 +73,7 @@ public class RetrofitClient {
         try {
             // 1️⃣ Load the certificate you just exported
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = context.getResources().openRawResource(R.raw.dev_cert);
+            InputStream caInput = context.getResources().openRawResource(R.raw.dev_cert_kiet);
             Certificate ca = cf.generateCertificate(caInput);
             caInput.close();
 

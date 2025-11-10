@@ -18,4 +18,9 @@
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
         android:title="@string/nav_profile_title" />
+<!--    This route is purely exist for testing, delete it later please-->
+    <item
+        android:id="@+id/testing"
+        android:icon="@drawable/ic_star_rate"
+        android:title="@string/testing_activity" />
 </menu>

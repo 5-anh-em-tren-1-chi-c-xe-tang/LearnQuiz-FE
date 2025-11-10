@@ -169,8 +169,8 @@ public class QuizRepository {
      * Get public quizzes
      * @return {@link ApiResponse<QuizResponseDTO>} API Response containing list of public quizzes
      */
-    public void getPublicQuizzes(GenericQuizCallback callback) {
-        Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getPublicQuizzies();
+    public void getPublicQuizzes(GenericQuizCallback callback, String query) {
+        Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getPublicQuizzies(query);
 
         call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
 

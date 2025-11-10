@@ -28,25 +28,43 @@
 
         <activity
             android:name=".ui.activities.RouterActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"> <!-- Theme trong suốt để không bị chớp màn hình -->
         </activity>
 
         <!-- Login Activity (Main Launcher) -->
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.LearnQuiz_FE">
-        </activity>
+            android:theme="@style/Theme.LearnQuiz_FE"></activity>
         <!-- Main activity - The one where it will manage the fragments -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LearnQuiz_FE">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+<!--        Payment activity -->
+        <activity
+            android:name=".ui.activities.payment.PayActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PaySuccessActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PayFailedActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+
         <!-- Home Activity -->
         <activity
             android:name=".ui.activities.HomeActivity"
@@ -66,14 +84,14 @@
             android:name=".ui.activities.QuizGenerationActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
+
         <!-- Quiz Taking Activity -->
         <activity
             android:name=".ui.activities.QuizTakingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LearnQuiz_FE" />
-        
+
         <!-- Quiz Result Activity -->
         <activity
             android:name=".ui.activities.QuizResultActivity"

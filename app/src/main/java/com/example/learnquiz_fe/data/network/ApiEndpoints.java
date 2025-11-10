@@ -14,16 +14,12 @@ public class ApiEndpoints {
      * use "http://10.0.0.2.2 to access localhost from Android emulator
      * 5186 for http and 7024 for https
      */
-//    public static final String BASE_URL = "https://10.0.2.2:7024/";
-//    public static final String BASE_URL = "https://192.168.1.18:7025/";
-    public static final String BASE_URL = "https://b177d9503547.ngrok-free.app/";
-//    public static final String BASE_URL = "http://192.168.1.3:7024/";
+    public static final String BASE_URL = "https://10.0.2.2:7024/";
 
     /**
      * Quiz generation endpoint
      */
     public static final String GENERATE_QUIZ = "api/quiz/generate";
-    
     /**
      * Authentication endpoints
      */
@@ -43,12 +39,19 @@ public class ApiEndpoints {
     public static final String GET_PUBLIC_QUIZ = "api/Quiz/public";
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
-    
+
     /**
      * Quiz history endpoints
      */
     public static final String SUBMIT_QUIZ = "api/quizhistory/submit";
-    
+
+
+    /**
+     * Payment endpoints
+     */
+    public static final String CREATE_PAYMENT_INTENT = "api/payment/create";
+    public static final String GET_ORDER = "api/payment/order/{orderId}";
+
     // Request timeout configuration (in seconds)
     public static final int CONNECT_TIMEOUT = 30;
     public static final int READ_TIMEOUT = 60;
