@@ -36,16 +36,26 @@
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.LearnQuiz_FE"></activity>
-        <!-- Main activity - The one where it will manage the fragments -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
             android:theme="@style/Theme.LearnQuiz_FE">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <!-- Main activity - The one where it will manage the fragments -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
 <!--        Payment activity -->

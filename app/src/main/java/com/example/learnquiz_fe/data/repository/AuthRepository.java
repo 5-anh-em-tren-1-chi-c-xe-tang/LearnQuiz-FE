@@ -13,6 +13,10 @@ import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.network.ApiService;
 
 import com.example.learnquiz_fe.data.network.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,8 +68,8 @@ public class AuthRepository {
                         liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                     }
                 } else {
-                    // Lỗi HTTP (ví dụ: 404, 500)
-                    liveData.postValue(new ApiResponse<>(false, "Server error, please try again.", null));
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                 }
             }
 
@@ -105,8 +109,8 @@ public class AuthRepository {
                         liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                     }
                 } else {
-                    // Lỗi HTTP (ví dụ: 404, 500)
-                    liveData.postValue(new ApiResponse<>(false, "Server error, please try again.", null));
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                 }
             }
 
@@ -142,8 +146,8 @@ public class AuthRepository {
                         liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                     }
                 } else {
-                    // HTTP error (e.g., 400 Bad Request, 500 Internal Server Error)
-                    liveData.postValue(new ApiResponse<>(false, "Server error, please try again.", null));
+                    String errorMessage =parseErrorResponse(response);
+                    liveData.postValue(new ApiResponse<>(false, errorMessage, null));
                 }
             }
 
@@ -155,6 +159,36 @@ public class AuthRepository {
         });
 
         return liveData;
+    }
+    private String parseErrorResponse(Response<?> response) {
+        String errorMessage = "An unknown error occurred."; // Tin nhắn mặc định
+
+        if (response.errorBody() != null) {
+            try {
+                // Đọc errorBody thành chuỗi String. Cần gọi .string() một lần duy nhất.
+                String errorJsonString = response.errorBody().string();
+
+                // Dùng Gson để parse chuỗi JSON thành đối tượng ApiResponse<?>
+                Gson gson = new Gson();
+                // Sử dụng ApiResponse.class vì chúng ta chỉ cần lấy message, không cần kiểu dữ liệu generic.
+                ApiResponse<?> errorResponse = gson.fromJson(errorJsonString, ApiResponse.class);
+
+                // Lấy message từ đối tượng đã parse được
+                if (errorResponse != null && errorResponse.getMessage() != null) {
+                    errorMessage = errorResponse.getMessage();
+                }
+
+            } catch (IOException e) {
+                // Lỗi khi đọc stream từ errorBody (rất hiếm).
+                e.printStackTrace();
+                errorMessage = "Error reading server response.";
+            } catch (JsonSyntaxException e) {
+                // Lỗi khi parse JSON (format JSON không đúng).
+                e.printStackTrace();
+                errorMessage = "Server returned invalid error format.";
+            }
+        }
+        return errorMessage;
     }
 
 }
