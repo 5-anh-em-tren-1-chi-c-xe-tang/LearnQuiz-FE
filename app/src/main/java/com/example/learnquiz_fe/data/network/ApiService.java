@@ -70,6 +70,13 @@ public interface ApiService {
     Call<ApiResponse<GenerateQuizResponse>> getQuizDetail(
         @Path("id") String quizId
     );
+
+    // This one differs from getQuizDetail by purpose
+    // Used when viewing quiz details for taking the quiz
+    @GET(ApiEndpoints.GET_QUIZ_DETAIL)
+    Call<ApiResponse<QuizResponseDTO>> getQuizDetailForView(
+            @Path("id") String quizId
+    );
     
     /**
      * Submit quiz answers (wrapped in ApiResponse)
