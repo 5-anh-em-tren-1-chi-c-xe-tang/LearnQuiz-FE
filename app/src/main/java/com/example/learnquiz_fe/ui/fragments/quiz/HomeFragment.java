@@ -1,5 +1,6 @@
 package com.example.learnquiz_fe.ui.fragments.quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,10 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -28,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
+import com.example.learnquiz_fe.ui.activities.quiz.QuizDetailActivity;
 import com.example.learnquiz_fe.ui.adapter.quiz.QuizListAdapter;
 
 import java.util.List;
@@ -63,10 +61,25 @@ public class HomeFragment extends Fragment {
         quizRepository = new QuizRepository(requireContext());
         loadPublicQuizzes();
 
+        // Set on item click listener for quiz items
+        adapter.setOnItemClickListener(quiz -> {
+           // Navigate to quiz detail fragment
+            Intent intent = new Intent(requireContext(), QuizDetailActivity.class);
+            intent.putExtra("quiz_id", quiz.getId());
+            startActivity(intent);
+        });
+
         // setup swipe to refresh
         swipeRefreshLayout.setOnRefreshListener(this::reloadQuizzes);
 
         // Show or hide clear button dynamically
+        addClearTextListener();
+
+        handleSearchInput();
+        return view;
+    }
+
+    private void addClearTextListener() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,12 +94,9 @@ public class HomeFragment extends Fragment {
             public void afterTextChanged(Editable s) {
             }
         });
-
-        HandleSearchInput();
-        return view;
     }
 
-    private void HandleSearchInput() {
+    private void handleSearchInput() {
         // Clear input and reload quizzes
         btnClear.setOnClickListener(v -> {
             etSearch.setText("");
@@ -138,7 +148,7 @@ public class HomeFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
         Log.d("QuizListActivity", "Loading public quizzes");
-        quizRepository.getPublicQuizzes(new QuizRepository.GenericQuizCallback() {
+        quizRepository.getPublicQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
             @Override
             public void onSuccess(List<QuizResponseDTO> quizzes) {
                 Log.d("QuizListActivity", "Loaded " + quizzes.size() + " public quizzes");
@@ -162,7 +172,7 @@ public class HomeFragment extends Fragment {
     private void loadPublicQuizzes() {
         progressBar.setVisibility(View.VISIBLE);
         Log.d("QuizListActivity", "Loading public quizzes");
-        quizRepository.getPublicQuizzes(new QuizRepository.GenericQuizCallback() {
+        quizRepository.getPublicQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
             @Override
             public void onSuccess(List<QuizResponseDTO> quizzes) {
                 Log.d("QuizListActivity", "Loaded " + quizzes.size() + " public quizzes");

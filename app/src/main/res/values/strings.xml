@@ -160,4 +160,5 @@
     <string name="payment_qr">Payment QR\n</string>
     <string name="payment_success">payment_success</string>
     <string name="payment_failed">payment failed</string>
+    <string name="share">Share</string>
 </resources>

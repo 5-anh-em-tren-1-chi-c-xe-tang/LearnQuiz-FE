@@ -305,11 +305,13 @@ public class QuizTakingActivity extends AppCompatActivity {
         
         // Update card background color
         if (isCorrect) {
-            cardQuestion.setCardBackgroundColor(getColor(R.color.correct_answer_bg));
+//            cardQuestion.setCardBackgroundColor(getColor(R.color.correct_answer_bg));
+            cardQuestion.setCardBackgroundColor(getColor(R.color.green_400));
             cardQuestion.setStrokeColor(getColor(android.R.color.holo_green_dark));
             cardQuestion.setStrokeWidth(4);
         } else {
-            cardQuestion.setCardBackgroundColor(getColor(R.color.wrong_answer_bg));
+//            cardQuestion.setCardBackgroundColor(getColor(R.color.wrong_answer_bg));
+            cardQuestion.setCardBackgroundColor(getColor(R.color.red_400));
             cardQuestion.setStrokeColor(getColor(android.R.color.holo_red_dark));
             cardQuestion.setStrokeWidth(4);
         }
@@ -403,7 +405,8 @@ public class QuizTakingActivity extends AppCompatActivity {
                 answerResults.put(currentQuestionIndex, false);
                 
                 // Update card to gray
-                cardQuestion.setCardBackgroundColor(getColor(R.color.skipped_answer_bg));
+//                cardQuestion.setCardBackgroundColor(getColor(R.color.skipped_answer_bg));
+                cardQuestion.setCardBackgroundColor(getColor(R.color.gray_400));
                 cardQuestion.setStrokeColor(getColor(android.R.color.darker_gray));
                 cardQuestion.setStrokeWidth(4);
                 

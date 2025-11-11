@@ -1,29 +1,32 @@
 package com.example.learnquiz_fe.data.dtos.quiz;
 
+import com.example.learnquiz_fe.data.model.user.response.UserResponse;
+
 import java.util.List;
 
 public class QuizResponseDTO {
     private String id;
     private String title;
     private String description;
+    private UserResponse author;
+    private String folderName;
     private String context;
     private String visibility;
-    private String language;
     private List<QuizQuestionDTO> questions;
-    private int quizExamTimeLimit;
-    private String createdAt;
-    private String imageSource;
     private double averageRating;
-    private double ratingCount;
+    private int ratingCount;
+    private String createdAt;
+    private int quizExamTimeLimit;
+    private String imageSource;
+    private String language;
     private List<String> tags;
-    private String authorName;
 
-    public String getAuthorName() {
-        return authorName;
+    public UserResponse getAuthor() {
+        return author;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthor(UserResponse author) {
+        this.author = author;
     }
 
     public double getAverageRating() {
@@ -34,11 +37,11 @@ public class QuizResponseDTO {
         this.averageRating = averageRating;
     }
 
-    public double getRatingCount() {
+    public int getRatingCount() {
         return ratingCount;
     }
 
-    public void setRatingCount(double ratingCount) {
+    public void setRatingCount(int ratingCount) {
         this.ratingCount = ratingCount;
     }
 
@@ -128,5 +131,13 @@ public class QuizResponseDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
     }
 }
