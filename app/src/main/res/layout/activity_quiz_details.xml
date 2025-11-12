@@ -133,7 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_600"
                         android:textSize="14sp"
                         tools:text="Test your knowledge of core JavaScript concepts including variables, data types, functions, objects, and more. Perfect for beginners and intermediate developers." />
 
@@ -173,7 +173,7 @@
                                 android:id="@+id/tvRatingCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/gray_600"
                                 android:textSize="12sp"
                                 tools:text="256 ratings" />
                         </LinearLayout>
@@ -207,7 +207,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="plays"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/gray_600"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -240,7 +240,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="questions"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/gray_600"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -273,7 +273,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="minutes"
-                                android:textColor="@android:color/darker_gray"
+                                android:textColor="@color/gray_600"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -342,7 +342,7 @@
                         android:id="@+id/tvQuizCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_600"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@id/ivAuthorAvatar"
                         app:layout_constraintEnd_toStartOf="@id/btnFollow"
@@ -406,7 +406,7 @@
                     <!--                        android:layout_height="wrap_content"-->
                     <!--                        android:layout_weight="1"-->
                     <!--                        android:text="Category"-->
-                    <!--                        android:textColor="@android:color/darker_gray"-->
+                    <!--                        android:textColor="@color/gray_600"-->
                     <!--                        android:textSize="14sp" />-->
 
                     <!--                    <TextView-->
@@ -424,7 +424,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/gray_600"
                         android:alpha="0.2" />
 
                     <!--                 Difficulty -->
@@ -439,7 +439,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Difficulty"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/gray_600"
                             android:textSize="14sp" />
 
                         <TextView
@@ -456,7 +456,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/gray_600"
                         android:alpha="0.2" />
 
                     <!-- Duration -->
@@ -471,7 +471,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Duration"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/gray_600"
                             android:textSize="14sp" />
 
                         <TextView
@@ -486,7 +486,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/gray_600"
                         android:alpha="0.2" />
 
                     <!-- Visibility -->
@@ -501,7 +501,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Visibility"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/gray_600"
                             android:textSize="14sp" />
 
                         <TextView
@@ -519,7 +519,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/gray_600"
                         android:alpha="0.2" />
 
                     <!-- Last Updated -->
@@ -534,7 +534,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Last Updated"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/gray_600"
                             android:textSize="14sp" />
 
                         <TextView

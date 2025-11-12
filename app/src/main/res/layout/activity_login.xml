@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Remember me"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/gray_600"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_password" />

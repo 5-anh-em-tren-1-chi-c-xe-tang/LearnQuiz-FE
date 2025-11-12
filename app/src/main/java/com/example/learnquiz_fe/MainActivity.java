@@ -7,11 +7,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.helpers.AuthManager;
+import com.example.learnquiz_fe.ui.activities.HomeActivity;
+import com.example.learnquiz_fe.ui.activities.QuizGenerationActivity;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private AuthManager authManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); // loads the XML
 
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+        authManager = new AuthManager(this);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -35,10 +42,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Navigating to my quizzies", Toast.LENGTH_SHORT).show();
 //                selected = new QuizListFragment();
             } else if (id == R.id.nav_create_quiz) {
-                Toast.makeText(this, "Navigating to create quiz", Toast.LENGTH_SHORT).show();
-//                selected = new CreateQuizFragment();
+                Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
             } else if (id == R.id.nav_profile) {
-                Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
+                AuthResponse user = authManager.getUser();
+                String msg = "Navigating to profile of " + (user != null ? user.getUsername() : "Guest");
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 //                selected = new ProfileFragment();
             } else if (id == R.id.testing) {
                 selected = new UpgradePremiumFragment();
