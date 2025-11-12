@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.learnquiz_fe.BuildConfig;
 import com.example.learnquiz_fe.MainActivity;
 import com.example.learnquiz_fe.R;
-import com.example.learnquiz_fe.helpers.AuthManager;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -148,8 +147,6 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.login(email, password).observe(this, response -> {
             if (response.isSuccess() && response.getData() != null) {
                 var userData = response.getData();
-                AuthManager authManager = new AuthManager(this);
-                authManager.saveUser(userData); // Save data for session management
                 showLoading(false);
                 Toast.makeText(this, "Welcome " + response.getData().getUsername(), Toast.LENGTH_SHORT).show();
                 saveRememberMeState(email, password);
