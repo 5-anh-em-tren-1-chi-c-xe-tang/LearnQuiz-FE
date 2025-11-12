@@ -7,7 +7,8 @@
         <domain includeSubdomains="true">10.0.2.2</domain>
         <trust-anchors>
             <!--            <certificates src="@raw/dev_cert_2"/>-->
-            <certificates src="@raw/dev_cert_kiet" />
+<!--            <certificates src="@raw/dev_cert_kiet" />-->
+            <certificates src="@raw/dev_certhuy" />
         </trust-anchors>
     </domain-config>
 </network-security-config>

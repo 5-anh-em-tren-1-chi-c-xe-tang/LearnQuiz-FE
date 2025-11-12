@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.learnquiz_fe.BuildConfig;
-import com.example.learnquiz_fe.MainActivity;
+import com.example.learnquiz_fe.MainActivity; // Đảm bảo import này đúng
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,22 +26,17 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-/**
- * Login Activity
- * Handles user authentication with email/username and password
- * Navigates to HomeActivity on successful login
- */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
-    
+
     // Hardcoded test credentials
     private static final String TEST_USERNAME = "admin";
     private static final String TEST_PASSWORD = "admin";
-    
+
     private GoogleSignInClient googleSignInClient;
     private LoginViewModel loginViewModel;
-    
+
     // UI Components
     private TextInputEditText etEmail;
     private TextInputEditText etPassword;
@@ -59,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         setupViewModel();
         setupListeners();
     }
-    
+
     private void initViews() {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -83,44 +78,41 @@ public class LoginActivity extends AppCompatActivity {
     private void setupListeners() {
         // Email/Password login
         btnSignIn.setOnClickListener(v -> handleEmailPasswordLogin());
-        
+
         // Google login
         findViewById(R.id.btn_login_google).setOnClickListener(v -> startGoogleLogin());
     }
-    
-    /**
-     * Handle email/password login with hardcoded credentials for testing
-     */
+
     private void handleEmailPasswordLogin() {
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
-        
+
         // Hide error
         tvError.setVisibility(View.GONE);
-        
+
         // Validate input
         if (email.isEmpty()) {
             tvError.setText("Please enter email/username");
             tvError.setVisibility(View.VISIBLE);
             return;
         }
-        
+
         if (password.isEmpty()) {
             tvError.setText("Please enter password");
             tvError.setVisibility(View.VISIBLE);
             return;
         }
-        
+
         // Show loading
         showLoading(true);
-        
+
         // Check hardcoded credentials
         if (email.equals(TEST_USERNAME) && password.equals(TEST_PASSWORD)) {
             // Login successful
             new android.os.Handler().postDelayed(() -> {
                 showLoading(false);
                 Toast.makeText(this, "Welcome " + TEST_USERNAME + "!", Toast.LENGTH_SHORT).show();
-                navigateToHome();
+                navigateToHome(); // Sẽ gọi đến MainActivity
             }, 500); // Simulate network delay
         } else {
             // Login failed
@@ -131,16 +123,19 @@ public class LoginActivity extends AppCompatActivity {
             }, 500);
         }
     }
-    
+
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         btnSignIn.setEnabled(!show);
         etEmail.setEnabled(!show);
         etPassword.setEnabled(!show);
     }
-    
+
     private void navigateToHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
+        // Đã đổi từ HomeActivity.class sang MainActivity.class
+        Intent intent = new Intent(this, MainActivity.class);
+        // ===== HẾT PHẦN SỬA =====
         startActivity(intent);
         finish();
     }
@@ -178,5 +173,3 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 }
-
-

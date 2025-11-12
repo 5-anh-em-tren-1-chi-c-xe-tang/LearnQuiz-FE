@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
+// THÊM IMPORT NÀY:
+import com.example.learnquiz_fe.ui.fragments.feedback.QuizFeedbackFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,9 +42,15 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_profile) {
                 Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
 //                selected = new ProfileFragment();
+
+                // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
             } else if (id == R.id.testing) {
-                selected = new UpgradePremiumFragment();
+                // Đã cập nhật Quiz ID của bạn
+                String testQuizId = "69041c9e2060f334a4daa331";
+
+                selected = QuizFeedbackFragment.newInstance(testQuizId);
             }
+            // ===== HẾT PHẦN SỬA =====
 
             if (selected != null) {
                 // The add to back stack should be false for bottom navigation
