@@ -128,6 +128,13 @@ public class HomeActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
+
+        // setup the back button for toolbar
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Enable navigation (back) button
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     /**

@@ -20,6 +20,15 @@ public class QuizResponseDTO {
     private String imageSource;
     private String language;
     private List<String> tags;
+    private int playsCount;
+
+    public int getPlaysCount() {
+        return playsCount;
+    }
+
+    public void setPlaysCount(int playsCount) {
+        this.playsCount = playsCount;
+    }
 
     public UserResponse getAuthor() {
         return author;

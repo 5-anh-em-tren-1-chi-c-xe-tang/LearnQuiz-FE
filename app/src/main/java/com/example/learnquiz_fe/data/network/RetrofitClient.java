@@ -78,46 +78,6 @@ public class RetrofitClient {
         apiService = retrofit.create(ApiService.class);
     }
 
-    private OkHttpClient createSecureClient(Context context) {
-        try {
-            // 1️⃣ Load the certificate you just exported
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = context.getResources().openRawResource(R.raw.dev_cert_kiet);
-            Certificate ca = cf.generateCertificate(caInput);
-            caInput.close();
-
-            // 2️⃣ Put it into a KeyStore
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", ca);
-
-            // 3️⃣ Create TrustManager based on that KeyStore
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
-                    TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(keyStore);
-
-            // 4️⃣ Build an SSLContext that uses our TrustManager
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
-            X509TrustManager trustManager = (X509TrustManager) tmf.getTrustManagers()[0];
-
-            // 5️⃣ Build the OkHttpClient with it
-            return new OkHttpClient.Builder()
-                    .sslSocketFactory(sslContext.getSocketFactory(), trustManager)
-                    .hostnameVerifier((hostname, session) -> true) // relax hostname for 10.0.2.2
-                    .addInterceptor(new AuthInterceptor(context))
-                    .addInterceptor(createLoggingInterceptor())
-                    .connectTimeout(ApiEndpoints.CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                    .readTimeout(ApiEndpoints.READ_TIMEOUT, TimeUnit.SECONDS)
-                    .writeTimeout(ApiEndpoints.WRITE_TIMEOUT, TimeUnit.SECONDS)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error setting up SSL for dev cert", e);
-        }
-    }
-
-
     /**
      * Get singleton instance
      */

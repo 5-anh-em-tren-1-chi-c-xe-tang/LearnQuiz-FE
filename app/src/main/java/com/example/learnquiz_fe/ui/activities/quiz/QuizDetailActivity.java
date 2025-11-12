@@ -145,7 +145,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         tvQuizDescription.setText(data.getDescription());
         tvRating.setText(String.format(Locale.getDefault(), "%.1f", data.getAverageRating()));
         tvRatingCount.setText(data.getRatingCount() + " ratings");
-        tvPlaysCount.setText("1234");
+        tvPlaysCount.setText(String.valueOf(data.getPlaysCount()));
         tvPlaysLabel.setText("plays");
         tvQuestionsCount.setText(String.valueOf(data.getQuestions().size()));
         tvQuestionsLabel.setText("questions");
