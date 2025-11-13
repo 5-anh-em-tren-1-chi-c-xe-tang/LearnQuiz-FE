@@ -3,29 +3,43 @@ package com.example.learnquiz_fe.data.model.auth;
 import com.google.gson.annotations.SerializedName;
 
 public class AuthResponse {
-    /**•Represents the "data" object returned on a successful authentication response. */
-        @SerializedName("accessToken")
-        private String accessToken;
-        @SerializedName("refreshToken")
-        private String refreshToken;
-        @SerializedName("expiresIn")
-        private int expiresIn;
-        @SerializedName("tokenType")
-        private String tokenType;
-        @SerializedName("userId")
-        private String userId;
-        @SerializedName("username")
-        private String username;
-        @SerializedName("email")
-        private String email;
-        @SerializedName("role")
-        private String role;
+    /**
+     * •Represents the "data" object returned on a successful authentication response.
+     */
+    @SerializedName("accessToken")
+    private String accessToken;
+    @SerializedName("refreshToken")
+    private String refreshToken;
+    @SerializedName("expiresIn")
+    private int expiresIn;
+    @SerializedName("tokenType")
+    private String tokenType;
+    @SerializedName("userId")
+    private String userId;
+    @SerializedName("username")
+    private String username;
+    @SerializedName("email")
+    private String email;
+    @SerializedName("role")
+    private String role;
+
+    @SerializedName("isPremium")
+    private Boolean isPremium;
 
     public AuthResponse(String userId, String username, String email, String role) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.role = role;
+        isPremium = false; // TODO: TRICK LO LMAO
+    }
+
+    public Boolean getIsPremium() {
+        return isPremium;
+    }
+
+    public void setIsPremium(Boolean isPremium) {
+        this.isPremium = isPremium;
     }
 
     public String getAccessToken() {

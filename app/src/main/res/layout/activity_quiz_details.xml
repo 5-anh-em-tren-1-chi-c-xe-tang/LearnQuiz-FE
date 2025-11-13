@@ -427,7 +427,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?attr/textAppearanceBody2"
                             android:textColor="?attr/colorOnSurface"
-                            tools:text="15 minutes" />
+                            tools:text="15s / Question" />
                     </LinearLayout>
 
                     <View

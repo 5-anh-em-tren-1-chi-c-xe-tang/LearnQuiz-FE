@@ -35,6 +35,7 @@ public class RetrofitClient {
     private static final String KEY_USERNAME = "user_name";
     private static final String KEY_EMAIL = "user_email";
     private static final String KEY_ROLE = "user_role";
+    private static final String KEY_PREMIUM = "user_premium";
 
     /**
      * Private constructor for singleton pattern
@@ -149,7 +150,7 @@ public class RetrofitClient {
         editor.putString(KEY_USERNAME, authResponse.getUsername());
         editor.putString(KEY_EMAIL, authResponse.getEmail());
         editor.putString(KEY_ROLE, authResponse.getRole());
-
+        setPremium(authResponse.getIsPremium());
         editor.apply();
     }
 
@@ -162,16 +163,18 @@ public class RetrofitClient {
         prefs.edit().remove("auth_token").apply();
     }
 
+    private SharedPreferences getPrefs() {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
     public void clearAuthData() {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-
         editor.remove(KEY_AUTH_TOKEN);
         editor.remove(KEY_USER_ID);
         editor.remove(KEY_USERNAME);
         editor.remove(KEY_EMAIL);
         editor.remove(KEY_ROLE);
-
         editor.apply();
     }
     /**
@@ -209,11 +212,36 @@ public class RetrofitClient {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getString(KEY_ROLE, null);
     }
+
     /**
      * Get current authentication token
      */
     public String getAuthToken() {
         SharedPreferences prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
         return prefs.getString("auth_token", null);
+    }
+
+    public boolean getIsPremium() {
+        return getPrefs().getBoolean(KEY_PREMIUM, false);
+    }
+
+    public void setUserId(String id) {
+        getPrefs().edit().putString(KEY_USER_ID, id).apply();
+    }
+
+    public void setUsername(String username) {
+        getPrefs().edit().putString(KEY_USERNAME, username).apply();
+    }
+
+    public void setEmail(String email) {
+        getPrefs().edit().putString(KEY_EMAIL, email).apply();
+    }
+
+    public void setRole(String role) {
+        getPrefs().edit().putString(KEY_ROLE, role).apply();
+    }
+
+    public void setPremium(boolean premium) {
+        getPrefs().edit().putBoolean(KEY_PREMIUM, premium).apply();
     }
 }

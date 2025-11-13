@@ -172,8 +172,14 @@ public class QuizDetailActivity extends AppCompatActivity {
         tvPlaysLabel.setText("plays");
         tvQuestionsCount.setText(String.valueOf(data.getQuestions().size()));
         tvQuestionsLabel.setText("questions");
-        tvDuration.setText(String.valueOf(data.getQuizExamTimeLimit()));
+
+        // Total minutes of this quiz
+        int totalMinutes = data.getQuizExamTimeLimit() * data.getQuestions().size() / 60;
+        var durationText = totalMinutes < 1 ? "<1" : String.valueOf(totalMinutes);
+        tvDuration.setText(String.valueOf(durationText));
         tvDurationLabel.setText("minutes");
+        // Time limit per question
+        tvDurationValue.setText(data.getQuizExamTimeLimit() + "s / question");
 
         String difficulty = getDifficultyLevel(data.getQuestions().size(), data.getQuizExamTimeLimit());
 //        tvDifficulty.setText(difficulty);
@@ -195,7 +201,6 @@ public class QuizDetailActivity extends AppCompatActivity {
                     .into(ivAuthorAvatar);
         }
 
-        tvDurationValue.setText(data.getQuizExamTimeLimit() + " minutes");
         if (data.getVisibility() != null) {
             String vis = data.getVisibility();
             tvVisibilityValue.setText(
