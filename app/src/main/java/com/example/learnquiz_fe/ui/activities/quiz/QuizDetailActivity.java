@@ -19,8 +19,11 @@ import com.bumptech.glide.Glide;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizQuestionDTO;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
-import com.example.learnquiz_fe.ui.activities.feedback.QuizFeedbackActivity; // Import Activity chứa Feedback Fragment
+import com.example.learnquiz_fe.ui.activities.QuizTakingActivity;
+import com.example.learnquiz_fe.ui.activities.feedback.QuizFeedbackActivity;
+import com.example.learnquiz_fe.utils.QuizDataHolder;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.button.MaterialButton;
 
@@ -33,7 +36,7 @@ public class QuizDetailActivity extends AppCompatActivity {
 
     private TextView tvQuizTitle, tvQuizDescription, tvRating, tvRatingCount,
             tvPlaysCount, tvPlaysLabel, tvQuestionsCount, tvQuestionsLabel,
-            tvDuration, tvDurationLabel, tvAuthorName, tvQuizCount,
+            tvDuration, tvDurationLabel, tvDifficulty, tvAuthorName, tvQuizCount,
             tvDifficultyValue, tvDurationValue, tvVisibilityValue,
             tvLastUpdated, tvMultipleChoiceCount, tvWriteReviewLink;
     private ImageView ivAuthorAvatar, ivHeaderImage;
@@ -75,13 +78,14 @@ public class QuizDetailActivity extends AppCompatActivity {
         }
     }
 
-    public static void start(Context context, String quizId) {
+    public static void start(Context context, int quizId) {
         Intent intent = new Intent(context, QuizDetailActivity.class);
         intent.putExtra("quiz_id", quizId);
         context.startActivity(intent);
     }
 
     private void findViews() {
+
         btnBack = findViewById(R.id.btnBack);
         btnShare = findViewById(R.id.btnShare);
         btnFollow = findViewById(R.id.btnFollow);
@@ -102,6 +106,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         tvQuestionsLabel = findViewById(R.id.tvQuestionsLabel);
         tvDuration = findViewById(R.id.tvDuration);
         tvDurationLabel = findViewById(R.id.tvDurationLabel);
+//        tvDifficulty = findViewById(R.id.tvDifficulty);
         tvAuthorName = findViewById(R.id.tvAuthorName);
         tvQuizCount = findViewById(R.id.tvQuizCount);
         tvDifficultyValue = findViewById(R.id.tvDifficultyValue);
@@ -127,6 +132,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         });
     }
 
+    // 🔹 Load quiz details from backend
     private void loadQuizDetails(String quizId) {
         progressBar.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.GONE);
@@ -153,7 +159,10 @@ public class QuizDetailActivity extends AppCompatActivity {
 
     private void displayQuizDetails(QuizResponseDTO data) {
         if (data.getImageSource() != null) {
-            Glide.with(this).load(data.getImageSource()).centerCrop().into(ivHeaderImage);
+            Glide.with(this)
+                    .load(data.getImageSource())
+                    .centerCrop()
+                    .into(ivHeaderImage);
         }
         tvQuizTitle.setText(data.getTitle());
         tvQuizDescription.setText(data.getDescription());
@@ -167,21 +176,30 @@ public class QuizDetailActivity extends AppCompatActivity {
         tvDurationLabel.setText("minutes");
 
         String difficulty = getDifficultyLevel(data.getQuestions().size(), data.getQuizExamTimeLimit());
+//        tvDifficulty.setText(difficulty);
         tvDifficultyValue.setText(difficulty);
 
         tvAuthorName.setText(data.getAuthor().getUsername());
         tvQuizCount.setText(data.getAuthor().getCreateQuizCount() + " quizzes");
 
         if (data.getAuthor().getAvatarUrl() != null) {
-            Glide.with(this).load(data.getAuthor().getAvatarUrl()).circleCrop().into(ivAuthorAvatar);
+            Glide.with(this)
+                    .load(data.getAuthor().getAvatarUrl())
+                    .circleCrop()
+                    .into(ivAuthorAvatar);
         } else {
-            Glide.with(this).load(R.drawable.img_placeholder_user).circleCrop().into(ivAuthorAvatar);
+            // Load placeholder avatar
+            Glide.with(this)
+                    .load(R.drawable.img_placeholder_user)
+                    .circleCrop()
+                    .into(ivAuthorAvatar);
         }
 
         tvDurationValue.setText(data.getQuizExamTimeLimit() + " minutes");
         if (data.getVisibility() != null) {
             String vis = data.getVisibility();
-            tvVisibilityValue.setText(vis.substring(0, 1).toUpperCase(Locale.getDefault()) + vis.substring(1));
+            tvVisibilityValue.setText(
+                    vis.substring(0, 1).toUpperCase(Locale.getDefault()) + vis.substring(1));
         }
 
         tvLastUpdated.setText(formatDate(data.getCreatedAt()));
@@ -224,14 +242,12 @@ public class QuizDetailActivity extends AppCompatActivity {
 
     private void displayTags(List<String> tags) {
         tagsContainer.removeAllViews();
-        if (tags != null) {
-            for (String tag : tags) {
-                View tagView = getLayoutInflater().inflate(R.layout.item_tag, tagsContainer, false);
-                TextView tv = tagView.findViewById(R.id.tvTag);
-                String tagName = "#" + tag;
-                tv.setText(tagName);
-                tagsContainer.addView(tagView);
-            }
+        for (String tag : tags) {
+            View tagView = getLayoutInflater().inflate(R.layout.item_tag, tagsContainer, false);
+            TextView tv = tagView.findViewById(R.id.tvTag);
+            String tagName = "#" + tag;
+            tv.setText(tagName);
+            tagsContainer.addView(tagView);
         }
     }
 
@@ -243,10 +259,56 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnFollow.setText("Following");
     }
 
+    // Trong file QuizDetailActivity.java
+
     private void startQuiz() {
-        Toast.makeText(this, "Start quiz feature not implemented yet", Toast.LENGTH_SHORT).show();
+        // 1. Kiểm tra xem quizId có tồn tại không
+        if (quizId == null || quizId.isEmpty()) {
+            Toast.makeText(this, "Cannot start: Quiz ID is missing.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 2. Hiển thị trạng thái loading
+        progressBar.setVisibility(View.VISIBLE);
+        mainContent.setAlpha(0.5f);
+        btnStartQuiz.setEnabled(false);
+
+        // 3. Gọi hàm getQuizDetail với đúng QuizCallback
+        quizRepository.getQuizDetail(quizId, new QuizRepository.QuizCallback() {
+            @Override
+            public void onSuccess(GenerateQuizResponse response) {
+                // Tắt loading
+                progressBar.setVisibility(View.GONE);
+                mainContent.setAlpha(1.0f);
+                btnStartQuiz.setEnabled(true);
+
+                // 4. Kiểm tra dữ liệu trả về
+                if (response != null && response.getQuestions() != null && !response.getQuestions().isEmpty()) {
+
+                    // 5. Đặt dữ liệu vào QuizDataHolder
+                    QuizDataHolder.getInstance().setQuizResponse(response);
+
+                    // 6. Chuyển sang màn hình làm bài
+                    Intent intent = new Intent(QuizDetailActivity.this, QuizTakingActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(QuizDetailActivity.this, "Failed to get quiz data or quiz has no questions.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onError(String message, int errorCode) {
+                // Tắt loading và báo lỗi
+                progressBar.setVisibility(View.GONE);
+                mainContent.setAlpha(1.0f);
+                btnStartQuiz.setEnabled(true);
+                Toast.makeText(QuizDetailActivity.this, "Error getting quiz data: " + message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
+
+    // Simple Pair class
     private static class Pair<F, S> {
         final F first;
         final S second;
