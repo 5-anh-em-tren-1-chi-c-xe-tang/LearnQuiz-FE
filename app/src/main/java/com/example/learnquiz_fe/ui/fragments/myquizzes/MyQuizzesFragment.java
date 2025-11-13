@@ -17,15 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.learnquiz_fe.R;
+import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.ui.adapter.myquizzes.MyQuizAdapter; // Import MyQuizAdapter
+import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,7 +54,7 @@ public class MyQuizzesFragment extends Fragment {
     // Declare all views that were previously accessed via binding
     private RecyclerView rvQuizzes;
     private ProgressBar progressBar;
-    private TextView tvEmptyState;
+    private LinearLayout tvEmptyState;
     private TextView tvQuizCountInfo;
     private MaterialButton btnCreateQuizHeader;
     private EditText etSearchQuizzes;
@@ -63,6 +67,7 @@ public class MyQuizzesFragment extends Fragment {
     private TextView tvFromTextLabel;
     private FloatingActionButton fabFromImage;
     private TextView tvFromImageLabel;
+    private MaterialCardView cardUpgradePrompt;
 
     public MyQuizzesFragment() {
         // Required empty public constructor
@@ -104,6 +109,7 @@ public class MyQuizzesFragment extends Fragment {
         etSearchQuizzes = view.findViewById(R.id.et_search_quizzes);
         ivFilterIcon = view.findViewById(R.id.iv_filter_icon);
         btnUpgrade = view.findViewById(R.id.btn_upgrade);
+        cardUpgradePrompt = view.findViewById(R.id.limit_banner_card);
         chipGroupCategories = view.findViewById(R.id.chip_group_categories);
         chipAllQuizzes = view.findViewById(R.id.chip_all_quizzes);
         fabMainCreate = view.findViewById(R.id.fab_main_create);
@@ -121,7 +127,25 @@ public class MyQuizzesFragment extends Fragment {
         loadMyQuizzes(); // Call without query, MyQuizAdapter handles filtering if query passed
 
         btnCreateQuizHeader.setOnClickListener(v -> Toast.makeText(getContext(), "Create Quiz button clicked!", Toast.LENGTH_SHORT).show());
-        btnUpgrade.setOnClickListener(v -> Toast.makeText(getContext(), "Upgrade button clicked!", Toast.LENGTH_SHORT).show());
+        boolean isPremium = RetrofitClient.getInstance(getContext()).getIsPremium();
+
+        if (!isPremium) {
+            cardUpgradePrompt.setVisibility(View.VISIBLE);
+            btnUpgrade.setOnClickListener(v -> {
+                // Start upgrade fragment
+                Fragment fragment = new UpgradePremiumFragment();
+
+                requireActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            });
+        } else {
+            cardUpgradePrompt.setVisibility(View.GONE);
+        }
+
         etSearchQuizzes.setOnClickListener(v -> Toast.makeText(getContext(), "Search input clicked!", Toast.LENGTH_SHORT).show());
         ivFilterIcon.setOnClickListener(v -> Toast.makeText(getContext(), "Filter icon clicked!", Toast.LENGTH_SHORT).show());
     }
@@ -248,11 +272,11 @@ public class MyQuizzesFragment extends Fragment {
         if (isEmpty) {
             tvEmptyState.setVisibility(View.VISIBLE);
             rvQuizzes.setVisibility(View.GONE);
-            tvQuizCountInfo.setText(String.format(getString(R.string.quiz_count_info), 0, 0));
+//            tvQuizCountInfo.setText(String.format(getString(R.string.quiz_count_info), 0, 0));
         } else {
             tvEmptyState.setVisibility(View.GONE);
             rvQuizzes.setVisibility(View.VISIBLE);
-            tvQuizCountInfo.setText(String.format(getString(R.string.quiz_count_info), quizAdapter.getItemCount(), quizAdapter.getItemCount()));
+//            tvQuizCountInfo.setText(String.format(getString(R.string.quiz_count_info), quizAdapter.getItemCount(), quizAdapter.getItemCount()));
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.learnquiz_fe.MainActivity;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.model.quiz.QuizAnswer;
@@ -155,7 +156,7 @@ public class QuizResultActivity extends AppCompatActivity {
     }
     
     private void navigateToHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

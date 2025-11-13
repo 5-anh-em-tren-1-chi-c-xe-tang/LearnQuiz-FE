@@ -42,20 +42,17 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 selected = new HomeFragment();
             } else if (id == R.id.nav_my_quizzes) {
-                Toast.makeText(this, "Navigating to my quizzies", Toast.LENGTH_SHORT).show();
                 selected = new MyQuizzesFragment();
             } else if (id == R.id.nav_create_quiz) {
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
             } else if (id == R.id.nav_profile) {
-                Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
                 selected = new ProfileFragment();
-            } else if (id == R.id.testing) {
-
-                String testQuizId = "69041c9e2060f334a4daa331";
-
-                selected = QuizFeedbackFragment.newInstance(testQuizId);
             }
+//            else if (id == R.id.testing) {
+//                String testQuizId = "69041c9e2060f334a4daa331";
+//                selected = QuizFeedbackFragment.newInstance(testQuizId);
+//            }
 
 
             if (selected != null) {

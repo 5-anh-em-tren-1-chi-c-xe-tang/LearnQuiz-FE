@@ -204,7 +204,7 @@
 <!--    MY QUIZZES-->
     <!-- My Quizzes Fragment -->
     <string name="my_quizzes_title">My Quizzes</string>
-    <string name="quiz_count_info">%1$d / %2$d quizzes created</string> <!-- Example for dynamic text -->
+    <string name="quiz_count_info">1 / 2 quizzes created</string> <!-- Example for dynamic text -->
     <string name="button_create">Create</string>
     <string name="search_quizzes_hint">Search quizzes...</string>
     <string name="search_icon_description">Search icon</string>
@@ -212,8 +212,9 @@
 
     <!-- Limit Banner -->
     <string name="limit_title">Free Limit Reached</string>
-    <string name="limit_description">You\'ve created %1$d quizzes. Upgrade to Premium for unlimited quiz creation!</string> <!-- Example for dynamic text -->
+    <string name="limit_description">You\'ve created 1 quizzes. Upgrade to Premium for unlimited quiz creation!</string> <!-- Example for dynamic text -->
     <string name="button_upgrade">Upgrade</string>
+    <string name="lock_icon_description">Lock icon</string>
 
     <!-- Category Chips -->
     <string name="chip_all_quizzes">All Quizzes</string>
@@ -238,4 +239,5 @@
     <string name="plays_count">%d plays</string>
     <string name="plays_icon_description">Plays count icon</string>
     <string name="empty_my_quizzes_state">You haven\'t created any quizzes yet!</string>
+    <string name="empty_state_icon_description">Empty state icon</string>
 </resources>

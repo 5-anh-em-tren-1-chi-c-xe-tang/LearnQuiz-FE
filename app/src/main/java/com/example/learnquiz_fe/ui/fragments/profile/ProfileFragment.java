@@ -1,6 +1,7 @@
 package com.example.learnquiz_fe.ui.fragments.profile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.learnquiz_fe.R;
 //import com.example.learnquiz_fe.ui.activities.AccountSettingsActivity; // Sẽ tạo ở bước 5
 import com.example.learnquiz_fe.data.network.RetrofitClient;
+import com.example.learnquiz_fe.helpers.LoginPreferences;
 import com.example.learnquiz_fe.ui.activities.LoginActivity; // Sử dụng để logout
+import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
+import com.google.android.material.button.MaterialButton;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,7 +33,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivEditProfile;
     private TextView tvProfileName;
     private TextView tvProfileEmail;
-    private View btnUpgradePremiumHeader; // MaterialButton
+    private MaterialButton btnUpgradePremiumHeader; // MaterialButton
     private TextView tvQuizzesCreatedCount;
     private TextView tvQuizzesTakenCount;
     private TextView tvAvgScoreValue;
@@ -44,7 +48,7 @@ public class ProfileFragment extends Fragment {
     private ConstraintLayout itemLogout;
     private TextView tvAppVersion;
     private LoginViewModel loginViewModel;
-
+    private LoginPreferences preferences;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -88,6 +92,16 @@ public class ProfileFragment extends Fragment {
         itemNotifications = view.findViewById(R.id.item_notifications);
         itemLogout = view.findViewById(R.id.item_logout);
         tvAppVersion = view.findViewById(R.id.tv_app_version);
+
+        // Check if user is premium to hide upgrade button if needed
+        boolean isPremium = RetrofitClient.getInstance(getContext()).getIsPremium();
+        if (isPremium) {
+            btnUpgradePremiumHeader.setVisibility(View.GONE);
+            itemUpgradePremium.setVisibility(View.GONE);
+        } else {
+            btnUpgradePremiumHeader.setVisibility(View.VISIBLE);
+            itemUpgradePremium.setVisibility(View.VISIBLE);
+        }
     }
 
     private void loadUserData() {
@@ -111,22 +125,33 @@ public class ProfileFragment extends Fragment {
 
     private void setupListeners() {
         ivEditProfile.setOnClickListener(v -> Toast.makeText(getContext(), "Edit Profile clicked!", Toast.LENGTH_SHORT).show());
-        btnUpgradePremiumHeader.setOnClickListener(v -> Toast.makeText(getContext(), "Upgrade to Premium clicked!", Toast.LENGTH_SHORT).show());
+        btnUpgradePremiumHeader.setOnClickListener(v -> {
+            // Start upgrade fragment
+            Fragment fragment = new UpgradePremiumFragment();
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         itemMyQuizzes.setOnClickListener(v -> Toast.makeText(getContext(), "My Quizzes clicked!", Toast.LENGTH_SHORT).show());
         itemQuizFolders.setOnClickListener(v -> Toast.makeText(getContext(), "Quiz Folders clicked!", Toast.LENGTH_SHORT).show());
         itemQuizHistory.setOnClickListener(v -> Toast.makeText(getContext(), "Quiz History clicked!", Toast.LENGTH_SHORT).show());
 
         itemAccountSettings.setOnClickListener(v -> Toast.makeText(getContext(), "Account Setting clicked!", Toast.LENGTH_SHORT).show());
-        itemUpgradePremium.setOnClickListener(v -> Toast.makeText(getContext(), "Upgrade to Premium clicked!", Toast.LENGTH_SHORT).show()); // Sử dụng lại Toast hoặc điều hướng đến cùng một activity/fragment
+
         itemQuickTour.setOnClickListener(v -> Toast.makeText(getContext(), "Quick Tour clicked!", Toast.LENGTH_SHORT).show());
         itemNotifications.setOnClickListener(v -> Toast.makeText(getContext(), "Notifications clicked!", Toast.LENGTH_SHORT).show());
 
         itemLogout.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Logging out...", Toast.LENGTH_SHORT).show();
             loginViewModel.logout();
-            // Thực hiện logic đăng xuất, ví dụ: xóa token, về màn hình Login
-            // Giả lập đăng xuất và chuyển về LoginActivity
+            // Clear preferences nếu cần
+            preferences = new LoginPreferences(requireContext());
+            preferences.clear();
             if (getActivity() != null) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Xóa hết stack activity
@@ -135,6 +160,28 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // Premium redirect
+        btnUpgradePremiumHeader.setOnClickListener(v -> {
+            Fragment fragment = new UpgradePremiumFragment();
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        itemUpgradePremium.setOnClickListener(v -> {
+            Fragment fragment = new UpgradePremiumFragment();
+
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
 
     }
 }

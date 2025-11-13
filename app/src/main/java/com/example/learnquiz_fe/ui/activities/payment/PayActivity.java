@@ -97,11 +97,11 @@ public class PayActivity extends AppCompatActivity {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
         String formattedAmount = currencyVN.format(data.getAmount());
-        tvDescription.setText("Description: " + data.getDescription());
-        tvAmount.setText("Amount: " + formattedAmount);
-        tvAccountName.setText("Account Name: " + data.getAccountName());
-        tvOrderCode.setText("Order code: " + orderCode);
-        tvAccountNumber.setText("Account Number: " + data.getAccountNumber());
+        tvDescription.setText(data.getDescription());
+        tvAmount.setText(formattedAmount);
+        tvAccountName.setText(data.getAccountName());
+        tvOrderCode.setText(orderCode);
+        tvAccountNumber.setText(data.getAccountNumber());
 
         Glide.with(this)
                 .load(data.getQrCodeLink())
