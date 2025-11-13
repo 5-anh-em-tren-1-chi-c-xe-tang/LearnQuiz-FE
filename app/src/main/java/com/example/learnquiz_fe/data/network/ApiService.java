@@ -17,6 +17,7 @@ import com.example.learnquiz_fe.data.model.auth.RegisterRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
+import com.example.learnquiz_fe.data.model.quizhistory.QuizHistoryResponseDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
 import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
@@ -105,6 +106,9 @@ public interface ApiService {
     Call<ApiResponse<AuthResponse>> register(@Body RegisterRequestDTO registerRequest);
     @PUT(ApiEndpoints.UPDATE_PROFILE)
     Call<ApiResponse<User>> updateProfile(@Body UserRequestDTO userRequestDTO);
+
+    @GET(ApiEndpoints.MY_QUIZ_HISTORY)
+    Call<QuizHistoryResponseDTO> getMyQuizHistory();
 
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);

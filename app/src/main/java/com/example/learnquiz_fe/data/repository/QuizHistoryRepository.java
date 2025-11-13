@@ -4,8 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
+import com.example.learnquiz_fe.data.model.quizhistory.QuizHistoryResponseDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
 import com.example.learnquiz_fe.data.network.ApiService;
@@ -33,7 +36,28 @@ public class QuizHistoryRepository {
         retrofitClient = RetrofitClient.getInstance(context);
         apiService = retrofitClient.getApiService();
     }
-    
+
+    public LiveData<QuizHistoryResponseDTO> getMyHistory() {
+        MutableLiveData<QuizHistoryResponseDTO> data = new MutableLiveData<>();
+        apiService.getMyQuizHistory().enqueue(new Callback<QuizHistoryResponseDTO>() {
+            @Override
+            public void onResponse(Call<QuizHistoryResponseDTO> call, Response<QuizHistoryResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    data.setValue(response.body());
+                } else {
+                    // Có thể tạo một response lỗi tùy chỉnh
+                    data.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QuizHistoryResponseDTO> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
+        return data;
+    }
+
     /**
      * Submit quiz answers to server
      * @param request Quiz submission request

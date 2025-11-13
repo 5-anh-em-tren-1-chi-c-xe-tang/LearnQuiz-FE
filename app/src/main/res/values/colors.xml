@@ -112,8 +112,8 @@
     <!-- Utility -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-
-
+    <color name="green_correct">#388E3C</color>
+    <color name="red_incorrect">#D32F2F</color>
 
     <!-- Các màu bổ sung cho Profile Fragment -->
     <!-- Màu nền cho các CardView bên dưới header -->
@@ -137,7 +137,7 @@
     <color name="orange_gradient_end">#FF9800</color>   <!-- Màu cam đậm -->
 
 
-<!--    Color for My Quizzes-->
+    <!--    Color for My Quizzes-->
     <color name="primary_purple">#6200EE</color> <!-- Alias for clarity -->
     <color name="material_dynamic_primary40">#6200EE</color> <!-- Assuming this is your primary color -->
 
