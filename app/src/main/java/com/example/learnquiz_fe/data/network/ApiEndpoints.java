@@ -10,7 +10,7 @@ public class ApiEndpoints {
     /**
      * Base URL for the backend API
      * Or configure in AppConfig.API.BASE_URL
-     * use "http://10.0.0.2.2 to access localhost from Android emulator
+     * use "http://10.0.2.2 to access localhost from Android emulator
      * 5186 for http and 7024 for https
      */
 
@@ -35,7 +35,7 @@ public class ApiEndpoints {
      * User profile endpoints
      */
     public static final String USER_PROFILE = "api/user/profile";
-
+    public static final String UPDATE_PROFILE = "api/user";
     /**
      * Quiz endpoints
      */

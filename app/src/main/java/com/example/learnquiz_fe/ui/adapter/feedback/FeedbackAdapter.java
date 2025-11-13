@@ -1,6 +1,5 @@
-package com.example.learnquiz_fe.ui.adapter.feedback; // Sửa lại package nếu cần
+package com.example.learnquiz_fe.ui.adapter.feedback;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.model.feedback.Feedback;
-// import com.bumptech.glide.Glide; // Bỏ comment nếu bạn dùng Glide để tải avatar
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -25,7 +23,6 @@ public class FeedbackAdapter extends ListAdapter<Feedback, FeedbackAdapter.Feedb
     private final String currentUserId;
     private final EditClickListener editClickListener;
 
-    // Interface để xử lý sự kiện click "Edit"
     public interface EditClickListener {
         void onEditClicked(Feedback feedback);
     }
@@ -50,7 +47,6 @@ public class FeedbackAdapter extends ListAdapter<Feedback, FeedbackAdapter.Feedb
         holder.bind(feedback, currentUserId, editClickListener);
     }
 
-    // ViewHolder class
     static class FeedbackViewHolder extends RecyclerView.ViewHolder {
         ImageView ivAvatar;
         TextView tvUserName, tvTimestamp, tvCommentBody;
@@ -68,23 +64,39 @@ public class FeedbackAdapter extends ListAdapter<Feedback, FeedbackAdapter.Feedb
         }
 
         public void bind(Feedback feedback, String currentUserId, EditClickListener listener) {
-            // TODO: API của bạn chỉ trả về userId. Bạn cần 1 cách để lấy
-            // tên và avatar từ userId đó. Hiện tại, chúng ta sẽ để tên giả.
-            tvUserName.setText("User " + feedback.getUserId().substring(0, 6) + "..."); // Tên tạm
 
-            // TODO: Tải avatar bằng Glide
-            // Glide.with(itemView.getContext()).load(user.getAvatarUrl()).into(ivAvatar);
-            ivAvatar.setImageResource(R.drawable.ic_profile); // Ảnh profile mặc định
+            // --- LOGIC HIỂN THỊ TÊN MỚI ---
+            String displayName;
+
+            // Kiểm tra nếu username có dữ liệu hợp lệ
+            if (feedback.getUsername() != null && !feedback.getUsername().isEmpty() && !feedback.getUsername().equals("string")) {
+                displayName = feedback.getUsername();
+            } else {
+                // Fallback: Dùng UserId cắt ngắn nếu không có tên
+                String shortId = feedback.getUserId();
+                if (shortId != null && shortId.length() > 6) {
+                    shortId = shortId.substring(0, 6) + "...";
+                }
+                displayName = "User " + shortId;
+            }
+
+            tvUserName.setText(displayName);
+            // ------------------------------
+
+            ivAvatar.setImageResource(R.drawable.ic_profile); // Avatar mặc định
 
             tvCommentBody.setText(feedback.getComment());
             ratingBarItem.setRating(feedback.getRating());
 
-            // Format ngày tháng
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-            tvTimestamp.setText(sdf.format(feedback.getCreatedAt()));
+            if (feedback.getCreatedAt() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                tvTimestamp.setText(sdf.format(feedback.getCreatedAt()));
+            } else {
+                tvTimestamp.setText("Just now");
+            }
 
-            // Logic hiển thị nút Edit
-            if (feedback.getUserId().equals(currentUserId)) {
+            // Hiển thị nút Edit nếu comment này là của chính user đang đăng nhập
+            if (currentUserId != null && currentUserId.equals(feedback.getUserId())) {
                 btnEditFeedback.setVisibility(View.VISIBLE);
                 btnEditFeedback.setOnClickListener(v -> listener.onEditClicked(feedback));
             } else {
@@ -93,7 +105,6 @@ public class FeedbackAdapter extends ListAdapter<Feedback, FeedbackAdapter.Feedb
         }
     }
 
-    // DiffUtil để RecyclerView cập nhật hiệu quả
     private static final DiffUtil.ItemCallback<Feedback> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Feedback>() {
                 @Override
@@ -104,7 +115,8 @@ public class FeedbackAdapter extends ListAdapter<Feedback, FeedbackAdapter.Feedb
                 @Override
                 public boolean areContentsTheSame(@NonNull Feedback oldItem, @NonNull Feedback newItem) {
                     return oldItem.getComment().equals(newItem.getComment()) &&
-                            oldItem.getRating() == newItem.getRating();
+                            oldItem.getRating() == newItem.getRating() &&
+                            oldItem.getUsername().equals(newItem.getUsername()); // So sánh cả username
                 }
             };
 }

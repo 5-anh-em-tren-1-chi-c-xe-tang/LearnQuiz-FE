@@ -45,17 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
                 // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
             } else if (id == R.id.testing) {
-                // Đã cập nhật Quiz ID của bạn
+
                 String testQuizId = "69041c9e2060f334a4daa331";
 
                 selected = QuizFeedbackFragment.newInstance(testQuizId);
             }
-            // ===== HẾT PHẦN SỬA =====
+
 
             if (selected != null) {
-                // The add to back stack should be false for bottom navigation
-                // But for debug you can set it to true
-                // This allow any back button press to go back to previous fragment
+
                 loadFragment(selected, true);
                 return true;
             }
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Load the default fragment only when the activity is first created
-        if (savedInstanceState == null) {
+    if (savedInstanceState == null) {
             // This will trigger the listener and load the HomeFragment,
             // and the BottomNavigationView will automatically highlight the correct item.
             // So no need to manual handle it

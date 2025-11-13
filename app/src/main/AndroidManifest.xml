@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.learnquiz_fe">
-    <!-- Permissions -->
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -29,15 +29,19 @@
         <activity
             android:name=".ui.activities.RouterActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"> <!-- Theme trong suốt để không bị chớp màn hình -->
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"> </activity>
 
-        <!-- Login Activity (Main Launcher) -->
         <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.LearnQuiz_FE"></activity>
-        <!-- Main activity - The one where it will manage the fragments -->
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -47,38 +51,64 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Home Activity -->
+
+        <activity
+            android:name=".ui.activities.payment.PayActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PaySuccessActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+        <activity
+            android:name=".ui.activities.payment.PayFailedActivity"
+            android:exported="false"
+            android:theme="@style/Theme.LearnQuiz_FE">
+        </activity>
+
         <activity
             android:name=".ui.activities.HomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Camera Activity (Full Screen) -->
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
         <activity
             android:name=".ui.activities.CameraActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Photo Preview Activity -->
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
         <activity
             android:name=".ui.activities.PhotoPreviewActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LearnQuiz_FE" /> <!-- Quiz Generation Activity -->
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
         <activity
             android:name=".ui.activities.QuizGenerationActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
 
-        <!-- Quiz Taking Activity -->
+        <activity android:name=".ui.activities.quiz.QuizDetailActivity" />
+
         <activity
             android:name=".ui.activities.QuizTakingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LearnQuiz_FE" />
 
-        <!-- Quiz Result Activity -->
         <activity
             android:name=".ui.activities.QuizResultActivity"
             android:exported="false"
             android:theme="@style/Theme.LearnQuiz_FE" />
+
+        <activity
+            android:name=".ui.activities.feedback.QuizFeedbackActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.learnquiz_fe.BuildConfig;
-import com.example.learnquiz_fe.MainActivity; // Đảm bảo import này đúng
+import com.example.learnquiz_fe.MainActivity;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,23 +26,31 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+/**
+ * Login Activity
+ * Handles user authentication with email/username and password
+ * Navigates to HomeActivity on successful login
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
-
+    
     // Hardcoded test credentials
     private static final String TEST_USERNAME = "admin";
     private static final String TEST_PASSWORD = "admin";
-
+    
     private GoogleSignInClient googleSignInClient;
     private LoginViewModel loginViewModel;
-
+    
     // UI Components
     private TextInputEditText etEmail;
     private TextInputEditText etPassword;
     private MaterialButton btnSignIn;
     private ProgressBar progressBar;
     private TextView tvError;
+    private MaterialButton btnGGLogin;
+    private TextView tvSignUp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +62,15 @@ public class LoginActivity extends AppCompatActivity {
         setupViewModel();
         setupListeners();
     }
-
+    
     private void initViews() {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         btnSignIn = findViewById(R.id.btn_sign_in);
         progressBar = findViewById(R.id.progress_bar);
         tvError = findViewById(R.id.tv_error);
+        btnGGLogin = findViewById(R.id.btn_login_google);
+        tvSignUp = findViewById(R.id.tv_sign_up);
     }
 
     private void initGoogleSignIn() {
@@ -77,13 +87,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupListeners() {
         // Email/Password login
-        btnSignIn.setOnClickListener(v -> handleEmailPasswordLogin());
-
+        btnSignIn.setOnClickListener(v -> handleNormalLogin());
+        tvSignUp.setOnClickListener(v -> navigateToSignup());
         // Google login
-        findViewById(R.id.btn_login_google).setOnClickListener(v -> startGoogleLogin());
+        btnGGLogin.setOnClickListener(v -> startGoogleLogin());
     }
-
-    private void handleEmailPasswordLogin() {
+    
+    /**
+     * Handle email/password login with hardcoded credentials for testing
+     */
+    private void handleNormalLogin(){
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
 
@@ -103,16 +116,51 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        showLoading(true);
+        loginViewModel.login(email,password).observe(this, response -> {
+            if (response.isSuccess() && response.getData() != null) {
+                showLoading(false);
+                Toast.makeText(this, "Welcome " + response.getData().getUsername(), Toast.LENGTH_SHORT).show();
+                navigateToMain();
+            } else {
+                showLoading(false);
+                tvError.setText("Invalid username or password.");
+                tvError.setVisibility(View.VISIBLE);
+//                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void handleEmailPasswordLogin() {
+        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
+        
+        // Hide error
+        tvError.setVisibility(View.GONE);
+        
+        // Validate input
+        if (email.isEmpty()) {
+            tvError.setText("Please enter email/username");
+            tvError.setVisibility(View.VISIBLE);
+            return;
+        }
+        
+        if (password.isEmpty()) {
+            tvError.setText("Please enter password");
+            tvError.setVisibility(View.VISIBLE);
+            return;
+        }
+        
         // Show loading
         showLoading(true);
-
+        
         // Check hardcoded credentials
         if (email.equals(TEST_USERNAME) && password.equals(TEST_PASSWORD)) {
             // Login successful
             new android.os.Handler().postDelayed(() -> {
                 showLoading(false);
                 Toast.makeText(this, "Welcome " + TEST_USERNAME + "!", Toast.LENGTH_SHORT).show();
-                navigateToHome(); // Sẽ gọi đến MainActivity
+                navigateToMain();
             }, 500); // Simulate network delay
         } else {
             // Login failed
@@ -123,19 +171,16 @@ public class LoginActivity extends AppCompatActivity {
             }, 500);
         }
     }
-
+    
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         btnSignIn.setEnabled(!show);
         etEmail.setEnabled(!show);
         etPassword.setEnabled(!show);
     }
-
-    private void navigateToHome() {
-        // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
-        // Đã đổi từ HomeActivity.class sang MainActivity.class
+    
+    private void navigateToMain() {
         Intent intent = new Intent(this, MainActivity.class);
-        // ===== HẾT PHẦN SỬA =====
         startActivity(intent);
         finish();
     }
@@ -164,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginWithGoogle(String idToken) {
         loginViewModel.loginWithGoogle(idToken).observe(this, response -> {
             if (response.isSuccess() && response.getData() != null) {
-                Toast.makeText(this, "Welcome " + response.getData().userResponseDto.username, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Welcome " + response.getData().getUserResponseDto().username, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {
@@ -172,4 +217,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void navigateToSignup() {
+        // Quay trở lại màn hình Login sau khi đăng ký thành công
+        Intent intent = new Intent(this, RegisterActivity.class);
+        // Xóa các activity trước đó khỏi stack để người dùng không thể quay lại màn hình đăng ký
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 }
+
+

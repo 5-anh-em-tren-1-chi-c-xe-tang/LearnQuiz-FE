@@ -20,6 +20,11 @@ public class Feedback {
     @SerializedName("userId")
     private String userId;
 
+    // --- MỚI THÊM ---
+    @SerializedName("username")
+    private String username;
+    // ----------------
+
     @SerializedName("createdAt")
     private Date createdAt;
 
@@ -39,6 +44,11 @@ public class Feedback {
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
+
+    // --- MỚI THÊM GETTER/SETTER ---
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    // ------------------------------
 
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }

@@ -3,6 +3,7 @@ package com.example.learnquiz_fe.data.repository;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.learnquiz_fe.data.model.payment.request.CreatePaymentRequest;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
@@ -17,20 +18,22 @@ public class PaymentRepository {
 
     private final ApiService apiService;
     private static final String TAG = "PaymentRepository";
+    private final Context context;
+
+    public PaymentRepository(Context context) {
+        this.context = context.getApplicationContext();
+        this.apiService = RetrofitClient.getInstance(context).getApiService();
+    }
 
     public interface GenericPaymentCallback<T> {
         void onSuccess(T data);
         void onError(String message, int code);
     }
 
-    public PaymentRepository(ApiService apiService) {
-        this.apiService = apiService;
-    }
-
     /**
      * Create a new payment intent
      */
-    public void createPaymentIntent(Object paymentRequest, GenericPaymentCallback<PayOSCreatePaymentResponse> callback) {
+    public void createPaymentIntent(CreatePaymentRequest paymentRequest, GenericPaymentCallback<PayOSCreatePaymentResponse> callback) {
         Call<ApiResponse<PayOSCreatePaymentResponse>> call = apiService.createPaymentIntent(paymentRequest);
 
         call.enqueue(new Callback<ApiResponse<PayOSCreatePaymentResponse>>() {
@@ -64,7 +67,7 @@ public class PaymentRepository {
     /**
      * Get an existing PayOS order
      */
-    public void getOrder(String orderId, GenericPaymentCallback<PayOSGetOrderResponse> callback) {
+    public void getOrder(int orderId, GenericPaymentCallback<PayOSGetOrderResponse> callback) {
         Call<ApiResponse<PayOSGetOrderResponse>> call = apiService.getOrder(orderId);
 
         call.enqueue(new Callback<ApiResponse<PayOSGetOrderResponse>>() {

@@ -1,24 +1,25 @@
 package com.example.learnquiz_fe.data.network;
 
-// Import your existing models
+import com.example.learnquiz_fe.data.model.User;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.auth.GoogleAuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.feedback.CreateFeedbackRequest;
+import com.example.learnquiz_fe.data.model.feedback.Feedback;
+import com.example.learnquiz_fe.data.model.feedback.QuizStats;
+import com.example.learnquiz_fe.data.model.feedback.UpdateFeedbackRequest;
+import com.example.learnquiz_fe.data.model.payment.request.CreatePaymentRequest;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
+import com.example.learnquiz_fe.data.model.auth.LoginRequestDTO;
+import com.example.learnquiz_fe.data.model.auth.RegisterRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
-
-// --- Imports for NEW Feedback models ---
-// You will need to create these files in your 'model' package
-import com.example.learnquiz_fe.data.model.feedback.Feedback;
-import com.example.learnquiz_fe.data.model.feedback.CreateFeedbackRequest;
-import com.example.learnquiz_fe.data.model.feedback.UpdateFeedbackRequest;
-import com.example.learnquiz_fe.data.model.feedback.QuizStats;
-// ----------------------------------------
+import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public interface ApiService {
     /**
      * Generate quiz from images
      * POST /api/quiz/generate
-     * * @param request Quiz generation request with images and settings
+     *
+     * @param request Quiz generation request with images and settings
      * @return ApiResponse containing GenerateQuizResponse
      */
     @POST(ApiEndpoints.GENERATE_QUIZ)
@@ -51,7 +53,8 @@ public interface ApiService {
 
     /**
      * Generate quiz with authentication token
-     * * @param token Authorization Bearer token
+     *
+     * @param token Authorization Bearer token
      * @param request Quiz generation request
      * @return ApiResponse containing GenerateQuizResponse
      */
@@ -64,7 +67,8 @@ public interface ApiService {
     /**
      * Get quiz detail by ID
      * GET /api/quiz/{id}
-     * * @param quizId Quiz ID
+     *
+     * @param quizId Quiz ID
      * @return ApiResponse containing GenerateQuizResponse
      */
     @GET(ApiEndpoints.GET_QUIZ_DETAIL)
@@ -72,10 +76,18 @@ public interface ApiService {
             @Path("id") String quizId
     );
 
+    // This one differs from getQuizDetail by purpose
+    // Used when viewing quiz details for taking the quiz
+    @GET(ApiEndpoints.GET_QUIZ_DETAIL)
+    Call<ApiResponse<QuizResponseDTO>> getQuizDetailForView(
+            @Path("id") String quizId
+    );
+
     /**
      * Submit quiz answers (wrapped in ApiResponse)
      * POST /api/quizhistory/submit
-     * * @param request Submit quiz request with quizId and answers
+     *
+     * @param request Submit quiz request with quizId and answers
      * @return ApiResponse containing SubmitQuizResponseDTO with score and results
      */
     @POST(ApiEndpoints.SUBMIT_QUIZ)
@@ -84,7 +96,15 @@ public interface ApiService {
     );
 
     @POST(ApiEndpoints.LOGIN_GOOGLE)
-    Call<ApiResponse<AuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+    Call<ApiResponse<GoogleAuthResponse>> loginWithGoogle(@Body IdTokenRequest idTokenRequest);
+
+    @POST(ApiEndpoints.LOGIN)
+    Call<ApiResponse<AuthResponse>> login(@Body LoginRequestDTO loginRequest);
+
+    @POST(ApiEndpoints.REGISTER)
+    Call<ApiResponse<AuthResponse>> register(@Body RegisterRequestDTO registerRequest);
+    @PUT(ApiEndpoints.UPDATE_PROFILE)
+    Call<ApiResponse<User>> updateProfile(@Body UserRequestDTO userRequestDTO);
 
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
@@ -93,19 +113,37 @@ public interface ApiService {
      * Payment endpoints
      */
     @GET(ApiEndpoints.GET_ORDER)
-    Call<ApiResponse<PayOSGetOrderResponse>> getOrder(@Path("orderId") String orderId);
+    Call<ApiResponse<PayOSGetOrderResponse>> getOrder(@Path("orderId") int orderId);
 
     @POST(ApiEndpoints.CREATE_PAYMENT_INTENT)
-    Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body Object paymentRequest);
+    Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body CreatePaymentRequest paymentRequest);
 
-
-    // ===============================================
-    // ============= NEW FEEDBACK API ================
-    // ===============================================
+    @GET(ApiEndpoints.FEEDBACK_STATS)
+    Call<ApiResponse<QuizStats>> getQuizRatingStats(
+            @Path("quizId") String quizId
+    );
 
     /**
-     * Create new feedback for a quiz
-     * POST /api/Feedback
+     * Lấy danh sách feedback theo Quiz (Get by Quiz)
+     * URL: api/Feedback/quiz/{quizId}
+     */
+    @GET(ApiEndpoints.FEEDBACK_BY_QUIZ)
+    Call<ApiResponse<List<Feedback>>> getFeedbackByQuiz(
+            @Path("quizId") String quizId
+    );
+
+    /**
+     * Lấy feedback của user hiện tại (Get My Feedback)
+     * URL: api/Feedback/my-feedback
+     */
+    @GET(ApiEndpoints.FEEDBACK_MY)
+    Call<ApiResponse<List<Feedback>>> getMyFeedback(
+            @Header("Authorization") String token
+    );
+
+    /**
+     * Tạo feedback mới (Create)
+     * URL: api/Feedback
      */
     @POST(ApiEndpoints.FEEDBACK_BASE)
     Call<ApiResponse<Feedback>> createFeedback(
@@ -114,29 +152,9 @@ public interface ApiService {
     );
 
     /**
-     * Get a specific feedback by its ID
-     * GET /api/Feedback/{id}
-     */
-    @GET(ApiEndpoints.FEEDBACK_BY_ID)
-    Call<ApiResponse<Feedback>> getFeedbackById(@Path("id") String feedbackId);
-
-    /**
-     * Get all feedback for a specific quiz
-     * GET /api/Feedback/quiz/{quizId}
-     */
-    @GET(ApiEndpoints.FEEDBACK_BY_QUIZ)
-    Call<ApiResponse<List<Feedback>>> getFeedbackByQuiz(@Path("quizId") String quizId);
-
-    /**
-     * Get all feedback submitted by the current user
-     * GET /api/Feedback/my-feedback
-     */
-    @GET(ApiEndpoints.FEEDBACK_MY)
-    Call<ApiResponse<List<Feedback>>> getMyFeedback(@Header("Authorization") String token);
-
-    /**
-     * Update an existing feedback
-     * PUT /api/Feedback/{id}
+     * Cập nhật feedback (Update)
+     * URL: api/Feedback/{id}
+     * Lưu ý: ApiEndpoints.FEEDBACK_BY_ID chứa {id}, nên @Path phải là "id"
      */
     @PUT(ApiEndpoints.FEEDBACK_BY_ID)
     Call<ApiResponse<Feedback>> updateFeedback(
@@ -146,19 +164,12 @@ public interface ApiService {
     );
 
     /**
-     * Delete a feedback
-     * DELETE /api/Feedback/{id}
+     * Xóa feedback (Delete)
+     * URL: api/Feedback/{id}
      */
     @DELETE(ApiEndpoints.FEEDBACK_BY_ID)
     Call<ApiResponse<Object>> deleteFeedback(
             @Header("Authorization") String token,
             @Path("id") String feedbackId
     );
-
-    /**
-     * Get rating statistics for a quiz
-     * GET /api/Feedback/quiz/{quizId}/stats
-     */
-    @GET(ApiEndpoints.FEEDBACK_STATS)
-    Call<ApiResponse<QuizStats>> getQuizRatingStats(@Path("quizId") String quizId);
 }
