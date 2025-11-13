@@ -122,7 +122,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_600"
                         android:textSize="14sp"
                         tools:text="Test your knowledge of core JavaScript concepts including variables, data types, functions, objects, and more." />
 
@@ -217,7 +217,7 @@
                         android:id="@+id/tvQuizCount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_600"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@id/ivAuthorAvatar"
                         app:layout_constraintEnd_toStartOf="@id/btnFollow"
