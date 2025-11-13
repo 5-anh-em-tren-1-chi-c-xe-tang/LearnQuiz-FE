@@ -180,6 +180,7 @@ public class QuizTakingActivity extends AppCompatActivity {
         cardQuestion.setCardBackgroundColor(defaultCardBackgroundColor);
         cardQuestion.setStrokeWidth(0); // Bỏ viền
 
+        tvQuestion.setTextColor(getColor(R.color.black));
         // 2. Ẩn và xóa nội dung giải thích (nếu có)
         TextView tvExplanation = cardQuestion.findViewById(R.id.tvExplanation);
         if (tvExplanation != null) {

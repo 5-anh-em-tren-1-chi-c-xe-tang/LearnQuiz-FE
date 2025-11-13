@@ -109,6 +109,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LearnQuiz_FE" />
 
+        <activity
+            android:name=".ui.activities.quiz.QuizHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
+        <activity
+            android:name=".ui.activities.quiz.QuizHistoryDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LearnQuiz_FE" />
+
     </application>
 
 </manifest>
