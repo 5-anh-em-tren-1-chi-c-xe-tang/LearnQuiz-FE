@@ -35,12 +35,12 @@ public class QuizDetailActivity extends AppCompatActivity {
             tvPlaysCount, tvPlaysLabel, tvQuestionsCount, tvQuestionsLabel,
             tvDuration, tvDurationLabel, tvAuthorName, tvQuizCount,
             tvDifficultyValue, tvDurationValue, tvVisibilityValue,
-            tvLastUpdated, tvMultipleChoiceCount;
+            tvLastUpdated, tvMultipleChoiceCount, tvWriteReviewLink;
     private ImageView ivAuthorAvatar, ivHeaderImage;
     private FlexboxLayout tagsContainer;
     private ImageButton btnBack, btnShare;
     private Button btnFollow;
-    private MaterialButton btnStartQuiz, btnRateComment; // Thêm btnRateComment
+    private MaterialButton btnStartQuiz;
 
     private QuizRepository quizRepository;
     private ProgressBar progressBar;
@@ -67,6 +67,14 @@ public class QuizDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (quizId != null && !quizId.isBlank()) {
+            loadQuizDetails(quizId);
+        }
+    }
+
     public static void start(Context context, String quizId) {
         Intent intent = new Intent(context, QuizDetailActivity.class);
         intent.putExtra("quiz_id", quizId);
@@ -78,7 +86,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnShare = findViewById(R.id.btnShare);
         btnFollow = findViewById(R.id.btnFollow);
         btnStartQuiz = findViewById(R.id.btnStartQuiz);
-        btnRateComment = findViewById(R.id.btnRateComment); // Ánh xạ nút Rate
+        tvWriteReviewLink = findViewById(R.id.tvWriteReviewLink); // Ánh xạ nút Rate
 
         progressBar = findViewById(R.id.progressBar);
         mainContent = findViewById(R.id.mainContent);
@@ -112,20 +120,17 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnFollow.setOnClickListener(v -> followAuthor());
         btnStartQuiz.setOnClickListener(v -> startQuiz());
 
-        // Xử lý sự kiện click nút "Write a Review"
-        if (btnRateComment != null) {
-            btnRateComment.setOnClickListener(v -> {
-                Intent intent = new Intent(QuizDetailActivity.this, QuizFeedbackActivity.class);
-                intent.putExtra("QUIZ_ID", quizId);
-                startActivity(intent);
-            });
-        }
+        tvWriteReviewLink.setOnClickListener(v -> {
+            Intent intent = new Intent(QuizDetailActivity.this, QuizFeedbackActivity.class);
+            intent.putExtra("QUIZ_ID", quizId);
+            startActivity(intent);
+        });
     }
 
     private void loadQuizDetails(String quizId) {
         progressBar.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.GONE);
-        if (btnRateComment != null) btnRateComment.setVisibility(View.GONE);
+        if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.GONE);
 
         quizRepository.getQuizDetail(new QuizRepository.GenericCallback<QuizResponseDTO>() {
             @Override
@@ -133,7 +138,7 @@ public class QuizDetailActivity extends AppCompatActivity {
                 displayQuizDetails(data);
                 progressBar.setVisibility(View.GONE);
                 mainContent.setVisibility(View.VISIBLE);
-                if (btnRateComment != null) btnRateComment.setVisibility(View.VISIBLE);
+                if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -245,6 +250,10 @@ public class QuizDetailActivity extends AppCompatActivity {
     private static class Pair<F, S> {
         final F first;
         final S second;
-        Pair(F f, S s) { first = f; second = s; }
+
+        Pair(F f, S s) {
+            first = f;
+            second = s;
+        }
     }
 }

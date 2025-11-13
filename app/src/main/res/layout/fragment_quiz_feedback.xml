@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9FB"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
     tools:context=".ui.fragments.feedback.QuizFeedbackFragment">
 
     <LinearLayout
         android:id="@+id/headerBar"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@drawable/bg_banner_gradient_purple"
+        android:background="?attr/colorPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
@@ -27,7 +28,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@android:color/white" />
+            app:tint="?attr/colorOnPrimary" />
 
         <TextView
             android:id="@+id/tvHeaderTitle"
@@ -35,9 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Rate &amp; Comment"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="?attr/colorOnPrimary" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:isIndicator="true"
                         android:numStars="5"
-                        android:progressTint="#FFB300"
+                        android:progressTint="@color/yellow_500"
                         android:rating="4.5"
                         android:stepSize="0.1" />
 
@@ -89,8 +89,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="4.8"
-                        android:textColor="#333"
-                        android:textSize="14sp"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorOnSurface"
                         android:textStyle="bold" />
 
                     <TextView
@@ -99,8 +99,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:text="(120 reviews)"
-                        android:textColor="#757575"
-                        android:textSize="14sp" />
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:textColorSecondary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -111,9 +111,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:text="Comments"
-                android:textColor="#333"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorOnSurface" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/feedbackRecyclerView"
@@ -147,9 +146,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:text="How was the quiz?"
-                        android:textColor="#333333"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -157,8 +155,8 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="4dp"
                         android:text="Your feedback helps us improve"
-                        android:textColor="#757575"
-                        android:textSize="12sp" />
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?android:textColorSecondary" />
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -168,9 +166,8 @@
                         android:layout_marginTop="12dp"
                         android:numStars="5"
                         android:stepSize="1.0"
-                        android:progressTint="#FFB300"
-                        android:secondaryProgressTint="#FFB300"
-                        android:theme="@style/Widget.AppCompat.RatingBar" />
+                        android:progressTint="@color/yellow_500"
+                        android:secondaryProgressTint="@color/yellow_500" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/commentInputLayout"
@@ -179,13 +176,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:hint="Share your thoughts (optional)"
-                        app:boxBackgroundColor="#FAFAFA"
                         app:boxCornerRadiusBottomEnd="12dp"
                         app:boxCornerRadiusBottomStart="12dp"
                         app:boxCornerRadiusTopEnd="12dp"
                         app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeColor="#A46DFF"
-                        app:boxStrokeWidth="1dp">
+                        app:boxStrokeColor="?attr/colorPrimary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etComment"
@@ -195,27 +190,24 @@
                             android:inputType="textMultiLine"
                             android:minLines="2"
                             android:maxLines="4"
-                            android:textSize="14sp" />
+                            android:textAppearance="?attr/textAppearanceBody1" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSubmitFeedback"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="24dp"
-                        android:background="@drawable/bg_button_purple"
-                        android:text="Gửi Feedback"
+                        android:text="Submit Feedback"
                         android:textAllCaps="false"
-                        android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableLeft="@drawable/ic_send"
-                        android:drawableTint="@android:color/white"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
-                        android:drawablePadding="10dp"
-                        android:gravity="center"
-                        android:stateListAnimator="@null" />
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:icon="@drawable/baseline_send_24"
+                        app:iconGravity="start"
+                        app:iconPadding="8dp"
+                        app:cornerRadius="12dp"
+                        style="@style/Widget.MaterialComponents.Button" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

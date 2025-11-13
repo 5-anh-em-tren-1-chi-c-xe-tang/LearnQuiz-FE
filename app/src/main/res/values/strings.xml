@@ -161,4 +161,5 @@
     <string name="payment_success">payment_success</string>
     <string name="payment_failed">payment failed</string>
     <string name="share">Share</string>
+    <string name="write_review_underlined"><u>View and write a Review</u></string>
 </resources>

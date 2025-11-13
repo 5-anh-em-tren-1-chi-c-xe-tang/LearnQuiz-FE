@@ -62,19 +62,32 @@
             app:layout_constraintStart_toStartOf="@+id/tvUserName"
             app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnEditFeedback"-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--            android:src="@drawable/ic_edit"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/ratingBarItem"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/ratingBarItem"-->
+<!--            tools:visibility="visible" />-->
+
         <ImageButton
             android:id="@+id/btnEditFeedback"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_edit"
+            android:contentDescription="edit_feedback"
+            android:src="@drawable/baseline_edit_24"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/ratingBarItem"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ratingBarItem"
+            app:tint="@color/blue_600"
             tools:visibility="visible" />
-
-
 
         <TextView
             android:id="@+id/tvCommentBody"

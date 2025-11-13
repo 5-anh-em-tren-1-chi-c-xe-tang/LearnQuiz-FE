@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.model.feedback.Feedback;
+import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.ui.adapter.feedback.FeedbackAdapter;
 import com.example.learnquiz_fe.ui.viewmodel.FeedbackViewModel;
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,15 +35,12 @@ public class QuizFeedbackFragment extends Fragment {
     private RatingBar ratingBar;
     private TextInputEditText etComment;
     private AppCompatButton btnSubmitFeedback; // Đã sửa kiểu dữ liệu
-
     private RecyclerView feedbackRecyclerView;
     private FeedbackAdapter feedbackAdapter;
-
     private String quizId;
     private String currentUserId;
-    private String userToken;
     private Feedback myFeedback;
-
+    private RetrofitClient client;
     public static QuizFeedbackFragment newInstance(String quizId) {
         QuizFeedbackFragment fragment = new QuizFeedbackFragment();
         Bundle args = new Bundle();
@@ -57,9 +55,8 @@ public class QuizFeedbackFragment extends Fragment {
         if (getArguments() != null) {
             quizId = getArguments().getString("QUIZ_ID");
         }
-        // TODO: Lấy thông tin user thật từ Session/SharedPreferences
-        currentUserId = "6914ade3721cfa1c07fc398e";
-        userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI2OTE0YWRlMzcyMWNmYTFjMDdmYzM5OGUiLCJ1bmlxdWVfbmFtZSI6Im1hY2hlc3RlciIsImVtYWlsIjoibWFjaGVzdGVyQGdtYWlsLmNvbSIsInJvbGUiOiJVc2VyIiwianRpIjoiZDU5OTg0YjAtZGI2Yy00MzBlLWFkNjctMWU3YTE1MGFhYzA5IiwibmJmIjoxNzYyOTY1NzAyLCJleHAiOjE3NjI5Njc1MDIsImlhdCI6MTc2Mjk2NTcwMiwiaXNzIjoiTGVhcm5TbmFwQXBpIiwiYXVkIjoiTGVhcm5TbmFwQ2xpZW50In0.P4q7jPlPqrSTmMneCawCqB-EqWz5aIcl2Ev43Hj47Do";
+        client = RetrofitClient.getInstance(getContext());
+        currentUserId = client.getUserId();
     }
 
     @Nullable
@@ -113,7 +110,7 @@ public class QuizFeedbackFragment extends Fragment {
     private void loadAllFeedbackData() {
         feedbackViewModel.getQuizStats(quizId);
         feedbackViewModel.getFeedbackList(quizId);
-        feedbackViewModel.getMyFeedback(userToken);
+        feedbackViewModel.getMyFeedback();
     }
 
     private void observeViewModel() {
@@ -131,7 +128,7 @@ public class QuizFeedbackFragment extends Fragment {
             }
         });
 
-        feedbackViewModel.getMyFeedback(userToken).observe(getViewLifecycleOwner(), response -> {
+        feedbackViewModel.getMyFeedback().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.isSuccess() && response.getData() != null) {
                 Optional<Feedback> foundFeedback = response.getData().stream()
                         .filter(f -> f.getQuizId().equals(quizId))
@@ -157,7 +154,7 @@ public class QuizFeedbackFragment extends Fragment {
             Toast.makeText(getContext(), "Please provide a rating (1-5 stars)", Toast.LENGTH_SHORT).show();
             return;
         }
-        feedbackViewModel.submitFeedback(userToken, quizId, rating, comment, myFeedback)
+        feedbackViewModel.submitFeedback(quizId, rating, comment, myFeedback)
                 .observe(getViewLifecycleOwner(), response -> {
                     if (response != null && response.isSuccess()) {
                         Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();

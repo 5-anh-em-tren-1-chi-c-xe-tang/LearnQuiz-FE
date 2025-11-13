@@ -96,6 +96,13 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload quizzes when returning to this fragment
+        loadPublicQuizzesNoProgressBar();
+    }
+
     private void handleSearchInput() {
         // Clear input and reload quizzes
         btnClear.setOnClickListener(v -> {
@@ -186,6 +193,26 @@ public class HomeFragment extends Fragment {
             public void onError(String message, int errorCode) {
                 Log.d("QuizListActivity", "Error loading public quizzes: " + message);
                 progressBar.setVisibility(View.GONE);
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                handleEmptyState(adapter.getItemCount() == 0);
+            }
+        }, null);
+    }
+
+    private void loadPublicQuizzesNoProgressBar() {
+        Log.d("QuizListActivity", "Loading public quizzes");
+        quizRepository.getPublicQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
+            @Override
+            public void onSuccess(List<QuizResponseDTO> quizzes) {
+                Log.d("QuizListActivity", "Loaded " + quizzes.size() + " public quizzes");
+                adapter.setQuizzes(quizzes);
+
+                handleEmptyState(quizzes.isEmpty());
+            }
+
+            @Override
+            public void onError(String message, int errorCode) {
+                Log.d("QuizListActivity", "Error loading public quizzes: " + message);
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                 handleEmptyState(adapter.getItemCount() == 0);
             }
