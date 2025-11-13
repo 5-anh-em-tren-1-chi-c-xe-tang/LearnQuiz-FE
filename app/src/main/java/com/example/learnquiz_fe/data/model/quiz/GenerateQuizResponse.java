@@ -64,6 +64,7 @@ public class GenerateQuizResponse {
      */
     @SerializedName("createdAt")
     private Date createdAt;
+
     
     /**
      * Source image URL or identifier

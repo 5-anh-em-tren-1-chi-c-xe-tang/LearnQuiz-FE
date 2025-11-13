@@ -109,7 +109,21 @@ public interface ApiService {
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
 
+    @DELETE(ApiEndpoints.DELETE_QUIZ)
+    Call<ApiResponse<Object>> deleteQuiz(
+            @Path("id") String quizId
+    );
+    @PUT(ApiEndpoints.UPDATE_QUIZ)
+    Call<ApiResponse<Object>> updateQuiz(
+            @Path("id") String quizId,
+            @Body GenerateQuizResponse request
+    );
 
+    @POST(ApiEndpoints.RATE_QUIZ)
+    Call<ApiResponse<Object>> rateQuiz(
+            @Path("id") String quizId,
+            @Body Double rating
+    );
     @GET(ApiEndpoints.GET_MY_QUIZZES)
     Call<ApiResponse<List<QuizResponseDTO>>> getMyQuizzies();
 

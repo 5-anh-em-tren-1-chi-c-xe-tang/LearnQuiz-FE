@@ -23,12 +23,12 @@ import retrofit2.Response;
  * Handles business logic and data transformation
  */
 public class QuizRepository {
-    
+
     private static final String TAG = "QuizRepository";
-    
+
     private final ApiService apiService;
     private final Context context;
-    
+
     /**
      * Constructor
      */
@@ -36,11 +36,10 @@ public class QuizRepository {
         this.context = context.getApplicationContext();
         this.apiService = RetrofitClient.getInstance(context).getApiService();
     }
-    
+
     /**
      * Generate quiz from images
-     * 
-     * @param request Quiz generation request
+     * * @param request Quiz generation request
      * @param callback Callback for success/error handling
      */
     public void generateQuiz(GenerateQuizRequest request, QuizCallback callback) {
@@ -49,26 +48,26 @@ public class QuizRepository {
             callback.onError("Invalid request data", 400);
             return;
         }
-        
+
         Log.d(TAG, "Generating quiz with " + request.getImages().size() + " images");
-        
+
         // Make API call
         Call<ApiResponse<GenerateQuizResponse>> call = apiService.generateQuiz(request);
-        
+
         call.enqueue(new Callback<ApiResponse<GenerateQuizResponse>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
                                    @NonNull Response<ApiResponse<GenerateQuizResponse>> response) {
-                
+
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<GenerateQuizResponse> apiResponse = response.body();
-                    
+
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
                         Log.d(TAG, "Quiz generated successfully: " + apiResponse.getData().getId());
                         callback.onSuccess(apiResponse.getData());
                     } else {
-                        String errorMsg = apiResponse.getMessage() != null ? 
-                            apiResponse.getMessage() : "Unknown error";
+                        String errorMsg = apiResponse.getMessage() != null ?
+                                apiResponse.getMessage() : "Unknown error";
                         Log.e(TAG, "API returned error: " + errorMsg);
                         callback.onError(errorMsg, response.code());
                     }
@@ -78,7 +77,7 @@ public class QuizRepository {
                     callback.onError(errorMsg, response.code());
                 }
             }
-            
+
             @Override
             public void onFailure(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
                                   @NonNull Throwable t) {
@@ -90,8 +89,7 @@ public class QuizRepository {
 
     /**
      * Generate quiz with authentication
-     * 
-     * @param request Quiz generation request
+     * * @param request Quiz generation request
      * @param token Authorization token
      * @param callback Callback for success/error handling
      */
@@ -100,18 +98,18 @@ public class QuizRepository {
             callback.onError("Invalid request data", 400);
             return;
         }
-        
+
         Call<ApiResponse<GenerateQuizResponse>> call = apiService.generateQuizWithAuth(
-            "Bearer " + token, request);
-        
+                "Bearer " + token, request);
+
         call.enqueue(new Callback<ApiResponse<GenerateQuizResponse>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
                                    @NonNull Response<ApiResponse<GenerateQuizResponse>> response) {
-                
+
                 if (response.isSuccessful() && response.body() != null) {
                     ApiResponse<GenerateQuizResponse> apiResponse = response.body();
-                    
+
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
                         callback.onSuccess(apiResponse.getData());
                     } else {
@@ -121,7 +119,7 @@ public class QuizRepository {
                     callback.onError(handleErrorResponse(response.code()), response.code());
                 }
             }
-            
+
             @Override
             public void onFailure(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
                                   @NonNull Throwable t) {
@@ -129,11 +127,10 @@ public class QuizRepository {
             }
         });
     }
-    
+
     /**
-     * Get quiz detail by ID
-     * 
-     * @param quizId Quiz ID
+     * Get quiz detail by ID (For Editing/Generating context)
+     * * @param quizId Quiz ID
      * @param callback Callback for success/error handling
      */
     public void getQuizDetail(String quizId, QuizCallback callback) {
@@ -166,6 +163,39 @@ public class QuizRepository {
     }
 
     /**
+     * Get quiz detail by ID (For Viewing/Taking Quiz)
+     */
+    public void getQuizDetail(GenericCallback<QuizResponseDTO> callback, String quizId) {
+        Call<ApiResponse<QuizResponseDTO>> call = apiService.getQuizDetailForView(quizId);
+
+        call.enqueue(new Callback<ApiResponse<QuizResponseDTO>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<QuizResponseDTO>> call, Response<ApiResponse<QuizResponseDTO>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<QuizResponseDTO> apiResponse = response.body();
+
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        callback.onSuccess(apiResponse.getData());
+                    } else {
+                        callback.onError(apiResponse.getMessage(), response.code());
+                    }
+                } else {
+                    String errorMsg = handleErrorResponse(response.code());
+                    Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
+                    callback.onError(errorMsg, response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<QuizResponseDTO>> call, Throwable throwable) {
+                Log.e(TAG, "HTTP error " + throwable.getMessage());
+                callback.onError("Network error: " + throwable.getMessage(), -1);
+            }
+        });
+    }
+
+    /**
      * Get public quizzes
      * @return {@link ApiResponse<QuizResponseDTO>} API Response containing list of public quizzes
      */
@@ -173,7 +203,6 @@ public class QuizRepository {
         Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getPublicQuizzies(query);
 
         call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
-
             @Override
             public void onResponse(Call<ApiResponse<List<QuizResponseDTO>>> call, Response<ApiResponse<List<QuizResponseDTO>>> response) {
 
@@ -190,43 +219,12 @@ public class QuizRepository {
                 } else {
                     String errorMsg = handleErrorResponse(response.code());
                     Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
+                    callback.onError(errorMsg, response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<List<QuizResponseDTO>>> call, Throwable throwable) {
-                Log.e(TAG, "HTTP error " + throwable.getMessage());
-                callback.onError("Network error: " + throwable.getMessage(), -1);
-            }
-        });
-    }
-
-    public void getQuizDetail(GenericCallback<QuizResponseDTO> callback, String quizId) {
-        Call<ApiResponse<QuizResponseDTO>> call = apiService.getQuizDetailForView(quizId);
-
-        call.enqueue(new Callback<ApiResponse<QuizResponseDTO>>() {
-
-            @Override
-            public void onResponse(Call<ApiResponse<QuizResponseDTO>> call, Response<ApiResponse<QuizResponseDTO>> response) {
-
-                if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<QuizResponseDTO> apiResponse = response.body();
-
-                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-                        Log.d(TAG, "Public quizzes fetched successfully");
-                        callback.onSuccess(apiResponse.getData());
-                    } else {
-                        Log.e(TAG, "API returned error: " + apiResponse.getMessage());
-                        callback.onError(apiResponse.getMessage(), response.code());
-                    }
-                } else {
-                    String errorMsg = handleErrorResponse(response.code());
-                    Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<QuizResponseDTO>> call, Throwable throwable) {
                 Log.e(TAG, "HTTP error " + throwable.getMessage());
                 callback.onError("Network error: " + throwable.getMessage(), -1);
             }
@@ -241,7 +239,6 @@ public class QuizRepository {
         Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getMyQuizzies();
 
         call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
-
             @Override
             public void onResponse(Call<ApiResponse<List<QuizResponseDTO>>> call, Response<ApiResponse<List<QuizResponseDTO>>> response) {
 
@@ -249,7 +246,7 @@ public class QuizRepository {
                     ApiResponse<List<QuizResponseDTO>> apiResponse = response.body();
 
                     if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-                        Log.d(TAG, "Public quizzes fetched successfully");
+                        Log.d(TAG, "My quizzes fetched successfully");
                         callback.onSuccess(apiResponse.getData());
                     } else {
                         Log.e(TAG, "API returned error: " + apiResponse.getMessage());
@@ -258,6 +255,7 @@ public class QuizRepository {
                 } else {
                     String errorMsg = handleErrorResponse(response.code());
                     Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
+                    callback.onError(errorMsg, response.code());
                 }
             }
 
@@ -269,6 +267,57 @@ public class QuizRepository {
         });
     }
 
+    /**
+     * Delete a quiz
+     */
+    public void deleteQuiz(String quizId, GenericCallback<Object> callback) {
+        Call<ApiResponse<Object>> call = apiService.deleteQuiz(quizId);
+        call.enqueue(new Callback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Object>> call, @NonNull Response<ApiResponse<Object>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        callback.onSuccess(response.body().getData());
+                    } else {
+                        callback.onError(response.body().getMessage(), response.code());
+                    }
+                } else {
+                    callback.onError(handleErrorResponse(response.code()), response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Object>> call, @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage(), -1);
+            }
+        });
+    }
+
+    /**
+     * Update a quiz
+     */
+    public void updateQuiz(String quizId, GenerateQuizResponse requestBody, GenericCallback<Object> callback) {
+        Call<ApiResponse<Object>> call = apiService.updateQuiz(quizId, requestBody);
+        call.enqueue(new Callback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Object>> call, @NonNull Response<ApiResponse<Object>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        callback.onSuccess(response.body().getData());
+                    } else {
+                        callback.onError(response.body().getMessage(), response.code());
+                    }
+                } else {
+                    callback.onError(handleErrorResponse(response.code()), response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Object>> call, @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage(), -1);
+            }
+        });
+    }
 
     /**
      * Handle HTTP error responses
@@ -291,7 +340,7 @@ public class QuizRepository {
                 return "Error occurred (Code: " + code + ")";
         }
     }
-    
+
     /**
      * Callback interface for quiz operations
      */
