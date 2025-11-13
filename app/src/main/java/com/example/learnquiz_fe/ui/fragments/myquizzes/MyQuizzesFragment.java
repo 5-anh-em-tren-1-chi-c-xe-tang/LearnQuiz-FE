@@ -219,7 +219,7 @@ public class MyQuizzesFragment extends Fragment {
 
         Log.d(TAG, "Loading my quizzes.");
 
-        quizRepository.getMyQuizzes(new QuizRepository.GenericQuizCallback() {
+        quizRepository.getMyQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
             @Override
             public void onSuccess(List<QuizResponseDTO> quizResponseDTOList) {
                 if (!isAdded()) return;

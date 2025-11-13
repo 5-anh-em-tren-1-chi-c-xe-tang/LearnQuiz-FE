@@ -142,7 +142,6 @@
     <color name="material_dynamic_primary40">#6200EE</color> <!-- Assuming this is your primary color -->
 
     <!-- Accent/Warning colors -->
-    <color name="orange_500">#FF9800</color>
     <color name="warning_orange">#FF9800</color> <!-- Alias for clarity -->
     <color name="banner_background_yellow">#FFF3E0</color>
 

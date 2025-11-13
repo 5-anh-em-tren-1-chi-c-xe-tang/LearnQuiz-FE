@@ -9,6 +9,7 @@ public class QuizResponseDTO {
     private String title;
     private String description;
     private UserResponse author;
+    private String authorName;
     private String folderName;
     private String context;
     private String visibility;
@@ -20,6 +21,14 @@ public class QuizResponseDTO {
     private String imageSource;
     private String language;
     private List<String> tags;
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
     public UserResponse getAuthor() {
         return author;

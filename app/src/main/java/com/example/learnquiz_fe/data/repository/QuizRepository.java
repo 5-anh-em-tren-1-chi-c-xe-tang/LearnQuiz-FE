@@ -237,7 +237,7 @@ public class QuizRepository {
      * Get my quizzes
      * @return {@link ApiResponse<QuizResponseDTO>} API Response containing list of public quizzes
      */
-    public void getMyQuizzes(GenericQuizCallback callback) {
+    public void getMyQuizzes(GenericCallback<List<QuizResponseDTO>> callback) {
         Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getMyQuizzies();
 
         call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
