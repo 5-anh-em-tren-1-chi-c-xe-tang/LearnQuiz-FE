@@ -100,7 +100,7 @@ public class PayActivity extends AppCompatActivity {
         tvDescription.setText(data.getDescription());
         tvAmount.setText(formattedAmount);
         tvAccountName.setText(data.getAccountName());
-        tvOrderCode.setText(orderCode);
+        tvOrderCode.setText(String.valueOf(orderCode));
         tvAccountNumber.setText(data.getAccountNumber());
 
         Glide.with(this)

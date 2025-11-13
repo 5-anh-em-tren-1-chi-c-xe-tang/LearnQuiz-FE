@@ -21,6 +21,7 @@ import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.helpers.LoginPreferences;
 import com.example.learnquiz_fe.ui.activities.LoginActivity; // Sử dụng để logout
+import com.example.learnquiz_fe.ui.activities.quiz.QuizHistoryActivity;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.viewmodel.LoginViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -139,7 +140,6 @@ public class ProfileFragment extends Fragment {
 
         itemMyQuizzes.setOnClickListener(v -> Toast.makeText(getContext(), "My Quizzes clicked!", Toast.LENGTH_SHORT).show());
         itemQuizFolders.setOnClickListener(v -> Toast.makeText(getContext(), "Quiz Folders clicked!", Toast.LENGTH_SHORT).show());
-        itemQuizHistory.setOnClickListener(v -> Toast.makeText(getContext(), "Quiz History clicked!", Toast.LENGTH_SHORT).show());
 
         itemAccountSettings.setOnClickListener(v -> Toast.makeText(getContext(), "Account Setting clicked!", Toast.LENGTH_SHORT).show());
 
@@ -181,6 +181,11 @@ public class ProfileFragment extends Fragment {
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)
                     .commit();
+        });
+
+        itemQuizHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), QuizHistoryActivity.class);
+            startActivity(intent);
         });
 
     }

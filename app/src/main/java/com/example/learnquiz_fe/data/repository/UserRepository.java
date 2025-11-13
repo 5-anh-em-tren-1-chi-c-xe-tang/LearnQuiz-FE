@@ -2,14 +2,17 @@ package com.example.learnquiz_fe.data.repository;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.learnquiz_fe.data.model.User;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
 import com.example.learnquiz_fe.data.model.auth.LoginRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
-import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
+import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
+
 import com.example.learnquiz_fe.data.network.ApiService;
 import com.example.learnquiz_fe.data.network.RetrofitClient;
 
@@ -66,5 +69,73 @@ public class UserRepository {
 
         return liveData;
     }
+    public void deleteQuiz(String quizId, QuizRepository.GenericCallback<Object> callback) {
+        Call<ApiResponse<Object>> call = apiService.deleteQuiz(quizId);
+        call.enqueue(new Callback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Object>> call, @NonNull Response<ApiResponse<Object>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        callback.onSuccess(response.body().getData());
+                    } else {
+                        callback.onError(response.body().getMessage(), response.code());
+                    }
+                } else {
+                    callback.onError(handleErrorResponse(response.code()), response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Object>> call, @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage(), -1);
+            }
+        });
+    }
+
+    /**
+     * Update a quiz
+     * Note: ApiService yêu cầu body là GenerateQuizResponse
+     */
+    public void updateQuiz(String quizId, GenerateQuizResponse request, QuizRepository.GenericCallback<Object> callback) {
+        Call<ApiResponse<Object>> call = apiService.updateQuiz(quizId, request);
+        call.enqueue(new Callback<ApiResponse<Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<Object>> call, @NonNull Response<ApiResponse<Object>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isSuccess()) {
+                        callback.onSuccess(response.body().getData());
+                    } else {
+                        callback.onError(response.body().getMessage(), response.code());
+                    }
+                } else {
+                    callback.onError(handleErrorResponse(response.code()), response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<Object>> call, @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage(), -1);
+            }
+        });
+    }
+    private String handleErrorResponse(int code) {
+        switch (code) {
+            case 400:
+                return "Invalid request data. Please check your inputs.";
+            case 401:
+                return "Unauthorized. Please login again.";
+            case 403:
+                return "Access forbidden.";
+            case 404:
+                return "Resource not found.";
+            case 500:
+                return "Server error. Please try again later.";
+            case 503:
+                return "Service unavailable. Please try again later.";
+            default:
+                return "Error occurred (Code: " + code + ")";
+        }
+    }
+
 
 }

@@ -17,6 +17,7 @@ import com.example.learnquiz_fe.data.model.auth.RegisterRequestDTO;
 import com.example.learnquiz_fe.data.model.quiz.ApiResponse;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizRequest;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
+import com.example.learnquiz_fe.data.model.quizhistory.QuizHistoryResponseDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizRequestDTO;
 import com.example.learnquiz_fe.data.model.quizhistory.SubmitQuizResponseDTO;
 import com.example.learnquiz_fe.data.model.user.UserRequestDTO;
@@ -106,10 +107,27 @@ public interface ApiService {
     @PUT(ApiEndpoints.UPDATE_PROFILE)
     Call<ApiResponse<User>> updateProfile(@Body UserRequestDTO userRequestDTO);
 
+    @GET(ApiEndpoints.MY_QUIZ_HISTORY)
+    Call<QuizHistoryResponseDTO> getMyQuizHistory();
+
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
 
+    @DELETE(ApiEndpoints.DELETE_QUIZ)
+    Call<ApiResponse<Object>> deleteQuiz(
+            @Path("id") String quizId
+    );
+    @PUT(ApiEndpoints.UPDATE_QUIZ)
+    Call<ApiResponse<Object>> updateQuiz(
+            @Path("id") String quizId,
+            @Body GenerateQuizResponse request
+    );
 
+    @POST(ApiEndpoints.RATE_QUIZ)
+    Call<ApiResponse<Object>> rateQuiz(
+            @Path("id") String quizId,
+            @Body Double rating
+    );
     @GET(ApiEndpoints.GET_MY_QUIZZES)
     Call<ApiResponse<List<QuizResponseDTO>>> getMyQuizzies();
 

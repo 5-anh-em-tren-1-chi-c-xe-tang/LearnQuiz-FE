@@ -36,15 +36,17 @@ public class ApiEndpoints {
      */
     public static final String USER_PROFILE = "api/user/profile";
     public static final String UPDATE_PROFILE = "api/user";
+    public static final String MY_QUIZ_HISTORY = "api/QuizHistory/me";
+
     /**
      * Quiz endpoints
      */
     public static final String GET_PUBLIC_QUIZ = "api/Quiz/public";
     public static final String GET_MY_QUIZZES = "api/Quiz/my-quizzes";
-
+    public static final String UPDATE_QUIZ = "api/quiz/{id}";
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
-
+    public static final String RATE_QUIZ = "api/quiz/{id}/rate";
     /**
      * Quiz history endpoints
      */

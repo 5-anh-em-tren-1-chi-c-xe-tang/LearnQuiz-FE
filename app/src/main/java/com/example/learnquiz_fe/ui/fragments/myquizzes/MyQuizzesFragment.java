@@ -1,10 +1,12 @@
-// @/app/src/main/java/com/example/learnquiz_fe/ui/fragments/myquizzes/MyQuizzesFragment.java
 package com.example.learnquiz_fe.ui.fragments.myquizzes;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.os.Bundle;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,6 +28,9 @@ import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.repository.QuizRepository;
+import com.example.learnquiz_fe.ui.adapter.myquizzes.MyQuizAdapter;
+import com.example.learnquiz_fe.ui.fragments.myquizzes.QuizUpdateFragment;
 import com.example.learnquiz_fe.ui.adapter.myquizzes.MyQuizAdapter; // Import MyQuizAdapter
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.google.android.material.button.MaterialButton;
@@ -36,24 +41,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
-// Removed unused imports: SimpleDateFormat, ParseException, Date, Locale
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyQuizzesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyQuizzesFragment extends Fragment {
 
-    private static final String TAG = "MyQuizzesFragment";
-
-    private MyQuizAdapter quizAdapter; // Changed type to MyQuizAdapter
-    private boolean isFabMenuOpen = false;
-    private QuizRepository quizRepository;
-
-    // Declare all views that were previously accessed via binding
     private RecyclerView rvQuizzes;
     private ProgressBar progressBar;
+    private MyQuizAdapter quizAdapter;
+    private QuizRepository quizRepository;
     private LinearLayout tvEmptyState;
     private TextView tvQuizCountInfo;
     private MaterialButton btnCreateQuizHeader;
@@ -69,30 +63,10 @@ public class MyQuizzesFragment extends Fragment {
     private TextView tvFromImageLabel;
     private MaterialCardView cardUpgradePrompt;
 
-    public MyQuizzesFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyQuizzesFragment.
-     */
-    public static MyQuizzesFragment newInstance(String param1, String param2) {
-        MyQuizzesFragment fragment = new MyQuizzesFragment();
-        Bundle args = new Bundle();
-        // args.putString(ARG_PARAM1, param1);
-        // args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public MyQuizzesFragment() {}
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my_quizzes, container, false);
     }
 
@@ -100,7 +74,6 @@ public class MyQuizzesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize all views using findViewById
         rvQuizzes = view.findViewById(R.id.rv_quizzes);
         progressBar = view.findViewById(R.id.progressBar);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
@@ -121,12 +94,8 @@ public class MyQuizzesFragment extends Fragment {
         quizRepository = new QuizRepository(requireContext());
 
         setupRecyclerView();
-        setupFabMenu();
-        setupCategoryChips();
+        loadMyQuizzes();
 
-        loadMyQuizzes(); // Call without query, MyQuizAdapter handles filtering if query passed
-
-        btnCreateQuizHeader.setOnClickListener(v -> Toast.makeText(getContext(), "Create Quiz button clicked!", Toast.LENGTH_SHORT).show());
         boolean isPremium = RetrofitClient.getInstance(getContext()).getIsPremium();
 
         if (!isPremium) {
@@ -145,125 +114,78 @@ public class MyQuizzesFragment extends Fragment {
         } else {
             cardUpgradePrompt.setVisibility(View.GONE);
         }
+    }
 
-        etSearchQuizzes.setOnClickListener(v -> Toast.makeText(getContext(), "Search input clicked!", Toast.LENGTH_SHORT).show());
-        ivFilterIcon.setOnClickListener(v -> Toast.makeText(getContext(), "Filter icon clicked!", Toast.LENGTH_SHORT).show());
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Load lại danh sách khi quay lại từ màn hình Update
+        loadMyQuizzes();
     }
 
     private void setupRecyclerView() {
-        quizAdapter = new MyQuizAdapter(new ArrayList<>()); // Pass an empty list initially
+        // Khởi tạo Adapter với Callback
+        quizAdapter = new MyQuizAdapter(new ArrayList<>(), new MyQuizAdapter.OnQuizActionClickListener() {
+            @Override
+            public void onEdit(QuizResponseDTO quiz) {
+                // Chuyển sang màn hình Update
+                QuizUpdateFragment updateFragment = QuizUpdateFragment.newInstance(quiz.getId());
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, updateFragment) // ID container trong MainActivity
+                        .addToBackStack(null)
+                        .commit();
+            }
+
+            @Override
+            public void onDelete(String quizId) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Confirm Delete")
+                        .setMessage("Are you sure you want to delete this quiz?")
+                        .setPositiveButton("Delete", (dialog, which) -> performDelete(quizId))
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            }
+        });
+
         rvQuizzes.setLayoutManager(new LinearLayoutManager(getContext()));
         rvQuizzes.setAdapter(quizAdapter);
     }
 
-    private void setupFabMenu() {
-        fabMainCreate.setOnClickListener(v -> toggleFabMenu());
-        fabFromText.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Navigate to HomeFragment for Text creation!", Toast.LENGTH_SHORT).show();
-            toggleFabMenu();
-        });
-        fabFromImage.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Navigate to HomeFragment for Image creation!", Toast.LENGTH_SHORT).show();
-            toggleFabMenu();
-        });
-        setFabMenuVisibility(false);
-    }
-
-    private void toggleFabMenu() {
-        isFabMenuOpen = !isFabMenuOpen;
-        setFabMenuVisibility(isFabMenuOpen);
-
-        float rotation = isFabMenuOpen ? 45f : 0f;
-        fabMainCreate.animate().rotation(rotation).setDuration(300).start();
-    }
-
-    private void setFabMenuVisibility(boolean show) {
-        if (show) {
-            fabFromText.setVisibility(View.VISIBLE);
-            tvFromTextLabel.setVisibility(View.VISIBLE);
-            fabFromImage.setVisibility(View.VISIBLE);
-            tvFromImageLabel.setVisibility(View.VISIBLE);
-
-            // Animate appearance
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(
-                    ObjectAnimator.ofFloat(fabFromText, "translationY", -getResources().getDimension(R.dimen.fab_margin_offset_large)),
-                    ObjectAnimator.ofFloat(tvFromTextLabel, "translationY", -getResources().getDimension(R.dimen.fab_margin_offset_large)),
-                    ObjectAnimator.ofFloat(fabFromImage, "translationY", -getResources().getDimension(R.dimen.fab_margin_offset_small)),
-                    ObjectAnimator.ofFloat(tvFromImageLabel, "translationY", -getResources().getDimension(R.dimen.fab_margin_offset_small))
-            );
-            animatorSet.setDuration(300);
-            animatorSet.start();
-
-        } else {
-            // Animate disappearance
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(
-                    ObjectAnimator.ofFloat(fabFromText, "translationY", 0f),
-                    ObjectAnimator.ofFloat(tvFromTextLabel, "translationY", 0f),
-                    ObjectAnimator.ofFloat(fabFromImage, "translationY", 0f),
-                    ObjectAnimator.ofFloat(tvFromImageLabel, "translationY", 0f)
-            );
-            animatorSet.setDuration(300);
-            animatorSet.start();
-
-            fabFromText.postDelayed(() -> {
-                fabFromText.setVisibility(View.GONE);
-                tvFromTextLabel.setVisibility(View.GONE);
-                fabFromImage.setVisibility(View.GONE);
-                tvFromImageLabel.setVisibility(View.GONE);
-            }, 300);
-        }
-    }
-
-    private void setupCategoryChips() {
-        chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                chipAllQuizzes.setChecked(true);
-            } else {
-                for (int id : checkedIds) {
-                    Chip chip = group.findViewById(id);
-                    if (chip != null) {
-                        Toast.makeText(getContext(), "Category selected: " + chip.getText(), Toast.LENGTH_SHORT).show();
-                        // TODO: Implement filtering logic here and then call loadMyQuizzes()
-                        // Example: loadMyQuizzes(chip.getText().toString());
-                    }
-                }
-            }
-        });
-    }
-
-    // --- Method to load quizzes from repository ---
-    // Removed 'String query' parameter as getMyQuizzes from repository doesn't take one.
-    // If you add search/filter to the API, re-add the parameter.
-    private void loadMyQuizzes() {
+    private void performDelete(String quizId) {
         progressBar.setVisibility(View.VISIBLE);
-        tvEmptyState.setVisibility(View.GONE);
-        rvQuizzes.setVisibility(View.GONE);
-
-        Log.d(TAG, "Loading my quizzes.");
-
-        quizRepository.getMyQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
+        quizRepository.deleteQuiz(quizId, new QuizRepository.GenericCallback<Object>() {
             @Override
-            public void onSuccess(List<QuizResponseDTO> quizResponseDTOList) {
+            public void onSuccess(Object response) {
                 if (!isAdded()) return;
-
                 progressBar.setVisibility(View.GONE);
-                Log.d(TAG, "Loaded " + quizResponseDTOList.size() + " quizzes.");
-
-                // Directly pass the DTO list to the adapter
-                quizAdapter.setQuizzes(quizResponseDTOList);
-                handleEmptyState(quizResponseDTOList.isEmpty());
+                Toast.makeText(getContext(), "Deleted successfully", Toast.LENGTH_SHORT).show();
+                loadMyQuizzes(); // Refresh list
             }
 
             @Override
             public void onError(String message, int errorCode) {
                 if (!isAdded()) return;
-
                 progressBar.setVisibility(View.GONE);
-                Log.e(TAG, "Error loading my quizzes: " + message + " (Code: " + errorCode + ")");
-                Toast.makeText(getContext(), "Error loading quizzes: " + message, Toast.LENGTH_LONG).show();
-                handleEmptyState(quizAdapter.getItemCount() == 0);
+                Toast.makeText(getContext(), "Delete failed: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadMyQuizzes() {
+        progressBar.setVisibility(View.VISIBLE);
+        quizRepository.getMyQuizzes(new QuizRepository.GenericCallback<List<QuizResponseDTO>>() {
+            @Override
+            public void onSuccess(List<QuizResponseDTO> response) {
+                if (!isAdded()) return;
+                progressBar.setVisibility(View.GONE);
+                quizAdapter.setQuizzes(response);
+            }
+
+            @Override
+            public void onError(String message, int errorCode) {
+                if (!isAdded()) return;
+                progressBar.setVisibility(View.GONE);
+                // Handle empty or error state
             }
         });
     }
