@@ -15,6 +15,7 @@ glide = "4.16.0"
 photoview = "2.3.0"
 material = "1.13.0"
 activity = "1.11.0"
+protoliteWellKnownTypes = "18.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,7 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

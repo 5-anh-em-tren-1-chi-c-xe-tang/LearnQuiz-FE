@@ -2,8 +2,6 @@ package com.example.learnquiz_fe.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,8 +21,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+
+import android.content.SharedPreferences;
+
 
 /**
  * Login Activity
@@ -38,6 +39,11 @@ public class LoginActivity extends AppCompatActivity {
     // Hardcoded test credentials
     private static final String TEST_USERNAME = "admin";
     private static final String TEST_PASSWORD = "admin";
+    private static final String PREFS_NAME = "login_prefs";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_REMEMBER = "remember";
+    private SharedPreferences preferences;
 
     private GoogleSignInClient googleSignInClient;
     private LoginViewModel loginViewModel;
@@ -50,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvError;
     private MaterialButton btnGGLogin;
     private TextView tvSignUp;
+    private MaterialCheckBox cbRememberMe;
 
 
     @Override
@@ -58,9 +65,27 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initViews();
+        checkRememberMe();
         initGoogleSignIn();
         setupViewModel();
         setupListeners();
+    }
+
+    private void checkRememberMe() {
+        preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+
+// Check if user previously chose "Remember Me"
+        boolean isRemembered = preferences.getBoolean(KEY_REMEMBER, false);
+
+        if (isRemembered) {
+            String savedEmail = preferences.getString(KEY_EMAIL, "");
+            String savedPassword = preferences.getString(KEY_PASSWORD, "");
+
+            etEmail.setText(savedEmail);
+            etPassword.setText(savedPassword);
+            cbRememberMe.setChecked(true);
+//             handleNormalLogin();  // Uncomment if you want instant login
+        }
     }
 
     private void initViews() {
@@ -71,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         tvError = findViewById(R.id.tv_error);
         btnGGLogin = findViewById(R.id.btn_login_google);
         tvSignUp = findViewById(R.id.tv_sign_up);
+        cbRememberMe = findViewById(R.id.cb_remember_me);
     }
 
     private void initGoogleSignIn() {
@@ -96,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Handle email/password login with hardcoded credentials for testing
      */
-    private void handleNormalLogin(){
+    private void handleNormalLogin() {
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
 
@@ -117,10 +143,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         showLoading(true);
-        loginViewModel.login(email,password).observe(this, response -> {
+        loginViewModel.login(email, password).observe(this, response -> {
             if (response.isSuccess() && response.getData() != null) {
+                var userData = response.getData();
                 showLoading(false);
                 Toast.makeText(this, "Welcome " + response.getData().getUsername(), Toast.LENGTH_SHORT).show();
+                saveRememberMeState(email, password);
                 navigateToMain();
             } else {
                 showLoading(false);
@@ -129,6 +157,19 @@ public class LoginActivity extends AppCompatActivity {
 //                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Remember me
+    private void saveRememberMeState(String email, String password) {
+        if (cbRememberMe.isChecked()) {
+            preferences.edit()
+                    .putString(KEY_EMAIL, email)
+                    .putString(KEY_PASSWORD, password)
+                    .putBoolean(KEY_REMEMBER, true)
+                    .apply();
+        } else {
+            preferences.edit().clear().apply();
+        }
     }
 
     private void handleEmailPasswordLogin() {

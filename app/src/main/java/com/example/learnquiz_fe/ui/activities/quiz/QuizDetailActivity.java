@@ -19,8 +19,13 @@ import com.bumptech.glide.Glide;
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizQuestionDTO;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
+import com.example.learnquiz_fe.ui.activities.QuizTakingActivity;
+import com.example.learnquiz_fe.ui.activities.feedback.QuizFeedbackActivity;
+import com.example.learnquiz_fe.utils.QuizDataHolder;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,11 +38,12 @@ public class QuizDetailActivity extends AppCompatActivity {
             tvPlaysCount, tvPlaysLabel, tvQuestionsCount, tvQuestionsLabel,
             tvDuration, tvDurationLabel, tvDifficulty, tvAuthorName, tvQuizCount,
             tvDifficultyValue, tvDurationValue, tvVisibilityValue,
-            tvLastUpdated, tvMultipleChoiceCount;
+            tvLastUpdated, tvMultipleChoiceCount, tvWriteReviewLink;
     private ImageView ivAuthorAvatar, ivHeaderImage;
     private FlexboxLayout tagsContainer;
     private ImageButton btnBack, btnShare;
-    private Button btnFollow, btnStartQuiz;
+    private Button btnFollow;
+    private MaterialButton btnStartQuiz;
 
     private QuizRepository quizRepository;
     private ProgressBar progressBar;
@@ -64,6 +70,14 @@ public class QuizDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (quizId != null && !quizId.isBlank()) {
+            loadQuizDetails(quizId);
+        }
+    }
+
     public static void start(Context context, int quizId) {
         Intent intent = new Intent(context, QuizDetailActivity.class);
         intent.putExtra("quiz_id", quizId);
@@ -76,6 +90,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnShare = findViewById(R.id.btnShare);
         btnFollow = findViewById(R.id.btnFollow);
         btnStartQuiz = findViewById(R.id.btnStartQuiz);
+        tvWriteReviewLink = findViewById(R.id.tvWriteReviewLink); // Ánh xạ nút Rate
 
         progressBar = findViewById(R.id.progressBar);
         mainContent = findViewById(R.id.mainContent);
@@ -109,19 +124,27 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnShare.setOnClickListener(v -> shareQuiz());
         btnFollow.setOnClickListener(v -> followAuthor());
         btnStartQuiz.setOnClickListener(v -> startQuiz());
+
+        tvWriteReviewLink.setOnClickListener(v -> {
+            Intent intent = new Intent(QuizDetailActivity.this, QuizFeedbackActivity.class);
+            intent.putExtra("QUIZ_ID", quizId);
+            startActivity(intent);
+        });
     }
 
     // 🔹 Load quiz details from backend
     private void loadQuizDetails(String quizId) {
         progressBar.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.GONE);
+        if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.GONE);
+
         quizRepository.getQuizDetail(new QuizRepository.GenericCallback<QuizResponseDTO>() {
             @Override
             public void onSuccess(QuizResponseDTO data) {
                 displayQuizDetails(data);
                 progressBar.setVisibility(View.GONE);
                 mainContent.setVisibility(View.VISIBLE);
-
+                if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -145,7 +168,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         tvQuizDescription.setText(data.getDescription());
         tvRating.setText(String.format(Locale.getDefault(), "%.1f", data.getAverageRating()));
         tvRatingCount.setText(data.getRatingCount() + " ratings");
-        tvPlaysCount.setText("1234");
+        tvPlaysCount.setText(String.valueOf(data.getPlaysCount()));
         tvPlaysLabel.setText("plays");
         tvQuestionsCount.setText(String.valueOf(data.getQuestions().size()));
         tvQuestionsLabel.setText("questions");
@@ -236,9 +259,54 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnFollow.setText("Following");
     }
 
+    // Trong file QuizDetailActivity.java
+
     private void startQuiz() {
-        Toast.makeText(this, "Start quiz feature not implemented yet", Toast.LENGTH_SHORT).show();
+        // 1. Kiểm tra xem quizId có tồn tại không
+        if (quizId == null || quizId.isEmpty()) {
+            Toast.makeText(this, "Cannot start: Quiz ID is missing.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 2. Hiển thị trạng thái loading
+        progressBar.setVisibility(View.VISIBLE);
+        mainContent.setAlpha(0.5f);
+        btnStartQuiz.setEnabled(false);
+
+        // 3. Gọi hàm getQuizDetail với đúng QuizCallback
+        quizRepository.getQuizDetail(quizId, new QuizRepository.QuizCallback() {
+            @Override
+            public void onSuccess(GenerateQuizResponse response) {
+                // Tắt loading
+                progressBar.setVisibility(View.GONE);
+                mainContent.setAlpha(1.0f);
+                btnStartQuiz.setEnabled(true);
+
+                // 4. Kiểm tra dữ liệu trả về
+                if (response != null && response.getQuestions() != null && !response.getQuestions().isEmpty()) {
+
+                    // 5. Đặt dữ liệu vào QuizDataHolder
+                    QuizDataHolder.getInstance().setQuizResponse(response);
+
+                    // 6. Chuyển sang màn hình làm bài
+                    Intent intent = new Intent(QuizDetailActivity.this, QuizTakingActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(QuizDetailActivity.this, "Failed to get quiz data or quiz has no questions.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onError(String message, int errorCode) {
+                // Tắt loading và báo lỗi
+                progressBar.setVisibility(View.GONE);
+                mainContent.setAlpha(1.0f);
+                btnStartQuiz.setEnabled(true);
+                Toast.makeText(QuizDetailActivity.this, "Error getting quiz data: " + message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
+
 
     // Simple Pair class
     private static class Pair<F, S> {

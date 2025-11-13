@@ -7,13 +7,20 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.data.network.RetrofitClient;
+import com.example.learnquiz_fe.ui.activities.HomeActivity;
 import com.example.learnquiz_fe.ui.fragments.myquizzes.MyQuizzesFragment;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.fragments.profile.ProfileFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
+// THÊM IMPORT NÀY:
+import com.example.learnquiz_fe.ui.fragments.feedback.QuizFeedbackFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RetrofitClient retrofitClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); // loads the XML
 
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+        retrofitClient = RetrofitClient.getInstance(this);
 
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -37,19 +45,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Navigating to my quizzies", Toast.LENGTH_SHORT).show();
                 selected = new MyQuizzesFragment();
             } else if (id == R.id.nav_create_quiz) {
-                Toast.makeText(this, "Navigating to create quiz", Toast.LENGTH_SHORT).show();
-//                selected = new CreateQuizFragment();
+                Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
             } else if (id == R.id.nav_profile) {
                 Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
                 selected = new ProfileFragment();
             } else if (id == R.id.testing) {
-                selected = new UpgradePremiumFragment();
+
+                String testQuizId = "69041c9e2060f334a4daa331";
+
+                selected = QuizFeedbackFragment.newInstance(testQuizId);
             }
 
+
             if (selected != null) {
-                // The add to back stack should be false for bottom navigation
-                // But for debug you can set it to true
-                // This allow any back button press to go back to previous fragment
+
                 loadFragment(selected, true);
                 return true;
             }

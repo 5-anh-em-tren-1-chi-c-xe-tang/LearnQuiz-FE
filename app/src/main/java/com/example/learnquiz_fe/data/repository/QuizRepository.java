@@ -87,7 +87,7 @@ public class QuizRepository {
             }
         });
     }
-    
+
     /**
      * Generate quiz with authentication
      * 
@@ -136,34 +136,34 @@ public class QuizRepository {
      * @param quizId Quiz ID
      * @param callback Callback for success/error handling
      */
-//    public void getQuizDetail(String quizId, QuizCallback callback) {
-//        Call<ApiResponse<GenerateQuizResponse>> call = apiService.getQuizDetail(quizId);
-//
-//        call.enqueue(new Callback<ApiResponse<GenerateQuizResponse>>() {
-//            @Override
-//            public void onResponse(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
-//                                   @NonNull Response<ApiResponse<GenerateQuizResponse>> response) {
-//
-//                if (response.isSuccessful() && response.body() != null) {
-//                    ApiResponse<GenerateQuizResponse> apiResponse = response.body();
-//
-//                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
-//                        callback.onSuccess(apiResponse.getData());
-//                    } else {
-//                        callback.onError(apiResponse.getMessage(), response.code());
-//                    }
-//                } else {
-//                    callback.onError(handleErrorResponse(response.code()), response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
-//                                  @NonNull Throwable t) {
-//                callback.onError("Network error: " + t.getMessage(), -1);
-//            }
-//        });
-//    }
+    public void getQuizDetail(String quizId, QuizCallback callback) {
+        Call<ApiResponse<GenerateQuizResponse>> call = apiService.getQuizDetail(quizId);
+
+        call.enqueue(new Callback<ApiResponse<GenerateQuizResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
+                                   @NonNull Response<ApiResponse<GenerateQuizResponse>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<GenerateQuizResponse> apiResponse = response.body();
+
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        callback.onSuccess(apiResponse.getData());
+                    } else {
+                        callback.onError(apiResponse.getMessage(), response.code());
+                    }
+                } else {
+                    callback.onError(handleErrorResponse(response.code()), response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<GenerateQuizResponse>> call,
+                                  @NonNull Throwable t) {
+                callback.onError("Network error: " + t.getMessage(), -1);
+            }
+        });
+    }
 
     /**
      * Get public quizzes
