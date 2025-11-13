@@ -1,12 +1,14 @@
 package com.example.learnquiz_fe.data.model.quizhistory;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * DTO for individual answer result from server
  */
-public class AnswerResultDTO {
+public class AnswerResultDTO implements Serializable {
     
     @SerializedName("questionId")
     private String questionId;

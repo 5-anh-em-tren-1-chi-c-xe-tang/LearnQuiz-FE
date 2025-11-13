@@ -36,6 +36,8 @@ public class ApiEndpoints {
      */
     public static final String USER_PROFILE = "api/user/profile";
     public static final String UPDATE_PROFILE = "api/user";
+    public static final String MY_QUIZ_HISTORY = "api/QuizHistory/me";
+
     /**
      * Quiz endpoints
      */
