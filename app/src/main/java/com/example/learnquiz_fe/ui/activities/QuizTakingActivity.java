@@ -598,12 +598,12 @@ public class QuizTakingActivity extends AppCompatActivity {
         
         // Navigate to result screen with server data
         Intent intent = new Intent(this, QuizResultActivity.class);
+        quizData.setImageSource(""); // OPTIMIZE
         intent.putExtra(QuizResultActivity.EXTRA_QUIZ_TITLE, quizData.getTitle());
         intent.putExtra(QuizResultActivity.EXTRA_TOTAL_QUESTIONS, response.getTotalQuestions());
         intent.putExtra(QuizResultActivity.EXTRA_CORRECT_ANSWERS, response.getCorrectCount());
         intent.putExtra(QuizResultActivity.EXTRA_QUIZ_DATA, new Gson().toJson(quizData));
         intent.putExtra(QuizResultActivity.EXTRA_USER_ANSWERS, convertMapToJson(userAnswers));
-        
         // Add server-specific data
         intent.putExtra("server_score", response.getScore());
         intent.putExtra("server_percentage", response.getPercentage());

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F8FC"
+    android:background="?attr/colorSurface"
     tools:context=".ui.activities.RegisterActivity">
 
     <!-- Logo -->
@@ -24,10 +24,10 @@
         android:id="@+id/tv_app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="LearnQuiz"
-        android:textColor="#6A3DE8"
-        android:textSize="28sp"
-        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_logo" />
@@ -37,25 +37,25 @@
         android:id="@+id/tv_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:text="Create your new account"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_app_title" />
 
     <!-- Register Form Card -->
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_register_form"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_subtitle">
@@ -63,7 +63,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp">
+            android:padding="24dp">
 
             <!-- Username Label -->
             <TextView
@@ -71,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorOnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,13 +83,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxBackgroundColor="#F7F8FC"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="1dp"
+                app:boxStrokeColor="?attr/colorPrimary"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +98,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Enter your username"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textAppearance="?attr/textAppearanceBody1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email Label -->
@@ -110,8 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Email"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorOnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_username" />
 
@@ -122,13 +121,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxBackgroundColor="#F7F8FC"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="1dp"
+                app:boxStrokeColor="?attr/colorPrimary"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +136,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Enter your email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textAppearance="?attr/textAppearanceBody1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password Label -->
@@ -149,8 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Password"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="?attr/colorOnSurface"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_email" />
 
@@ -161,13 +159,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxBackgroundColor="#F7F8FC"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="1dp"
+                app:boxStrokeColor="?attr/colorPrimary"
                 app:endIconMode="password_toggle"
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -179,7 +175,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Enter your password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textAppearance="?attr/textAppearanceBody1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Error Message TextView -->
@@ -188,9 +185,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="14sp"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?attr/colorError"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -202,16 +198,18 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_register"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#6A3DE8"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
                 android:text="Sign Up"
                 android:textAllCaps="false"
                 android:textSize="16sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:cornerRadius="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_error" />
+                app:layout_constraintTop_toBottomOf="@id/tv_error"
+                style="@style/Widget.MaterialComponents.Button" />
 
             <!-- Progress Bar (shown during loading) -->
             <ProgressBar
@@ -219,7 +217,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:elevation="8dp"
-                android:indeterminateTint="@android:color/white"
+                android:indeterminateTint="?attr/colorOnPrimary"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@id/btn_register"
                 app:layout_constraintEnd_toEndOf="@id/btn_register"
@@ -228,7 +226,7 @@
                 tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Sign In Section -->
     <LinearLayout
@@ -244,17 +242,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Already have an account? "
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:textColorSecondary" />
 
         <TextView
             android:id="@+id/tv_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign in"
-            android:textColor="#6A3DE8"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:padding="4dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

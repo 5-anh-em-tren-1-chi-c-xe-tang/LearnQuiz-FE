@@ -43,25 +43,25 @@ public class FeedbackViewModel extends AndroidViewModel {
     }
 
     // Lấy bình luận của riêng tôi
-    public LiveData<ApiResponse<List<Feedback>>> getMyFeedback(String token) {
-        return feedbackRepository.getMyFeedback(token);
+    public LiveData<ApiResponse<List<Feedback>>> getMyFeedback() {
+        return feedbackRepository.getMyFeedback();
     }
 
     // Gửi hoặc Cập nhật Feedback
-    public LiveData<ApiResponse<Feedback>> submitFeedback(String token, String quizId, int rating, String comment, Feedback existingFeedback) {
+    public LiveData<ApiResponse<Feedback>> submitFeedback(String quizId, int rating, String comment, Feedback existingFeedback) {
         if (existingFeedback != null) {
             // Đây là CẬP NHẬT
             UpdateFeedbackRequest request = new UpdateFeedbackRequest(rating, comment);
-            return feedbackRepository.updateFeedback(token, existingFeedback.getId(), request);
+            return feedbackRepository.updateFeedback(existingFeedback.getId(), request);
         } else {
             // Đây là TẠO MỚI
             CreateFeedbackRequest request = new CreateFeedbackRequest(rating, comment, quizId);
-            return feedbackRepository.createFeedback(token, request);
+            return feedbackRepository.createFeedback(request);
         }
     }
 
     // Xóa Feedback
-    public LiveData<ApiResponse<Object>> deleteFeedback(String token, String feedbackId) {
-        return feedbackRepository.deleteFeedback(token, feedbackId);
+    public LiveData<ApiResponse<Object>> deleteFeedback(String feedbackId) {
+        return feedbackRepository.deleteFeedback(feedbackId);
     }
 }

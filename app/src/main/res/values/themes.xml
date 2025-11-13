@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- ✅ Works with AppCompatActivity -->
+    <!-- Modern Blue Theme -->
     <style name="Theme.LearnQuiz_FE" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <!-- Primary brand color - Blue -->
+        <item name="colorPrimary">@color/blue_600</item>
+        <item name="colorPrimaryVariant">@color/blue_800</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/blue_400</item>
-        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Secondary brand color - Teal accent -->
+        <item name="colorSecondary">@color/teal_500</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Error color -->
+        <item name="colorError">@color/red_600</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/gray_900</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/gray_50</item>
+        <item name="colorOnBackground">@color/gray_900</item>
 
         <!-- TextInputLayout styles -->
         <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
-        
+
         <!-- Text Appearance -->
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -27,8 +43,13 @@
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
 
-<!--        Status bar color -->
-        <item name="android:windowLightStatusBar">true</item> <!-- makes icons dark -->
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/blue_700</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- white icons on blue status bar -->
+
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
 </resources>
