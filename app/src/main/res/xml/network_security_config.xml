@@ -8,6 +8,7 @@
             <certificates src="@raw/dev_cert_kiet" />
             <certificates src="@raw/dev_cert_huyen" />
             <certificates src="@raw/dev_cert_dat" />
+            <certificates src="@raw/dev_certhuy" />
         </trust-anchors>
     </domain-config>
 </network-security-config>

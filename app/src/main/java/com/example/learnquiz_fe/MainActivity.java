@@ -12,6 +12,8 @@ import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.ui.activities.HomeActivity;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
+// THÊM IMPORT NÀY:
+import com.example.learnquiz_fe.ui.fragments.feedback.QuizFeedbackFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,14 +50,18 @@ public class MainActivity extends AppCompatActivity {
                 String msg = "Navigating to profile of " + (userName != null ? userName : "Guest");
                 Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 //                selected = new ProfileFragment();
+
+                // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
             } else if (id == R.id.testing) {
-                selected = new UpgradePremiumFragment();
+
+                String testQuizId = "69041c9e2060f334a4daa331";
+
+                selected = QuizFeedbackFragment.newInstance(testQuizId);
             }
 
+
             if (selected != null) {
-                // The add to back stack should be false for bottom navigation
-                // But for debug you can set it to true
-                // This allow any back button press to go back to previous fragment
+
                 loadFragment(selected, true);
                 return true;
             }

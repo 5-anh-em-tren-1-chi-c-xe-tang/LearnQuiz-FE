@@ -5,6 +5,10 @@ import com.example.learnquiz_fe.data.model.auth.AuthResponse;
 import com.example.learnquiz_fe.data.model.auth.GoogleAuthResponse;
 import com.example.learnquiz_fe.data.model.auth.IdTokenRequest;
 import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
+import com.example.learnquiz_fe.data.model.feedback.CreateFeedbackRequest;
+import com.example.learnquiz_fe.data.model.feedback.Feedback;
+import com.example.learnquiz_fe.data.model.feedback.QuizStats;
+import com.example.learnquiz_fe.data.model.feedback.UpdateFeedbackRequest;
 import com.example.learnquiz_fe.data.model.payment.request.CreatePaymentRequest;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSCreatePaymentResponse;
 import com.example.learnquiz_fe.data.model.payment.response.PayOSGetOrderResponse;
@@ -21,6 +25,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -33,42 +38,42 @@ import retrofit2.http.Query;
  * Defines all API endpoints for the application
  */
 public interface ApiService {
-    
+
     /**
      * Generate quiz from images
      * POST /api/quiz/generate
-     * 
+     *
      * @param request Quiz generation request with images and settings
      * @return ApiResponse containing GenerateQuizResponse
      */
     @POST(ApiEndpoints.GENERATE_QUIZ)
     Call<ApiResponse<GenerateQuizResponse>> generateQuiz(
-        @Body GenerateQuizRequest request
+            @Body GenerateQuizRequest request
     );
-    
+
     /**
      * Generate quiz with authentication token
-     * 
+     *
      * @param token Authorization Bearer token
      * @param request Quiz generation request
      * @return ApiResponse containing GenerateQuizResponse
      */
     @POST(ApiEndpoints.GENERATE_QUIZ)
     Call<ApiResponse<GenerateQuizResponse>> generateQuizWithAuth(
-        @Header("Authorization") String token,
-        @Body GenerateQuizRequest request
+            @Header("Authorization") String token,
+            @Body GenerateQuizRequest request
     );
-    
+
     /**
      * Get quiz detail by ID
      * GET /api/quiz/{id}
-     * 
+     *
      * @param quizId Quiz ID
      * @return ApiResponse containing GenerateQuizResponse
      */
     @GET(ApiEndpoints.GET_QUIZ_DETAIL)
     Call<ApiResponse<GenerateQuizResponse>> getQuizDetail(
-        @Path("id") String quizId
+            @Path("id") String quizId
     );
 
     // This one differs from getQuizDetail by purpose
@@ -77,17 +82,17 @@ public interface ApiService {
     Call<ApiResponse<QuizResponseDTO>> getQuizDetailForView(
             @Path("id") String quizId
     );
-    
+
     /**
      * Submit quiz answers (wrapped in ApiResponse)
      * POST /api/quizhistory/submit
-     * 
+     *
      * @param request Submit quiz request with quizId and answers
      * @return ApiResponse containing SubmitQuizResponseDTO with score and results
      */
     @POST(ApiEndpoints.SUBMIT_QUIZ)
     Call<ApiResponse<SubmitQuizResponseDTO>> submitQuiz(
-        @Body SubmitQuizRequestDTO request
+            @Body SubmitQuizRequestDTO request
     );
 
     @POST(ApiEndpoints.LOGIN_GOOGLE)
@@ -112,4 +117,59 @@ public interface ApiService {
 
     @POST(ApiEndpoints.CREATE_PAYMENT_INTENT)
     Call<ApiResponse<PayOSCreatePaymentResponse>> createPaymentIntent(@Body CreatePaymentRequest paymentRequest);
+
+    @GET(ApiEndpoints.FEEDBACK_STATS)
+    Call<ApiResponse<QuizStats>> getQuizRatingStats(
+            @Path("quizId") String quizId
+    );
+
+    /**
+     * Lấy danh sách feedback theo Quiz (Get by Quiz)
+     * URL: api/Feedback/quiz/{quizId}
+     */
+    @GET(ApiEndpoints.FEEDBACK_BY_QUIZ)
+    Call<ApiResponse<List<Feedback>>> getFeedbackByQuiz(
+            @Path("quizId") String quizId
+    );
+
+    /**
+     * Lấy feedback của user hiện tại (Get My Feedback)
+     * URL: api/Feedback/my-feedback
+     */
+    @GET(ApiEndpoints.FEEDBACK_MY)
+    Call<ApiResponse<List<Feedback>>> getMyFeedback(
+            @Header("Authorization") String token
+    );
+
+    /**
+     * Tạo feedback mới (Create)
+     * URL: api/Feedback
+     */
+    @POST(ApiEndpoints.FEEDBACK_BASE)
+    Call<ApiResponse<Feedback>> createFeedback(
+            @Header("Authorization") String token,
+            @Body CreateFeedbackRequest request
+    );
+
+    /**
+     * Cập nhật feedback (Update)
+     * URL: api/Feedback/{id}
+     * Lưu ý: ApiEndpoints.FEEDBACK_BY_ID chứa {id}, nên @Path phải là "id"
+     */
+    @PUT(ApiEndpoints.FEEDBACK_BY_ID)
+    Call<ApiResponse<Feedback>> updateFeedback(
+            @Header("Authorization") String token,
+            @Path("id") String feedbackId,
+            @Body UpdateFeedbackRequest request
+    );
+
+    /**
+     * Xóa feedback (Delete)
+     * URL: api/Feedback/{id}
+     */
+    @DELETE(ApiEndpoints.FEEDBACK_BY_ID)
+    Call<ApiResponse<Object>> deleteFeedback(
+            @Header("Authorization") String token,
+            @Path("id") String feedbackId
+    );
 }
