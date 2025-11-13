@@ -191,4 +191,10 @@ public class AuthRepository {
         return errorMessage;
     }
 
+    public Void logout()
+    {
+        RetrofitClient.getInstance(null).clearAuthToken();
+        RetrofitClient.getInstance(null).clearAuthData();
+        return null;
+    }
 }

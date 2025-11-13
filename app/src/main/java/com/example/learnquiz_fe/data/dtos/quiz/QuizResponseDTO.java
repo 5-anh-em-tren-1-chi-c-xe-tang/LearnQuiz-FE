@@ -9,6 +9,7 @@ public class QuizResponseDTO {
     private String title;
     private String description;
     private UserResponse author;
+    private String authorName;
     private String folderName;
     private String context;
     private String visibility;
@@ -28,6 +29,14 @@ public class QuizResponseDTO {
 
     public void setPlaysCount(int playsCount) {
         this.playsCount = playsCount;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
     }
 
     public UserResponse getAuthor() {

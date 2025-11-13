@@ -234,6 +234,43 @@ public class QuizRepository {
     }
 
     /**
+     * Get my quizzes
+     * @return {@link ApiResponse<QuizResponseDTO>} API Response containing list of public quizzes
+     */
+    public void getMyQuizzes(GenericCallback<List<QuizResponseDTO>> callback) {
+        Call<ApiResponse<List<QuizResponseDTO>>> call = apiService.getMyQuizzies();
+
+        call.enqueue(new Callback<ApiResponse<List<QuizResponseDTO>>>() {
+
+            @Override
+            public void onResponse(Call<ApiResponse<List<QuizResponseDTO>>> call, Response<ApiResponse<List<QuizResponseDTO>>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<List<QuizResponseDTO>> apiResponse = response.body();
+
+                    if (apiResponse.isSuccess() && apiResponse.getData() != null) {
+                        Log.d(TAG, "Public quizzes fetched successfully");
+                        callback.onSuccess(apiResponse.getData());
+                    } else {
+                        Log.e(TAG, "API returned error: " + apiResponse.getMessage());
+                        callback.onError(apiResponse.getMessage(), response.code());
+                    }
+                } else {
+                    String errorMsg = handleErrorResponse(response.code());
+                    Log.e(TAG, "HTTP error " + response.code() + ": " + errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<List<QuizResponseDTO>>> call, Throwable throwable) {
+                Log.e(TAG, "HTTP error " + throwable.getMessage());
+                callback.onError("Network error: " + throwable.getMessage(), -1);
+            }
+        });
+    }
+
+
+    /**
      * Handle HTTP error responses
      */
     private String handleErrorResponse(int code) {

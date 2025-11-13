@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
 import com.example.learnquiz_fe.data.network.RetrofitClient;
 import com.example.learnquiz_fe.ui.activities.HomeActivity;
+import com.example.learnquiz_fe.ui.fragments.myquizzes.MyQuizzesFragment;
 import com.example.learnquiz_fe.ui.fragments.payment.UpgradePremiumFragment;
+import com.example.learnquiz_fe.ui.fragments.profile.ProfileFragment;
 import com.example.learnquiz_fe.ui.fragments.quiz.HomeFragment;
 // THÊM IMPORT NÀY:
 import com.example.learnquiz_fe.ui.fragments.feedback.QuizFeedbackFragment;
@@ -41,17 +43,13 @@ public class MainActivity extends AppCompatActivity {
                 selected = new HomeFragment();
             } else if (id == R.id.nav_my_quizzes) {
                 Toast.makeText(this, "Navigating to my quizzies", Toast.LENGTH_SHORT).show();
-//                selected = new QuizListFragment();
+                selected = new MyQuizzesFragment();
             } else if (id == R.id.nav_create_quiz) {
                 Intent intent = new Intent(this, HomeActivity.class);
                 startActivity(intent);
             } else if (id == R.id.nav_profile) {
-                var userName = retrofitClient.getUsername();
-                String msg = "Navigating to profile of " + (userName != null ? userName : "Guest");
-                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-//                selected = new ProfileFragment();
-
-                // ===== BẠN ĐÃ SỬA Ở ĐÂY =====
+                Toast.makeText(this, "Navigating to my profile", Toast.LENGTH_SHORT).show();
+                selected = new ProfileFragment();
             } else if (id == R.id.testing) {
 
                 String testQuizId = "69041c9e2060f334a4daa331";

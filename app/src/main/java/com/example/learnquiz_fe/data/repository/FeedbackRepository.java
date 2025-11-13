@@ -87,13 +87,12 @@ public class FeedbackRepository {
 
     /**
      * Lấy tất cả feedback của người dùng hiện tại (yêu cầu xác thực).
-     * @param token Access token của người dùng (JWT).
      * @return LiveData chứa ApiResponse với một danh sách Feedback.
      */
-    public LiveData<ApiResponse<List<Feedback>>> getMyFeedback(String token) {
+    public LiveData<ApiResponse<List<Feedback>>> getMyFeedback() {
         MutableLiveData<ApiResponse<List<Feedback>>> liveData = new MutableLiveData<>();
 
-        apiService.getMyFeedback("Bearer " + token).enqueue(new Callback<ApiResponse<List<Feedback>>>() {
+        apiService.getMyFeedback().enqueue(new Callback<ApiResponse<List<Feedback>>>() {
             @Override
             public void onResponse(Call<ApiResponse<List<Feedback>>> call, Response<ApiResponse<List<Feedback>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -115,14 +114,13 @@ public class FeedbackRepository {
 
     /**
      * Gửi một feedback mới (yêu cầu xác thực).
-     * @param token Access token của người dùng (JWT).
      * @param request Đối tượng chứa thông tin feedback mới.
      * @return LiveData chứa ApiResponse với Feedback vừa được tạo.
      */
-    public LiveData<ApiResponse<Feedback>> createFeedback(String token, CreateFeedbackRequest request) {
+    public LiveData<ApiResponse<Feedback>> createFeedback(CreateFeedbackRequest request) {
         MutableLiveData<ApiResponse<Feedback>> liveData = new MutableLiveData<>();
 
-        apiService.createFeedback("Bearer " + token, request).enqueue(new Callback<ApiResponse<Feedback>>() {
+        apiService.createFeedback(request).enqueue(new Callback<ApiResponse<Feedback>>() {
             @Override
             public void onResponse(Call<ApiResponse<Feedback>> call, Response<ApiResponse<Feedback>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -145,15 +143,14 @@ public class FeedbackRepository {
 
     /**
      * Cập nhật một feedback đã có (yêu cầu xác thực).
-     * @param token Access token của người dùng (JWT).
      * @param feedbackId ID của feedback cần cập nhật.
      * @param request Đối tượng chứa thông tin cập nhật.
      * @return LiveData chứa ApiResponse với Feedback đã được cập nhật.
      */
-    public LiveData<ApiResponse<Feedback>> updateFeedback(String token, String feedbackId, UpdateFeedbackRequest request) {
+    public LiveData<ApiResponse<Feedback>> updateFeedback(String feedbackId, UpdateFeedbackRequest request) {
         MutableLiveData<ApiResponse<Feedback>> liveData = new MutableLiveData<>();
 
-        apiService.updateFeedback("Bearer " + token, feedbackId, request).enqueue(new Callback<ApiResponse<Feedback>>() {
+        apiService.updateFeedback(feedbackId, request).enqueue(new Callback<ApiResponse<Feedback>>() {
             @Override
             public void onResponse(Call<ApiResponse<Feedback>> call, Response<ApiResponse<Feedback>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -175,14 +172,13 @@ public class FeedbackRepository {
 
     /**
      * Xóa một feedback (yêu cầu xác thực).
-     * @param token Access token của người dùng (JWT).
      * @param feedbackId ID của feedback cần xóa.
      * @return LiveData chứa ApiResponse (data có thể là null hoặc Object).
      */
-    public LiveData<ApiResponse<Object>> deleteFeedback(String token, String feedbackId) {
+    public LiveData<ApiResponse<Object>> deleteFeedback(String feedbackId) {
         MutableLiveData<ApiResponse<Object>> liveData = new MutableLiveData<>();
 
-        apiService.deleteFeedback("Bearer " + token, feedbackId).enqueue(new Callback<ApiResponse<Object>>() {
+        apiService.deleteFeedback(feedbackId).enqueue(new Callback<ApiResponse<Object>>() {
             @Override
             public void onResponse(Call<ApiResponse<Object>> call, Response<ApiResponse<Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {

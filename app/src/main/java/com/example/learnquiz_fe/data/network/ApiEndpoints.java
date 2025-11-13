@@ -42,6 +42,8 @@ public class ApiEndpoints {
      * Quiz endpoints
      */
     public static final String GET_PUBLIC_QUIZ = "api/Quiz/public";
+    public static final String GET_MY_QUIZZES = "api/Quiz/my-quizzes";
+
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
 
@@ -67,7 +69,7 @@ public class ApiEndpoints {
     public static final String FEEDBACK_STATS = "api/Feedback/quiz/{quizId}/stats";
 
     // Request timeout configuration (in seconds)
-    public static final int CONNECT_TIMEOUT = 30;
-    public static final int READ_TIMEOUT = 60;
-    public static final int WRITE_TIMEOUT = 60;
+    public static final int CONNECT_TIMEOUT = 500;
+    public static final int READ_TIMEOUT = 500;
+    public static final int WRITE_TIMEOUT = 500;
 }

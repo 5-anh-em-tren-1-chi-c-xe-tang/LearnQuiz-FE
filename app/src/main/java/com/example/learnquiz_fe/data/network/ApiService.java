@@ -113,6 +113,10 @@ public interface ApiService {
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
 
+
+    @GET(ApiEndpoints.GET_MY_QUIZZES)
+    Call<ApiResponse<List<QuizResponseDTO>>> getMyQuizzies();
+
     /**
      * Payment endpoints
      */
@@ -142,7 +146,6 @@ public interface ApiService {
      */
     @GET(ApiEndpoints.FEEDBACK_MY)
     Call<ApiResponse<List<Feedback>>> getMyFeedback(
-            @Header("Authorization") String token
     );
 
     /**
@@ -151,7 +154,6 @@ public interface ApiService {
      */
     @POST(ApiEndpoints.FEEDBACK_BASE)
     Call<ApiResponse<Feedback>> createFeedback(
-            @Header("Authorization") String token,
             @Body CreateFeedbackRequest request
     );
 
@@ -162,7 +164,6 @@ public interface ApiService {
      */
     @PUT(ApiEndpoints.FEEDBACK_BY_ID)
     Call<ApiResponse<Feedback>> updateFeedback(
-            @Header("Authorization") String token,
             @Path("id") String feedbackId,
             @Body UpdateFeedbackRequest request
     );
@@ -173,7 +174,6 @@ public interface ApiService {
      */
     @DELETE(ApiEndpoints.FEEDBACK_BY_ID)
     Call<ApiResponse<Object>> deleteFeedback(
-            @Header("Authorization") String token,
             @Path("id") String feedbackId
     );
 }

@@ -22,8 +22,10 @@ import com.example.learnquiz_fe.data.dtos.quiz.QuizResponseDTO;
 import com.example.learnquiz_fe.data.model.quiz.GenerateQuizResponse;
 import com.example.learnquiz_fe.data.repository.QuizRepository;
 import com.example.learnquiz_fe.ui.activities.QuizTakingActivity;
+import com.example.learnquiz_fe.ui.activities.feedback.QuizFeedbackActivity;
 import com.example.learnquiz_fe.utils.QuizDataHolder;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,11 +38,12 @@ public class QuizDetailActivity extends AppCompatActivity {
             tvPlaysCount, tvPlaysLabel, tvQuestionsCount, tvQuestionsLabel,
             tvDuration, tvDurationLabel, tvDifficulty, tvAuthorName, tvQuizCount,
             tvDifficultyValue, tvDurationValue, tvVisibilityValue,
-            tvLastUpdated, tvMultipleChoiceCount;
+            tvLastUpdated, tvMultipleChoiceCount, tvWriteReviewLink;
     private ImageView ivAuthorAvatar, ivHeaderImage;
     private FlexboxLayout tagsContainer;
     private ImageButton btnBack, btnShare;
-    private Button btnFollow, btnStartQuiz;
+    private Button btnFollow;
+    private MaterialButton btnStartQuiz;
 
     private QuizRepository quizRepository;
     private ProgressBar progressBar;
@@ -67,6 +70,14 @@ public class QuizDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (quizId != null && !quizId.isBlank()) {
+            loadQuizDetails(quizId);
+        }
+    }
+
     public static void start(Context context, int quizId) {
         Intent intent = new Intent(context, QuizDetailActivity.class);
         intent.putExtra("quiz_id", quizId);
@@ -79,6 +90,7 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnShare = findViewById(R.id.btnShare);
         btnFollow = findViewById(R.id.btnFollow);
         btnStartQuiz = findViewById(R.id.btnStartQuiz);
+        tvWriteReviewLink = findViewById(R.id.tvWriteReviewLink); // Ánh xạ nút Rate
 
         progressBar = findViewById(R.id.progressBar);
         mainContent = findViewById(R.id.mainContent);
@@ -112,19 +124,27 @@ public class QuizDetailActivity extends AppCompatActivity {
         btnShare.setOnClickListener(v -> shareQuiz());
         btnFollow.setOnClickListener(v -> followAuthor());
         btnStartQuiz.setOnClickListener(v -> startQuiz());
+
+        tvWriteReviewLink.setOnClickListener(v -> {
+            Intent intent = new Intent(QuizDetailActivity.this, QuizFeedbackActivity.class);
+            intent.putExtra("QUIZ_ID", quizId);
+            startActivity(intent);
+        });
     }
 
     // 🔹 Load quiz details from backend
     private void loadQuizDetails(String quizId) {
         progressBar.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.GONE);
+        if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.GONE);
+
         quizRepository.getQuizDetail(new QuizRepository.GenericCallback<QuizResponseDTO>() {
             @Override
             public void onSuccess(QuizResponseDTO data) {
                 displayQuizDetails(data);
                 progressBar.setVisibility(View.GONE);
                 mainContent.setVisibility(View.VISIBLE);
-
+                if (tvWriteReviewLink != null) tvWriteReviewLink.setVisibility(View.VISIBLE);
             }
 
             @Override
