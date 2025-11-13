@@ -40,6 +40,8 @@ public class ApiEndpoints {
      * Quiz endpoints
      */
     public static final String GET_PUBLIC_QUIZ = "api/Quiz/public";
+    public static final String GET_MY_QUIZZES = "api/Quiz/my-quizzes";
+
     public static final String GET_QUIZ_DETAIL = "api/quiz/{id}";
     public static final String DELETE_QUIZ = "api/quiz/{id}";
 

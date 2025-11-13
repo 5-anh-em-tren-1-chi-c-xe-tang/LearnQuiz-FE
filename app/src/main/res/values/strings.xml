@@ -78,13 +78,13 @@
     <string name="generation_exit_confirm">Discard</string>
     <string name="generation_photo_info">Photo Information</string>
     <string name="generation_pinch_zoom_hint">Pinch to zoom, double tap to reset</string>
-    
+
     <!-- Add Photo Options -->
     <string name="add_photo_choose_option">Choose Option</string>
     <string name="add_photo_take_photo">Take Photo with Camera</string>
     <string name="add_photo_select_files">Select Files (Images/PDF)</string>
     <string name="add_photo_processing">Processing files…</string>
-    
+
     <!-- PDF Upload -->
     <string name="pdf_too_large">PDF file too large (%.1f MB). Maximum size is 10 MB</string>
     <string name="pdf_timeout">Processing timeout - PDF file is too large or complex</string>
@@ -92,7 +92,7 @@
     <string name="pdf_read_error">Cannot read PDF file</string>
     <string name="pdf_encode_error">Failed to encode PDF file</string>
     <string name="pdf_processing">Processing PDF file…</string>
-    
+
     <!-- Quiz Taking -->
     <string name="quiz_question_number">Question %1$d of %2$d</string>
     <string name="quiz_previous">Previous</string>
@@ -105,7 +105,7 @@
     <string name="quiz_submit_message">You have answered %1$d out of %2$d questions. Submit now?</string>
     <string name="quiz_submit_confirm">Submit</string>
     <string name="quiz_view_results">View Results</string>
-    
+
     <!-- Quiz Result -->
     <string name="quiz_result_title">Quiz Results</string>
     <string name="quiz_result_score">%1$d / %2$d</string>
@@ -116,7 +116,7 @@
     <string name="quiz_review_title">Review Answers</string>
     <string name="quiz_retake">Retake Quiz</string>
     <string name="quiz_home">Back to Home</string>
-    
+
 
     <!--    View all quiz activity-->
     <string name="nav_home" type="id">nav_home</string>
@@ -162,4 +162,80 @@
     <string name="payment_failed">payment failed</string>
     <string name="share">Share</string>
     <string name="write_review_underlined"><u>View and write a Review</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- PROFILE -->
+    <!-- Strings cho Profile Fragment -->
+    <string name="profile_name_placeholder">John Doe</string>
+    <string name="profile_email_placeholder">john.doe@example.com</string>
+    <string name="upgrade_to_premium">Upgrade to Premium</string>
+
+    <!-- Labels và Counts cho Stats Section -->
+    <string name="quizzes_created_label">Created</string>
+    <string name="quizzes_taken_label">Taken</string>
+    <string name="avg_score_label">Avg Score</string>
+    <!-- String format cho Avg Score, ví dụ "85%" -->
+    <string name="average_score_format">%d%%</string>
+
+    <!-- Headers cho các phần -->
+    <string name="quiz_management_header">Quiz Management</string>
+    <string name="support_header">Support</string>
+
+    <!-- Mục trong Quiz Management -->
+    <string name="my_quizzes">My Quizzes</string>
+    <string name="quiz_folders">Quiz Folders</string>
+    <string name="quiz_history">Quiz History</string>
+
+    <!-- Mục trong Account Settings & Upgrade Premium -->
+    <string name="account_settings">Account Settings</string>
+    <!-- Dùng lại @string/upgrade_to_premium cho mục này -->
+
+    <!-- Mục trong Support -->
+    <string name="quick_tour">Quick Tour</string>
+    <string name="notifications">Notifications</string>
+
+    <!-- Mục Logout -->
+    <string name="logout">Logout</string>
+
+    <!-- App Version -->
+    <string name="app_version">LearnQuiz v1.0.0</string>
+
+<!--    MY QUIZZES-->
+    <!-- My Quizzes Fragment -->
+    <string name="my_quizzes_title">My Quizzes</string>
+    <string name="quiz_count_info">%1$d / %2$d quizzes created</string> <!-- Example for dynamic text -->
+    <string name="button_create">Create</string>
+    <string name="search_quizzes_hint">Search quizzes...</string>
+    <string name="search_icon_description">Search icon</string>
+    <string name="filter_icon_description">Filter icon</string>
+
+    <!-- Limit Banner -->
+    <string name="limit_title">Free Limit Reached</string>
+    <string name="limit_description">You\'ve created %1$d quizzes. Upgrade to Premium for unlimited quiz creation!</string> <!-- Example for dynamic text -->
+    <string name="button_upgrade">Upgrade</string>
+
+    <!-- Category Chips -->
+    <string name="chip_all_quizzes">All Quizzes</string>
+    <string name="chip_programming">Programming</string>
+    <string name="chip_design">Design</string>
+    <!-- Add more categories as needed -->
+
+    <!-- Floating Action Buttons -->
+    <string name="fab_from_text_description">Create quiz from text</string>
+    <string name="fab_from_text_label">From Text</string>
+    <string name="fab_from_image_description">Create quiz from image</string>
+    <string name="fab_from_image_label">From Image</string>
+    <string name="fab_main_create_description">Main create button</string>
+
+
+    <!-- Quiz Item Card (item_quiz_card.xml) -->
+    <string name="more_options_description">More options</string>
+    <string name="questions_count">%d questions</string>
+    <string name="privacy_status_public">Public</string>
+    <string name="privacy_status_private">Private</string>
+    <string name="privacy_icon_description">Privacy status icon</string>
+    <string name="plays_count">%d plays</string>
+    <string name="plays_icon_description">Plays count icon</string>
+    <string name="empty_my_quizzes_state">You haven\'t created any quizzes yet!</string>
 </resources>

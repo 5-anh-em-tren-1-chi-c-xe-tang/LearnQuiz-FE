@@ -109,6 +109,10 @@ public interface ApiService {
     @GET(ApiEndpoints.GET_PUBLIC_QUIZ)
     Call<ApiResponse<List<QuizResponseDTO>>> getPublicQuizzies(@Query("query") String query);
 
+
+    @GET(ApiEndpoints.GET_MY_QUIZZES)
+    Call<ApiResponse<List<QuizResponseDTO>>> getMyQuizzies();
+
     /**
      * Payment endpoints
      */

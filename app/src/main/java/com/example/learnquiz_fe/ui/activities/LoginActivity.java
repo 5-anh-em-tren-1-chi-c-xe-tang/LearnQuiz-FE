@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
         setupListeners();
     }
 
-
     private void checkRememberMe() {
         preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
@@ -219,6 +218,8 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn.setEnabled(!show);
         etEmail.setEnabled(!show);
         etPassword.setEnabled(!show);
+        btnGGLogin.setEnabled(!show); // Thêm dòng này để vô hiệu hóa nút Google Login
+        tvSignUp.setEnabled(!show); // Thêm dòng này để vô hiệu hóa nút Sign Up
     }
 
     private void navigateToMain() {
@@ -261,13 +262,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToSignup() {
-        // Quay trở lại màn hình Login sau khi đăng ký thành công
+        showLoading(true);
+
         Intent intent = new Intent(this, RegisterActivity.class);
         // Xóa các activity trước đó khỏi stack để người dùng không thể quay lại màn hình đăng ký
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 }
-
-

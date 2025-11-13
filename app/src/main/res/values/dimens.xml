@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    Khoảng cách di chuyển cho FAB và label ở gần nút chính nhất.
+    (ví dụ: From Image)
+    -->
+    <dimen name="fab_margin_offset_small">72dp</dimen>
+
+    <!--
+    Khoảng cách di chuyển cho FAB và label ở xa nút chính hơn.
+    (ví dụ: From Text)
+    -->
+    <dimen name="fab_margin_offset_large">144dp</dimen>
+</resources>

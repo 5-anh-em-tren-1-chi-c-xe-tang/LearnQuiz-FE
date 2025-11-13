@@ -113,4 +113,45 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+
+
+    <!-- Các màu bổ sung cho Profile Fragment -->
+    <!-- Màu nền cho các CardView bên dưới header -->
+    <color name="card_background_light">#F5F5F5</color>
+    <!-- Màu cho text đậm hơn -->
+    <color name="text_color_dark">#333333</color>
+    <!-- Màu cho text nhạt (sử dụng trên nền đậm) -->
+    <color name="text_color_light">#FFFFFF</color>
+    <!-- Màu đỏ cho nút Logout -->
+    <color name="logout_red">#F44336</color>
+    <!-- Màu cho đường phân cách -->
+    <color name="divider_color">#E0E0E0</color>
+
+    <!-- Màu cho header gradient (màu tím) -->
+    <color name="profile_gradient_start">#8A2BE2</color> <!-- Màu tím nhạt -->
+    <color name="profile_gradient_end">#4B0082</color>   <!-- Màu tím đậm -->
+    <color name="profile_background_purple">#673AB7</color> <!-- Màu tím chuẩn để tint icon -->
+
+    <!-- Màu cho nút Premium gradient (màu cam) -->
+    <color name="orange_gradient_start">#FFC107</color> <!-- Màu cam nhạt -->
+    <color name="orange_gradient_end">#FF9800</color>   <!-- Màu cam đậm -->
+
+
+<!--    Color for My Quizzes-->
+    <color name="primary_purple">#6200EE</color> <!-- Alias for clarity -->
+    <color name="material_dynamic_primary40">#6200EE</color> <!-- Assuming this is your primary color -->
+
+    <!-- Accent/Warning colors -->
+    <color name="warning_orange">#FF9800</color> <!-- Alias for clarity -->
+    <color name="banner_background_yellow">#FFF3E0</color>
+
+    <!-- Text colors -->
+    <color name="dark_gray">@android:color/darker_gray</color>
+
+    <!-- Chip colors for selector states -->
+    <color name="chip_background_selected">@color/primary_purple</color>
+    <color name="chip_background_unselected">#E0E0E0</color> <!-- Light gray for unselected chips -->
+    <color name="chip_text_selected">@color/white</color>
+    <color name="chip_text_unselected">@color/black</color>
+
 </resources>

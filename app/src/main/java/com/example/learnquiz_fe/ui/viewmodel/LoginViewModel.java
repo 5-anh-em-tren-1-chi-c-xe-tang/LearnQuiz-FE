@@ -30,5 +30,8 @@ public class LoginViewModel extends AndroidViewModel {
     public LiveData<ApiResponse<AuthResponse>> login(String usernameOrEmail, String password) {
         return repository.login(usernameOrEmail,password);
     }
+    public Void logout() {
+        return repository.logout();
+    }
 }
 
