@@ -1,6 +1,7 @@
 package com.example.learnquiz_fe.ui.activities;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -55,7 +56,7 @@ public class QuizTakingActivity extends AppCompatActivity {
     private MaterialButton btnPrevious;
     private MaterialButton btnNext;
     private MaterialButton btnSubmit;
-    
+    private ColorStateList defaultCardBackgroundColor;
     // Data
     private GenerateQuizResponse quizData;
     private List<QuizQuestion> questions;
@@ -76,7 +77,6 @@ public class QuizTakingActivity extends AppCompatActivity {
         
         // Get quiz data from QuizDataHolder (to avoid TransactionTooLargeException)
         quizData = com.example.learnquiz_fe.utils.QuizDataHolder.getInstance().getAndClearQuizResponse();
-        
         // Fallback: Try to get from intent if holder is empty (for backward compatibility)
         if (quizData == null) {
             String quizJson = getIntent().getStringExtra(EXTRA_QUIZ_DATA);
@@ -106,7 +106,7 @@ public class QuizTakingActivity extends AppCompatActivity {
         displayQuestion(0);
         setupBackPressHandler();
     }
-    
+
     private void setupBackPressHandler() {
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override
@@ -128,7 +128,7 @@ public class QuizTakingActivity extends AppCompatActivity {
         btnPrevious = findViewById(R.id.btnPrevious);
         btnNext = findViewById(R.id.btnNext);
         btnSubmit = findViewById(R.id.btnSubmit);
-        
+        defaultCardBackgroundColor = cardQuestion.getCardBackgroundColor();
         // Set quiz title
         tvQuizTitle.setText(quizData.getTitle());
         
@@ -175,7 +175,18 @@ public class QuizTakingActivity extends AppCompatActivity {
     
     private void displayQuestion(int index) {
         if (index < 0 || index >= questions.size()) return;
-        
+
+        // 1. Reset màu nền và viền của CardView
+        cardQuestion.setCardBackgroundColor(defaultCardBackgroundColor);
+        cardQuestion.setStrokeWidth(0); // Bỏ viền
+
+        // 2. Ẩn và xóa nội dung giải thích (nếu có)
+        TextView tvExplanation = cardQuestion.findViewById(R.id.tvExplanation);
+        if (tvExplanation != null) {
+            tvExplanation.setVisibility(View.GONE);
+            tvExplanation.setText("");
+        }
+
         currentQuestionIndex = index;
         answerSelected = false; // Reset for new question
         QuizQuestion question = questions.get(index);
@@ -210,7 +221,33 @@ public class QuizTakingActivity extends AppCompatActivity {
         if (userAnswers.containsKey(index)) {
             answerSelected = true;
             int answerIndex = userAnswers.get(index);
-            if (answerIndex >= 0 && answerIndex < rgAnswers.getChildCount()) {
+
+            if (answerIndex == -1) {
+                // question is timeout
+                tvQuestion.setTextColor(getColor(android.R.color.white));
+
+                for (int i = 0; i < rgAnswers.getChildCount(); i++) {
+                    RadioButton rb = (RadioButton) rgAnswers.getChildAt(i);
+                    rb.setEnabled(false);
+                    rb.setTextColor(getColor(android.R.color.white));
+
+                    // Highlight right answer
+                    if (question.getAnswers().get(i).isTrue()) {
+                        rb.setTypeface(null, android.graphics.Typeface.BOLD);
+                    } else {
+                        rb.setAlpha(0.7f);
+                    }
+                }
+
+                // Cập nhật thẻ sang màu xám
+                cardQuestion.setCardBackgroundColor(getColor(R.color.gray_400));
+                cardQuestion.setStrokeColor(getColor(android.R.color.darker_gray));
+                cardQuestion.setStrokeWidth(4);
+
+                // (Nếu muốn, hiển thị cả giải thích)
+
+            }
+            else if (answerIndex >= 0 && answerIndex < rgAnswers.getChildCount()) {
                 RadioButton selectedBtn = (RadioButton) rgAnswers.getChildAt(answerIndex);
                 selectedBtn.setChecked(true);
                 
@@ -283,12 +320,12 @@ public class QuizTakingActivity extends AppCompatActivity {
         
         // Save result
         answerResults.put(currentQuestionIndex, isCorrect);
-        
+
         // Disable all radio buttons
         for (int i = 0; i < rgAnswers.getChildCount(); i++) {
             RadioButton rb = (RadioButton) rgAnswers.getChildAt(i);
             rb.setEnabled(false);
-            
+
             QuizAnswer answer = question.getAnswers().get(i);
             
             // Highlight correct answer in green
@@ -387,12 +424,14 @@ public class QuizTakingActivity extends AppCompatActivity {
                 tvTimer.setTextColor(getColor(android.R.color.holo_red_dark));
                 
                 answerSelected = true;
-                
+
+                // Dùng -1 để đánh dấu câu này đã hết giờ/bị bỏ qua
+                userAnswers.put(currentQuestionIndex, -1);
                 // Disable radio buttons
                 for (int i = 0; i < rgAnswers.getChildCount(); i++) {
                     RadioButton rb = (RadioButton) rgAnswers.getChildAt(i);
                     rb.setEnabled(false);
-                    
+
                     // Highlight correct answer
                     QuizQuestion question = questions.get(currentQuestionIndex);
                     if (question.getAnswers().get(i).isTrue()) {
@@ -530,7 +569,7 @@ public class QuizTakingActivity extends AppCompatActivity {
             
             // Get selected answer text
             List<String> selectedAnswers = new ArrayList<>();
-            if (answerIndex != null && answerIndex < question.getAnswers().size()) {
+            if (answerIndex != null && answerIndex >= 0 && answerIndex < question.getAnswers().size()) {
                 QuizAnswer answer = question.getAnswers().get(answerIndex);
                 selectedAnswers.add(answer.getAnswer());
             }

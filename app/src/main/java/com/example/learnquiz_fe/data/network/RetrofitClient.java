@@ -5,19 +5,12 @@ import android.content.SharedPreferences;
 
 import com.example.learnquiz_fe.R;
 import com.example.learnquiz_fe.data.model.auth.AuthResponse;
+import com.example.learnquiz_fe.ui.adapter.DateTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.util.Date;
 
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -51,8 +44,7 @@ public class RetrofitClient {
 
         // Create Gson with custom date format
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                .setLenient()
+                .registerTypeAdapter(Date.class, new DateTypeAdapter())
                 .create();
 
 //         Create OkHttp client with interceptors
